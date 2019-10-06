@@ -1807,7 +1807,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #09f540;
+  background: #4024c9;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -2804,7 +2804,7 @@ body {
 .header-inner {
   position: relative;
   width: 100%;
-  height: 750px;
+  height: 900px;
   padding: 0;
   box-shadow: initial;
   border-radius: initial;
@@ -3163,7 +3163,7 @@ a {
 }
 .site-brand-wrapper {
   position: relative;
-  height: 650px;
+  height: 800px;
   width: 100%;
   background-size: cover;
   background-position: center bottom;
@@ -3381,7 +3381,7 @@ a {
   text-align: center;
   width: 70%;
   margin: auto;
-  top: -170px;
+  top: -350px;
   padding: 40px 0;
   padding-bottom: 40px;
   font-size: 16px;
@@ -3688,7 +3688,7 @@ a {
 .post {
   position: relative;
   padding: 40px;
-  background: #fff;
+  background: rgba(255,255,255,0.749);
   margin-bottom: 40px;
   border-radius: 5px;
 }
@@ -5341,9 +5341,6 @@ a {
 .post .post-body .links ul li a p {
   margin: 10px 0;
   line-height: 24px;
-}
-.theme-darling .site-title {
-  text-shadow: 1px 1px 0 #ff3f1a, -1px -1px 0 #00a7e0;
 }
 .theme-darling .site-master-description span:nth-child(1) {
   color: #00a7e0 !important;
