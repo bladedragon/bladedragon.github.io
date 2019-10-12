@@ -107,18 +107,18 @@
 
 
 
-<meta name="description" content="脚本式语言 基本语法标识符标识符由字母数字下划线组成，开头不能是数字，区分大小写  单下划线开头 _foo 的代表不能直接访问的类属性，需通过类提供的接口进行访问，不能用 from xxx import 而导入。 以双下划线开头的 __foo代表类的私有成员 以双下划线开头和结尾的 __foo__代表 Python 里特殊方法专用的标识，如 init() 代表类的构造函数。   书写语法 多行语句">
+<meta name="description" content="开始系统学习python 本节主要回顾python的基本语法">
 <meta name="keywords" content="python">
 <meta property="og:type" content="article">
 <meta property="og:title" content="python学习(01)">
 <meta property="og:url" content="http://yoursite.com/2019/09/22/python1/index.html">
 <meta property="og:site_name" content="Runner Forever">
-<meta property="og:description" content="脚本式语言 基本语法标识符标识符由字母数字下划线组成，开头不能是数字，区分大小写  单下划线开头 _foo 的代表不能直接访问的类属性，需通过类提供的接口进行访问，不能用 from xxx import 而导入。 以双下划线开头的 __foo代表类的私有成员 以双下划线开头和结尾的 __foo__代表 Python 里特殊方法专用的标识，如 init() 代表类的构造函数。   书写语法 多行语句">
+<meta property="og:description" content="开始系统学习python 本节主要回顾python的基本语法">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-09-23T10:19:15.092Z">
+<meta property="og:updated_time" content="2019-10-07T02:52:00.266Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="python学习(01)">
-<meta name="twitter:description" content="脚本式语言 基本语法标识符标识符由字母数字下划线组成，开头不能是数字，区分大小写  单下划线开头 _foo 的代表不能直接访问的类属性，需通过类提供的接口进行访问，不能用 from xxx import 而导入。 以双下划线开头的 __foo代表类的私有成员 以双下划线开头和结尾的 __foo__代表 Python 里特殊方法专用的标识，如 init() 代表类的构造函数。   书写语法 多行语句">
+<meta name="twitter:description" content="开始系统学习python 本节主要回顾python的基本语法">
 
 
 
@@ -542,13 +542,15 @@
       
 
       
-        <p>脚本式语言</p>
+        <p>开始系统学习python</p>
+<p>本节主要回顾python的基本语法</p>
+<a id="more"></a>
+
 <h2 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a>基本语法</h2><h3 id="标识符"><a href="#标识符" class="headerlink" title="标识符"></a>标识符</h3><p>标识符由字母数字下划线组成，开头不能是数字，区分大小写</p>
 <ul>
 <li>单下划线开头 <code>_foo</code> 的代表不能直接访问的类属性，需通过类提供的接口进行访问，不能用 <code>from xxx import</code> 而导入。</li>
 <li>以双下划线开头的 <code>__foo</code>代表类的私有成员</li>
 <li>以双下划线开头和结尾的 <code>__foo__</code>代表 Python 里特殊方法专用的标识，如 <strong><strong>init</strong>()</strong> 代表类的构造函数。</li>
-<li></li>
 </ul>
 <h3 id="书写语法"><a href="#书写语法" class="headerlink" title="书写语法"></a>书写语法</h3><ul>
 <li><p>多行语句</p>
@@ -569,7 +571,7 @@
 
 <p>Python math 模块提供了许多对浮点数的数学运算函数。</p>
 <p>Python cmath 模块包含了一些用于复数运算的函数。</p>
-<h3 id="字符串和编码"><a href="#字符串和编码" class="headerlink" title="字符串和编码"></a>字符串和编码</h3><p>ASCII编码是1个字节，而Unicode编码通常是2个字节。</p>
+<h3 id="字符串和编码"><a href="#字符串和编码" class="headerlink" title="字符串和编码"></a>字符串和编码</h3><p><mark>ASCII编码是1个字节，而Unicode编码通常是2个字节。</mark></p>
 <p>把Unicode编码转化为“可变长编码”的<code>UTF-8</code>编码。UTF-8编码把一个Unicode字符根据不同的数字大小编码成1-6个字节，常用的英文字母被编码成1个字节，汉字通常是3个字节，只有很生僻的字符才会被编码成4-6个字节。如果你要传输的文本包含大量英文字符，用UTF-8编码就能节省空间</p>
 <p>在计算机内存中，统一使用Unicode编码，当需要保存到硬盘或者需要传输的时候，就转换为UTF-8编码。</p>
 <p>用记事本编辑的时候，从文件读取的UTF-8字符被转换为Unicode字符到内存里，编辑完成后，保存的时候再把Unicode转换为UTF-8保存到文件：</p>
@@ -577,16 +579,14 @@
 <p>Python的字符串类型是<code>str</code>，在内存中以Unicode表示，传输时需要转换成<code>bytes</code>对<code>bytes</code>类型的数据用带<code>b</code>前缀的单引号或双引号表示</p>
 <p>字符串开头的含义</p>
 <ul>
-<li>b</li>
-<li>r非转义原生字符</li>
+<li>b </li>
+<li>r 非转义原生字符</li>
 <li>u unicode编码字符，python3默认字符串编码方式。</li>
-<li></li>
 </ul>
 <p>使用<code>encode</code>和<code>decode</code>进行编解码</p>
 <h3 id="List和tuple"><a href="#List和tuple" class="headerlink" title="List和tuple"></a>List和tuple</h3><p>list</p>
 <ul>
 <li>有序集合</li>
-<li></li>
 </ul>
 <p>tuple</p>
 <ul>
@@ -616,7 +616,7 @@
 <ul>
 <li>不重复的key的集合</li>
 </ul>
-<p>注意不可变对象，例如str</p>
+<p>注意不可变对象，例如<code>str</code></p>
 
       
     </div>
@@ -651,8 +651,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/09/18/mybatis/" rel="next" title="mybatis深入学习">
-                <i class="fa fa-chevron-left"></i> mybatis深入学习
+              <a href="/2019/09/18/mybatis/" rel="next" title="mybatis基础特性和sqlsession原理">
+                <i class="fa fa-chevron-left"></i> mybatis基础特性和sqlsession原理
               </a>
             
           </div>
@@ -803,7 +803,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-count">17</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
