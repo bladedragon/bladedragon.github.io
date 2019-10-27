@@ -1807,7 +1807,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #ba50fa;
+  background: #f5034a;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -3188,7 +3188,7 @@ a {
   text-shadow: 0 1px 1px #47456d;
   margin-bottom: 130px;
   z-index: 1;
-  font-family: 'Sigmar One';
+  font-family: 'Sonsie One';
   display: block;
 }
 @media (max-width: 991px) {
