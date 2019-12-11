@@ -108,12 +108,12 @@
 
 
 <meta property="og:type" content="website">
-<meta property="og:title" content="小站">
+<meta property="og:title" content="我的小站">
 <meta property="og:url" content="http://yoursite.com/index.html">
-<meta property="og:site_name" content="小站">
+<meta property="og:site_name" content="我的小站">
 <meta property="og:locale" content="zh-Hans">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="小站">
+<meta name="twitter:title" content="我的小站">
 
 
 
@@ -130,7 +130,7 @@
     since: '9/22/2019 11:30:00',
     onlineAPI: '',
     site: {
-      title: '小站',
+      title: '我的小站',
       subtitle: '',
       author: '陌花采撷'
     },
@@ -174,7 +174,7 @@
 
 
 
-  <title>小站</title>
+  <title>我的小站</title>
   
 
 
@@ -345,10 +345,10 @@
         <span class="logo-line-before"><i></i></span>
         <div class="site-title">
           <div id="animate" class="animate">
-            <span>小</span><span>站</span>
+            <span>我</span><span>的</span><span>小</span><span>站</span>
           </div>
           <div id="guide" class="guide">
-            <span>小</span><span>站</span>
+            <span>我</span><span>的</span><span>小</span><span>站</span>
           </div>
         </div>
         <span class="logo-line-after"><i></i></span>
@@ -423,7 +423,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小站">
+      <meta itemprop="name" content="我的小站">
     </span>
 
     
@@ -509,107 +509,18 @@
 
       
         
-          
-            <blockquote>
+          <blockquote>
 <p>据称，11月26日，负责英国、欧洲、中东和部分中亚地区互联网资源分配的欧洲网络协调中心宣布，全球所有43亿个IPv4地址已全部分配完毕。意味着再也没有新接入的互联网设备在也无法分配到新的IP地址。在目前的形势下，利益相关的同学们第一反应会想到什么呢？是提高IP地址利用率的无类域间路由还是为IPv4续命立下汗马功劳的NAT技术？</p>
 <p><strong>不得不说，靠IPv4协议也就图个乐呵，想要彻底解决地址分配问题还得看我IPv6协议</strong></p>
 </blockquote>
 <p>今天由于篇幅有限，主要专注于IPv6的地址解析</p>
-<h2 id="IPv6的优势"><a href="#IPv6的优势" class="headerlink" title="IPv6的优势"></a>IPv6的优势</h2><ul>
-<li>地址空间大，理论上存在2^128个地址，几乎不用担心地址短缺问题</li>
-<li>减少路由表大小，路由器处理报文性能提高</li>
-<li>安全性得到提高</li>
-<li>服务质量好，服务类型扩展灵活丰富</li>
-<li>支持可移动主机和网络</li>
-<li>兼容性强，可完全向下兼容IPv4</li>
-<li>…</li>
-</ul>
-<h2 id="IPv6地址"><a href="#IPv6地址" class="headerlink" title="IPv6地址"></a>IPv6地址</h2><p>IPv6地址的128位地址被分成8段，每16位一段，分别被转成4位十六进制数这种表示方法称之为“冒号十六进制表示法”。</p>
-<p><strong>地址格式</strong>：</p>
-<blockquote>
-<p>X:X:X:X:X:X:X:X</p>
-</blockquote>
-<p><strong>压缩表示</strong></p>
-<ol>
-<li><p>地址中包含的连续两个或多个均为0的组，可以用双冒号“::”来代替。</p>
-<p>如<code>FC00:0:130F:0:0:9C0:876A:130B</code>可写作<code>FC00:0:130F::9C0:876A:130B</code></p>
-<p>注意：</p>
-<ol>
-<li><p><code>::</code>代表的0位数必须最大化；</p>
-<p>错误示例：<code>FC00:0:130F:0:0:9C0:876A:130B</code>不能写作<code>FC00:0:130F::0:9C0:876A:130B</code></p>
-</li>
-<li><p>不能只代表一个全0段；</p>
-<p>错误示例：<code>FC00:1:130F:0:1:9C0:876A:130B</code>不能写作<code>FC00:1:130F::1:9C0:876A:130B</code></p>
-</li>
-<li><p>如果多个连续全0段长度相同，必须的代表最前面的那个</p>
-<p>错误示例：<code>FC00:0:130F:0:0:9C0:0:0</code>不能写作<code>FC00:0:130F:0:0:9C0::</code></p>
-</li>
-</ol>
-</li>
-<li><p>前导0可以省略</p>
-<p>如<code>FC00:0000:130F:0000:0000:09C0:876A:130B</code>可以写作<code>FC00:0:130F:0:0:9C0:876A:130B</code></p>
-</li>
-</ol>
-<p><strong>地址结构</strong></p>
-<p>一个IPv6地址可以分为如下两部分：</p>
-<ul>
-<li>网络前缀：n比特，相当于IPv4地址中的网络ID</li>
-<li>接口标识：128-n比特，相当于IPv4地址中的主机ID</li>
-</ul>
-<p>表示形式如<code>FF00::/8</code>代表<code>地址/前缀长度</code></p>
-<p>接口标识可通过三种方法生成：手工配置、系统通过软件自动生成或IEEE EUI-64规范生成。其中，EUI-64规范自动生成最为常用</p>
-<p><strong>地址分类</strong></p>
-<ul>
-<li><p>单播地址</p>
-<p>一对一</p>
-<p>常见的单播地址</p>
-<ul>
-<li><p>未指定地址<code>::/128</code></p>
-<p>该地址可以表示某个接口或者节点还没有IP地址，可以作为某些报文的源IP地址</p>
-</li>
-<li><p>环回地址<code>::1/128</code></p>
-<p>就是本地地址</p>
-</li>
-<li><p>全球单播地址:带有全球单播前缀,目前已经分配的全球路由前缀的前3bit均为<code>001</code></p>
-<p>带有全球单播前缀的IPv6地址，其作用类似于IPv4中的公网地址</p>
-<p><img src="http://cdn.zblade.top/qiniu_img/image-20191210213536204.png" alt></p>
-</li>
-<li><p>链路本地地址 ：使用了特定的本地链路前缀<code>FE80::/10</code></p>
-<p>链路本地地址是IPv6中的应用范围受限制的地址类型，只能在连接到同一本地链路的节点之间使用</p>
-<p><img src="http://cdn.zblade.top/qiniu_img/image-20191210213547240.png" alt></p>
-</li>
-<li><p>唯一本地地址：前缀固定为·<code>FC00::/7</code></p>
-<p>也是一种应用范围受限的地址，它仅能在一个站点内使用，类似于IPv4中的私网地址</p>
-<p><img src="http://cdn.zblade.top/qiniu_img/image-20191210213603271.png" alt></p>
-</li>
-</ul>
-</li>
-<li><p>组播地址</p>
-<p>IPv6的组播与IPv4相同，用来标识一组接口，一般这些接口属于不同的节点.</p>
-<p>IPv6组播地址的前缀是<code>FF00::/8</code></p>
-<p><img src="http://cdn.zblade.top/qiniu_img/image-20191210221010487.png" alt></p>
-<ul>
-<li>标志用来标识组播地址身份</li>
-<li>scop用来限制组播数据流在网络中发送的范围</li>
-<li>group ID标识组播组</li>
-</ul>
-</li>
-<li><p>任播地址</p>
-<p>任播地址标识一组网络接口（通常属于不同的节点）。目标地址是任播地址的数据包将发送给其中路由意义上最近的一个网络接口。主要用来在给多个主机或者节点提供相同服务时提供冗余功能和负载分担功能。</p>
-<p><img src="http://cdn.zblade.top/qiniu_img/image-20191210223223066.png" alt></p>
-<p>注：IPv6任播地址仅可以被分配给路由设备，不能应用于主机。任播地址不能作为IPv6报文的源地址</p>
-</li>
-</ul>
-<p><strong>整理了一下一个IPv6主机上一个接口可以具备的常见IPv6地址</strong></p>
-<p><img src="/2019/12/10/ipv6/image-20191210223727275.png" alt="image-20191210223727275"></p>
-<p><img src="http://cdn.zblade.top/qiniu_img/image-20191210223743875.png" alt></p>
-
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/12/10/ipv6/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/12/10/ipv6/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -678,7 +589,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小站">
+      <meta itemprop="name" content="我的小站">
     </span>
 
     
@@ -764,12 +675,12 @@
 
       
         
-          <div id="aplayer-OyzJewxY" class="aplayer aplayer-tag-marker" style="margin-bottom: 20px;">
+          <div id="aplayer-LEuuIqRo" class="aplayer aplayer-tag-marker" style="margin-bottom: 20px;">
             <pre class="aplayer-lrc-content"></pre>
         </div>
         <script>
           var ap = new APlayer({
-            element: document.getElementById("aplayer-OyzJewxY"),
+            element: document.getElementById("aplayer-LEuuIqRo"),
             narrow: false,
             autoplay: true,
             showlrc: false,
@@ -862,7 +773,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小站">
+      <meta itemprop="name" content="我的小站">
     </span>
 
     
@@ -1025,7 +936,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小站">
+      <meta itemprop="name" content="我的小站">
     </span>
 
     
@@ -1187,7 +1098,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小站">
+      <meta itemprop="name" content="我的小站">
     </span>
 
     
@@ -1340,7 +1251,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小站">
+      <meta itemprop="name" content="我的小站">
     </span>
 
     
@@ -1505,7 +1416,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小站">
+      <meta itemprop="name" content="我的小站">
     </span>
 
     
@@ -1594,12 +1505,12 @@
           <p>天凉好个秋~</p>
 <p>应该脚踏实地，应该认清现实，应该一往无前。</p>
 
-        <div id="aplayer-tfVyPUrV" class="aplayer aplayer-tag-marker" style="margin-bottom: 20px;">
+        <div id="aplayer-sHGHHWDD" class="aplayer aplayer-tag-marker" style="margin-bottom: 20px;">
             <pre class="aplayer-lrc-content"></pre>
         </div>
         <script>
           var ap = new APlayer({
-            element: document.getElementById("aplayer-tfVyPUrV"),
+            element: document.getElementById("aplayer-sHGHHWDD"),
             narrow: false,
             autoplay: false,
             showlrc: false,
@@ -1689,7 +1600,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小站">
+      <meta itemprop="name" content="我的小站">
     </span>
 
     
@@ -1851,7 +1762,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小站">
+      <meta itemprop="name" content="我的小站">
     </span>
 
     
@@ -2013,7 +1924,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小站">
+      <meta itemprop="name" content="我的小站">
     </span>
 
     
@@ -2308,7 +2219,7 @@
         <p>博客已萌萌哒运行<span id="since"></span><span class="my-face">(●'◡'●)ﾉ♥</span></p>
 <p>托管于<a href="https://github.com/" target="_blank" rel="nofollow"> GitHub</a>.</p>
 
-<p>© <span itemprop="copyrightYear">2019</span> 小站.
+<p>© <span itemprop="copyrightYear">2019</span> 我的小站.
     由 <a href="https://hexo.io/" target="_blank" class="external" rel="nofollow">Hexo</a> 强力驱动.
     Theme By <a href="https://github.com/DIYgod/hexo-theme-sagiri" target="_blank" class="external" rel="nofollow">Sagiri</a> v0.0.50.
     <a href="/" target="_blank">站点地图</a>.
