@@ -107,31 +107,31 @@
 
 
 
-<meta name="description" content="第三章 Java内存模型一、基础1、并发的两个关键问题线程间通信和线程间同步 线程通信机制：  ==共享内存==：隐式通信，显式同步 ==消息传递==：显式通信，隐式同步  Java的并发采用的是共享内存模型。 2、java内存结构 java中所有的实例域、静态域和数组元素都存储在堆内存中；局部变量、方法定义参数、异常处理器参数不会在线程之间共享  JMM定义了线程和主内存之间的抽象关系：线程之间">
+<meta name="description" content="第三章 Java内存模型">
 <meta name="keywords" content="JAVA,并发">
 <meta property="og:type" content="article">
 <meta property="og:title" content="并发编程艺术笔记(3)">
 <meta property="og:url" content="http://yoursite.com/2020/01/07/concurrent3/index.html">
 <meta property="og:site_name" content="陌花采撷">
-<meta property="og:description" content="第三章 Java内存模型一、基础1、并发的两个关键问题线程间通信和线程间同步 线程通信机制：  ==共享内存==：隐式通信，显式同步 ==消息传递==：显式通信，隐式同步  Java的并发采用的是共享内存模型。 2、java内存结构 java中所有的实例域、静态域和数组元素都存储在堆内存中；局部变量、方法定义参数、异常处理器参数不会在线程之间共享  JMM定义了线程和主内存之间的抽象关系：线程之间">
+<meta property="og:description" content="第三章 Java内存模型">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://yoursite.com/2020/01/ZZZ_files/学习/JAVA/并发编程/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3.assets/image-20200107100818113.png">
-<meta property="og:image" content="http://yoursite.com/2020/01/07/concurrent3/image-20200107102759253.png">
-<meta property="og:image" content="http://yoursite.com/2020/01/ZZZ_files/学习/JAVA/并发编程/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3.assets/image-20200107111012661.png">
-<meta property="og:image" content="http://yoursite.com/2020/01/ZZZ_files/学习/JAVA/并发编程/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3.assets/image-20200107111032356.png">
-<meta property="og:image" content="http://yoursite.com/2020/01/07/concurrent3/image-20200107144910441.png">
-<meta property="og:image" content="http://yoursite.com/2020/01/ZZZ_files/%E5%AD%A6%E4%B9%A0/JAVA/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3.assets/image-20200107102759253.png">
-<meta property="og:image" content="http://yoursite.com/2020/01/ZZZ_files/学习/JAVA/并发编程/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3.assets/image-20200107152436294.png">
-<meta property="og:image" content="http://yoursite.com/2020/01/ZZZ_files/学习/JAVA/并发编程/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3.assets/image-20200107152444982.png">
-<meta property="og:image" content="http://yoursite.com/2020/01/07/concurrent3/image-20200107174616024.png">
-<meta property="og:image" content="http://yoursite.com/2020/01/07/concurrent3/image-20200107205334303.png">
-<meta property="og:image" content="http://yoursite.com/2020/01/07/concurrent3/image-20200107205635952.png">
-<meta property="og:image" content="http://yoursite.com/2020/01/07/concurrent3/image-20200107205755222.png">
-<meta property="og:updated_time" content="2020-01-07T13:03:26.369Z">
+<meta property="og:image" content="http://yoursite.com/2020/01/ZZZ_files/学习/JAVA/并发编程/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3/image-20200107100818113.png">
+<meta property="og:image" content="http://yoursite.com/2020/01/07/concurrent3/image-20200107102759253-1578457897461.png">
+<meta property="og:image" content="http://yoursite.com/2020/01/ZZZ_files/学习/JAVA/并发编程/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3/image-20200107111012661.png">
+<meta property="og:image" content="http://yoursite.com/2020/01/ZZZ_files/学习/JAVA/并发编程/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3/image-20200107111032356.png">
+<meta property="og:image" content="http://yoursite.com/2020/01/07/concurrent3/image-20200107144910441-1578457897461.png">
+<meta property="og:image" content="http://yoursite.com/2020/01/ZZZ_files/%E5%AD%A6%E4%B9%A0/JAVA/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3/image-20200107102759253.png">
+<meta property="og:image" content="http://yoursite.com/2020/01/ZZZ_files/学习/JAVA/并发编程/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3/image-20200107152436294.png">
+<meta property="og:image" content="http://yoursite.com/2020/01/ZZZ_files/学习/JAVA/并发编程/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3/image-20200107152444982.png">
+<meta property="og:image" content="http://yoursite.com/2020/01/07/concurrent3/image-20200107174616024-1578457897461.png">
+<meta property="og:image" content="http://yoursite.com/2020/01/07/concurrent3/image-20200107205334303-1578457897461.png">
+<meta property="og:image" content="http://yoursite.com/2020/01/07/concurrent3/image-20200107205635952-1578457897461.png">
+<meta property="og:image" content="http://yoursite.com/2020/01/07/concurrent3/image-20200107205755222-1578457897461.png">
+<meta property="og:updated_time" content="2020-01-08T04:31:44.212Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="并发编程艺术笔记(3)">
-<meta name="twitter:description" content="第三章 Java内存模型一、基础1、并发的两个关键问题线程间通信和线程间同步 线程通信机制：  ==共享内存==：隐式通信，显式同步 ==消息传递==：显式通信，隐式同步  Java的并发采用的是共享内存模型。 2、java内存结构 java中所有的实例域、静态域和数组元素都存储在堆内存中；局部变量、方法定义参数、异常处理器参数不会在线程之间共享  JMM定义了线程和主内存之间的抽象关系：线程之间">
-<meta name="twitter:image" content="http://yoursite.com/2020/01/ZZZ_files/学习/JAVA/并发编程/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3.assets/image-20200107100818113.png">
+<meta name="twitter:description" content="第三章 Java内存模型">
+<meta name="twitter:image" content="http://yoursite.com/2020/01/ZZZ_files/学习/JAVA/并发编程/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3/image-20200107100818113.png">
 
 
 
@@ -521,7 +521,11 @@
       
 
       
-        <h1 id="第三章-Java内存模型"><a href="#第三章-Java内存模型" class="headerlink" title="第三章 Java内存模型"></a>第三章 Java内存模型</h1><h2 id="一、基础"><a href="#一、基础" class="headerlink" title="一、基础"></a>一、基础</h2><h3 id="1、并发的两个关键问题"><a href="#1、并发的两个关键问题" class="headerlink" title="1、并发的两个关键问题"></a>1、并发的两个关键问题</h3><p>线程间通信和线程间同步</p>
+        <h1 id="第三章-Java内存模型"><a href="#第三章-Java内存模型" class="headerlink" title="第三章 Java内存模型"></a>第三章 Java内存模型</h1><a id="more"></a>
+
+
+
+<h2 id="一、基础"><a href="#一、基础" class="headerlink" title="一、基础"></a>一、基础</h2><h3 id="1、并发的两个关键问题"><a href="#1、并发的两个关键问题" class="headerlink" title="1、并发的两个关键问题"></a>1、并发的两个关键问题</h3><p>线程间通信和线程间同步</p>
 <p>线程通信机制：</p>
 <ul>
 <li><strong>==共享内存==：隐式通信，显式同步</strong></li>
@@ -535,7 +539,7 @@
 <blockquote>
 <p>本地内存是JMM的一个抽象概念，并不真实存在，涵盖了缓存、写缓冲区、寄存器以及其他的硬件和编译器优化</p>
 </blockquote>
-<img src="/2020/01/07/concurrent3/../../ZZZ_files/学习/JAVA/并发编程/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3.assets/image-20200107100818113.png" alt="image-20200107100818113" style="zoom:50%;">
+<img src="/2020/01/07/concurrent3/../../ZZZ_files/学习/JAVA/并发编程/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3/image-20200107100818113.png" alt="image-20200107100818113" style="zoom:50%;">
 
 <p>线程A与线程B之间要通信必须经过两个步骤：</p>
 <ol>
@@ -563,7 +567,7 @@
 <li><code>LoadStore Barriers</code>：确保load装载先于store的存储刷新到内存</li>
 <li><code>StoreLoad Barriers</code>：该屏障前的指令全部完成之后才会执行后面的指令（开销大）</li>
 </ul>
-<p><img src="/2020/01/07/concurrent3/image-20200107102759253.png" alt="image-20200107102759253"></p>
+<p><img src="/2020/01/07/concurrent3/image-20200107102759253-1578457897461.png" alt="image-20200107102759253"></p>
 <h3 id="5、先行发生（happens-before）"><a href="#5、先行发生（happens-before）" class="headerlink" title="5、先行发生（happens-before）"></a>5、先行发生（happens-before）</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">程序员必须遵循的编程原则</span><br></pre></td></tr></table></figure>
 
 <p>==JMM中，如果一个操作执行的结果需要对另一个操作可见，那么这两个操作之间必须存在happens-before关系。==</p>
@@ -592,9 +596,9 @@
 <li>一个线程中的所有操作必须按照程序的顺序来执行。</li>
 <li>（不管程序是否同步）所有线程都只能看到一个单一的操作执行顺序。在顺序一致性内存模型中，每个操作都必须原子执行且立刻对所有线程可见。</li>
 </ul>
-<img src="/2020/01/07/concurrent3/../../ZZZ_files/学习/JAVA/并发编程/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3.assets/image-20200107111012661.png" alt="image-20200107111012661" style="zoom:50%;">
+<img src="/2020/01/07/concurrent3/../../ZZZ_files/学习/JAVA/并发编程/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3/image-20200107111012661.png" alt="image-20200107111012661" style="zoom:50%;">
 
-<img src="/2020/01/07/concurrent3/../../ZZZ_files/学习/JAVA/并发编程/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3.assets/image-20200107111032356.png" alt="image-20200107111032356" style="zoom:50%;">
+<img src="/2020/01/07/concurrent3/../../ZZZ_files/学习/JAVA/并发编程/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3/image-20200107111032356.png" alt="image-20200107111032356" style="zoom:50%;">
 
 <p><strong>未同步程序在顺序一致性模型中给虽然整体执行顺序是无序的但是所有线程都只能看见一个一致的的整体执行顺序。</strong>之所以能得到这个保证是因为顺序一致性内存模型中的每个操作必须立即对任意线程可见</p>
 <blockquote>
@@ -626,7 +630,7 @@
 这种复合操作不具有原子性。</code></pre><p>volatile写-读的内存语义：</p>
 <p>写：当写一个volatile变量时，JMM会把线程对应的==本地内存中的共享变量值刷新到主内存==</p>
 <p>读：当读一个volatile变量时，JMM会把该线程==对应的本地内存置为无效==。线程接下来从主内存中读取共享变量</p>
-<p><img src="/2020/01/07/concurrent3/image-20200107144910441.png" alt="image-20200107144910441"></p>
+<p><img src="/2020/01/07/concurrent3/image-20200107144910441-1578457897461.png" alt="image-20200107144910441"></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">volatile读的时候必须保证主内存中的数据不会更改，因此volatile读如果是第一个操作怎不能实现重排序</span><br><span class="line">volatile写的时候必须保证之前的数据能正常写入主内存，因此volatile写如果是第二个操作的话不能实现重排序</span><br><span class="line">普通读写是在本地内存，但是有概率会写入主内存，因此具有随机性</span><br></pre></td></tr></table></figure>
 
 <h3 id="volatile内存语义的实现"><a href="#volatile内存语义的实现" class="headerlink" title="volatile内存语义的实现"></a>volatile内存语义的实现</h3><p>为了实现volatile的内存语义，编译器在生成字节码时，会在指令序列中插入内存屏障来禁止特定类型的处理器重排序。</p>
@@ -636,15 +640,15 @@
 <li>在每个<code>volatile写操作</code><strong>后面</strong>插入<code>StoreLoad</code>屏障</li>
 <li>在每个<code>volatile读操作</code><strong>后面</strong>插入一个<code>LoadLoad</code>、一个<code>LoadStore</code></li>
 </ul>
-<p><img src="/2020/01/07/concurrent3/../../ZZZ_files/%E5%AD%A6%E4%B9%A0/JAVA/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3.assets/image-20200107102759253.png" alt="image-20200107102759253"></p>
-<img src="/2020/01/07/concurrent3/../../ZZZ_files/学习/JAVA/并发编程/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3.assets/image-20200107152436294.png" alt="image-20200107152436294" style="zoom:50%;">
+<p><img src="/2020/01/07/concurrent3/../../ZZZ_files/%E5%AD%A6%E4%B9%A0/JAVA/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3/image-20200107102759253.png" alt="image-20200107102759253"></p>
+<img src="/2020/01/07/concurrent3/../../ZZZ_files/学习/JAVA/并发编程/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3/image-20200107152436294.png" alt="image-20200107152436294" style="zoom:50%;">
 
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">为什么volatile写操作之前不用插入loadstore来避免普通读和volatile写之间的重排序？</span><br><span class="line">猜测：内存屏障之间存在包含关系，比如storeload就可以实现其他三个所有功能</span><br></pre></td></tr></table></figure>
 
 <blockquote>
 <p>volatile写-读内存语义的常见使用模式是：一个写线程写volatile变量，多个读线程读同一个volatile变量。当读线程的数量大大超过写线程时，选择在volatile写之后插入StoreLoad屏障将带来可观的执行效率的提升</p>
 </blockquote>
-<img src="/2020/01/07/concurrent3/../../ZZZ_files/学习/JAVA/并发编程/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3.assets/image-20200107152444982.png" alt="image-20200107152444982" style="zoom: 50%;">
+<img src="/2020/01/07/concurrent3/../../ZZZ_files/学习/JAVA/并发编程/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3/image-20200107152444982.png" alt="image-20200107152444982" style="zoom: 50%;">
 
 
 
@@ -693,7 +697,7 @@
 <li>==<strong>然后，使用<code>CAS</code>的原子条件更新来实现线程之间的同步</strong>==</li>
 <li>==<strong>同时，配合以<code>volatile</code>的读、写和<code>CAS</code>所具有的<code>volatile</code>读和写的内存语义来实现线程之间的通信</strong>==</li>
 </ol>
-<p><img src="/2020/01/07/concurrent3/image-20200107174616024.png" alt="image-20200107174616024"></p>
+<p><img src="/2020/01/07/concurrent3/image-20200107174616024-1578457897461.png" alt="image-20200107174616024"></p>
 <h2 id="六、final域的内存语义"><a href="#六、final域的内存语义" class="headerlink" title="六、final域的内存语义"></a>六、final域的内存语义</h2><h3 id="1、final域的重排序规则"><a href="#1、final域的重排序规则" class="headerlink" title="1、final域的重排序规则"></a>1、final域的重排序规则</h3><p>（1）写：在==构造函数内对==一个final域的写入，与==随后把这个被构造对象的引用赋值给一个引用变量==，这两个操作不能重排序</p>
 <p>（2）读：初次读一个包含final域的对象的引用，与==随后初次读这个final域==，这两个操作不能重排序。</p>
 <h3 id="2、写final域的重排序规则"><a href="#2、写final域的重排序规则" class="headerlink" title="2、写final域的重排序规则"></a>2、写final域的重排序规则</h3><p>==禁止把final域的写重排序到构造函数之外==包含两方面：</p>
@@ -787,7 +791,7 @@
 <p>继续放松==读-读==操作的顺序</p>
 </li>
 </ul>
-<p><img src="/2020/01/07/concurrent3/image-20200107205334303.png" alt="image-20200107205334303"></p>
+<p><img src="/2020/01/07/concurrent3/image-20200107205334303-1578457897461.png" alt="image-20200107205334303"></p>
 <blockquote>
 <p>所有处理器内存模型都允许写-读重排序，原因：<strong>它们都使用了写缓存区.</strong></p>
 <ol>
@@ -797,9 +801,9 @@
 </li>
 </ol>
 </blockquote>
-<p><img src="/2020/01/07/concurrent3/image-20200107205635952.png" alt="image-20200107205635952"></p>
+<p><img src="/2020/01/07/concurrent3/image-20200107205635952-1578457897461.png" alt="image-20200107205635952"></p>
 <h4 id="内存模型之间关系"><a href="#内存模型之间关系" class="headerlink" title="内存模型之间关系"></a>内存模型之间关系</h4><p>同处理器内存模型一样，越是追求执行性能的语言，内存模型设计得会越弱。</p>
-<p><img src="/2020/01/07/concurrent3/image-20200107205755222.png" alt="image-20200107205755222"></p>
+<p><img src="/2020/01/07/concurrent3/image-20200107205755222-1578457897461.png" alt="image-20200107205755222"></p>
 <h4 id="JMM的内存可见性保证"><a href="#JMM的内存可见性保证" class="headerlink" title="JMM的内存可见性保证"></a>JMM的内存可见性保证</h4><p>按程序类型可分为</p>
 <ul>
 <li><p><strong>单线程程序</strong>：</p>
