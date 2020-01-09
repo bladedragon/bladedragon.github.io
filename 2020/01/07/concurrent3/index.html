@@ -120,14 +120,14 @@
 <meta property="og:image" content="http://yoursite.com/2020/01/ZZZ_files/学习/JAVA/并发编程/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3/image-20200107111012661.png">
 <meta property="og:image" content="http://yoursite.com/2020/01/ZZZ_files/学习/JAVA/并发编程/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3/image-20200107111032356.png">
 <meta property="og:image" content="http://yoursite.com/2020/01/07/concurrent3/image-20200107144910441-1578457897461.png">
-<meta property="og:image" content="http://yoursite.com/2020/01/ZZZ_files/%E5%AD%A6%E4%B9%A0/JAVA/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3/image-20200107102759253.png">
-<meta property="og:image" content="http://yoursite.com/2020/01/ZZZ_files/学习/JAVA/并发编程/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3/image-20200107152436294.png">
-<meta property="og:image" content="http://yoursite.com/2020/01/ZZZ_files/学习/JAVA/并发编程/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3/image-20200107152444982.png">
+<meta property="og:image" content="http://yoursite.com/2020/01/07/concurrent3/image-20200107102759253.png">
+<meta property="og:image" content="http://yoursite.com/2020/01/07/concurrent3/image-20200107152436294.png">
+<meta property="og:image" content="http://yoursite.com/2020/01/07/concurrent3/image-20200107152444982.png">
 <meta property="og:image" content="http://yoursite.com/2020/01/07/concurrent3/image-20200107174616024-1578457897461.png">
 <meta property="og:image" content="http://yoursite.com/2020/01/07/concurrent3/image-20200107205334303-1578457897461.png">
 <meta property="og:image" content="http://yoursite.com/2020/01/07/concurrent3/image-20200107205635952-1578457897461.png">
 <meta property="og:image" content="http://yoursite.com/2020/01/07/concurrent3/image-20200107205755222-1578457897461.png">
-<meta property="og:updated_time" content="2020-01-08T04:31:44.212Z">
+<meta property="og:updated_time" content="2020-01-09T11:29:16.364Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="并发编程艺术笔记(3)">
 <meta name="twitter:description" content="第三章 Java内存模型">
@@ -523,8 +523,6 @@
       
         <h1 id="第三章-Java内存模型"><a href="#第三章-Java内存模型" class="headerlink" title="第三章 Java内存模型"></a>第三章 Java内存模型</h1><a id="more"></a>
 
-
-
 <h2 id="一、基础"><a href="#一、基础" class="headerlink" title="一、基础"></a>一、基础</h2><h3 id="1、并发的两个关键问题"><a href="#1、并发的两个关键问题" class="headerlink" title="1、并发的两个关键问题"></a>1、并发的两个关键问题</h3><p>线程间通信和线程间同步</p>
 <p>线程通信机制：</p>
 <ul>
@@ -640,15 +638,15 @@
 <li>在每个<code>volatile写操作</code><strong>后面</strong>插入<code>StoreLoad</code>屏障</li>
 <li>在每个<code>volatile读操作</code><strong>后面</strong>插入一个<code>LoadLoad</code>、一个<code>LoadStore</code></li>
 </ul>
-<p><img src="/2020/01/07/concurrent3/../../ZZZ_files/%E5%AD%A6%E4%B9%A0/JAVA/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3/image-20200107102759253.png" alt="image-20200107102759253"></p>
-<img src="/2020/01/07/concurrent3/../../ZZZ_files/学习/JAVA/并发编程/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3/image-20200107152436294.png" alt="image-20200107152436294" style="zoom:50%;">
+<p><img src="/2020/01/07/concurrent3/image-20200107102759253.png" alt="image-20200107102759253"></p>
+<img src="/2020/01/07/concurrent3/image-20200107152436294.png" alt="image-20200107152436294" style="zoom:50%;">
 
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">为什么volatile写操作之前不用插入loadstore来避免普通读和volatile写之间的重排序？</span><br><span class="line">猜测：内存屏障之间存在包含关系，比如storeload就可以实现其他三个所有功能</span><br></pre></td></tr></table></figure>
 
 <blockquote>
 <p>volatile写-读内存语义的常见使用模式是：一个写线程写volatile变量，多个读线程读同一个volatile变量。当读线程的数量大大超过写线程时，选择在volatile写之后插入StoreLoad屏障将带来可观的执行效率的提升</p>
 </blockquote>
-<img src="/2020/01/07/concurrent3/../../ZZZ_files/学习/JAVA/并发编程/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3/image-20200107152444982.png" alt="image-20200107152444982" style="zoom: 50%;">
+<img src="/2020/01/07/concurrent3/image-20200107152444982.png" alt="image-20200107152444982" style="zoom: 50%;">
 
 
 
@@ -866,8 +864,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/01/07/concurrent4/" rel="prev" title="concurrent4">
-                concurrent4 <i class="fa fa-chevron-right"></i>
+              <a href="/2020/01/07/concurrent4/" rel="prev" title="并发编程艺术笔记（4）">
+                并发编程艺术笔记（4） <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -1008,7 +1006,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
