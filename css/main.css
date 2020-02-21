@@ -1807,7 +1807,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #8ce318;
+  background: #25ff0e;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -5370,6 +5370,27 @@ a {
   .theme-darling .brand {
     top: 60px;
   }
+}
+mark {
+  background: rgba(70,246,154,0.49);
+  color: #000;
+  border-radius: 4px;
+}
+code {
+  padding: 2px 4px;
+  word-wrap: break-word;
+  color: #fc6728;
+  background: rgba(255,235,59,0.27);
+  border-radius: 3px;
+  font-size: 13px;
+}
+strong {
+  font-weight: bold;
+  color: #4a4b51;
+}
+::selection {
+  background: rgba(0,149,255,0.2);
+  border-radius: 5px;
 }
 /* Make clicks pass-through */
 #nprogress {
