@@ -1807,7 +1807,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #ff7aff;
+  background: #f439c4;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -3516,18 +3516,19 @@ a {
   transform: scale(1.2);
 }
 .site-author-image:hover +.site-author-name {
-  background-color: #fff;
   opacity: #c8c8c8;
-  box-shadow: 5px 5px 5px rgba(0,0,0,0.3);
-  text-shadow: 1px 1px 1px rgba(0,0,0,0.7);
+  background-color: rgba(136,223,247,0.831);
+  text-shadow: 3px 3px 1px rgba(0,0,0,0.43);
   bottom: 10px;
+  color: #fff;
+  z-index: 5;
 }
 .site-author-name:hover {
-  background-color: #fff;
+  background-color: rgba(136,223,247,0.831);
   opacity: #000;
-  box-shadow: 5px 5px 5px rgba(0,0,0,0.7);
-  text-shadow: 1px 1px 1px rgba(0,0,0,0.7);
+  text-shadow: 3px 3px 1px rgba(0,0,0,0.43);
   bottom: 10px;
+  z-index: 5;
 }
 .site-author-name {
   position: absolute;
