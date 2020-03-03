@@ -107,14 +107,15 @@
 
 
 
-<meta name="description" content="第五章 java中的锁（使用与实现）">
+<meta name="description" content="《并发编程的艺术》阅读笔记第五章，图文绝配 你锁我，我锁你，两者互不相让，然后就进入了死局，这像极了爱情。">
 <meta name="keywords" content="java,高并发">
 <meta property="og:type" content="article">
-<meta property="og:title" content="并发编程艺术笔记（5）">
+<meta property="og:title" content="java中的锁">
 <meta property="og:url" content="http://site.zblade.top/2020/01/09/concurrent5/index.html">
 <meta property="og:site_name" content="Feel The Wind">
-<meta property="og:description" content="第五章 java中的锁（使用与实现）">
+<meta property="og:description" content="《并发编程的艺术》阅读笔记第五章，图文绝配 你锁我，我锁你，两者互不相让，然后就进入了死局，这像极了爱情。">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://cdn.zblade.top/qiniu_img/wallhaven-lqz9jr.jpg">
 <meta property="og:image" content="http://site.zblade.top/2020/01/09/concurrent5/image-20200108213701147.png">
 <meta property="og:image" content="http://site.zblade.top/2020/01/09/concurrent5/image-20200108214810059.png">
 <meta property="og:image" content="http://site.zblade.top/2020/01/09/concurrent5/image-20200108214826047.png">
@@ -129,11 +130,11 @@
 <meta property="og:image" content="http://site.zblade.top/2020/01/09/concurrent5/image-20200109190057594.png">
 <meta property="og:image" content="http://site.zblade.top/2020/01/09/concurrent5/image-20200109190800698.png">
 <meta property="og:image" content="http://site.zblade.top/2020/01/09/concurrent5/image-20200109192336832.png">
-<meta property="og:updated_time" content="2020-02-21T17:03:23.206Z">
+<meta property="og:updated_time" content="2020-03-03T16:06:28.616Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="并发编程艺术笔记（5）">
-<meta name="twitter:description" content="第五章 java中的锁（使用与实现）">
-<meta name="twitter:image" content="http://site.zblade.top/2020/01/09/concurrent5/image-20200108213701147.png">
+<meta name="twitter:title" content="java中的锁">
+<meta name="twitter:description" content="《并发编程的艺术》阅读笔记第五章，图文绝配 你锁我，我锁你，两者互不相让，然后就进入了死局，这像极了爱情。">
+<meta name="twitter:image" content="http://cdn.zblade.top/qiniu_img/wallhaven-lqz9jr.jpg">
 
 
 
@@ -194,7 +195,7 @@
 
 
 
-  <title>并发编程艺术笔记（5） | Feel The Wind</title>
+  <title>java中的锁 | Feel The Wind</title>
   
 
 
@@ -448,7 +449,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">并发编程艺术笔记（5）</h1>
+          <h1 class="post-title" itemprop="name headline">java中的锁</h1>
         
 
         <div class="post-meta">
@@ -476,7 +477,7 @@
 
           
           
-             <span id="/2020/01/09/concurrent5/" class="leancloud_visitors" data-flag-title="并发编程艺术笔记（5）">
+             <span id="/2020/01/09/concurrent5/" class="leancloud_visitors" data-flag-title="java中的锁">
                <span class="post-meta-divider"></span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -506,7 +507,10 @@
       
 
       
-        <h1 id="第五章-java中的锁（使用与实现）"><a href="#第五章-java中的锁（使用与实现）" class="headerlink" title="第五章 java中的锁（使用与实现）"></a>第五章 java中的锁（使用与实现）</h1><a id="more"></a>
+        <p>《并发编程的艺术》阅读笔记第五章，图文绝配</p>
+<p>你锁我，我锁你，两者互不相让，然后就进入了死局，这像极了爱情。</p>
+<p><img src="http://cdn.zblade.top/qiniu_img/wallhaven-lqz9jr.jpg" alt></p>
+<a id="more"></a>
 
 <h2 id="一、Lock接口"><a href="#一、Lock接口" class="headerlink" title="一、Lock接口"></a>一、Lock接口</h2><p>提供了synchronized不具有的特性：</p>
 <ol>
@@ -709,8 +713,8 @@ writeLock.unlock();</code></pre><blockquote>
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/01/07/concurrent4/" rel="next" title="并发编程艺术笔记（4）">
-                <i class="fa fa-chevron-left"></i> 并发编程艺术笔记（4）
+              <a href="/2020/01/07/concurrent4/" rel="next" title="线程间通信">
+                <i class="fa fa-chevron-left"></i> 线程间通信
               </a>
             
           </div>
@@ -898,7 +902,7 @@ writeLock.unlock();</code></pre><blockquote>
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
                   <span class="site-state-item-name">分类</span>
-				   <span class="site-state-item-count">2</span>
+				   <span class="site-state-item-count">4</span>
                 </a>
               </div>
             
@@ -942,7 +946,7 @@ writeLock.unlock();</code></pre><blockquote>
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#第五章-java中的锁（使用与实现）"><span class="nav-text">第五章 java中的锁（使用与实现）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、Lock接口"><span class="nav-text">一、Lock接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、队列同步器"><span class="nav-text">二、队列同步器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#队列同步器的接口与示例"><span class="nav-text">队列同步器的接口与示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#工作原理"><span class="nav-text">工作原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#队列同步器的实现分析"><span class="nav-text">队列同步器的实现分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-同步队列"><span class="nav-text">1.同步队列</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-text"></span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-独占式同步状态获取和释放"><span class="nav-text">2.独占式同步状态获取和释放</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-共享式同步状态获取和释放"><span class="nav-text">3.共享式同步状态获取和释放</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-独占式超时获取同步状态"><span class="nav-text">4.独占式超时获取同步状态</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、重入锁（ReentrantLock）"><span class="nav-text">三、重入锁（ReentrantLock）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-重入的实现"><span class="nav-text">1.重入的实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-公平锁与非公平锁的区别："><span class="nav-text">2.公平锁与非公平锁的区别：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、读写锁（ReentrantReadWriteLock）"><span class="nav-text">四、读写锁（ReentrantReadWriteLock）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#读写锁的实现分析"><span class="nav-text">读写锁的实现分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-读写状态的设计"><span class="nav-text">1.读写状态的设计</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-写锁的获取与释放"><span class="nav-text">2.写锁的获取与释放</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-读锁的获取与释放"><span class="nav-text">3.读锁的获取与释放</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-锁降级（写锁降级成为读锁）"><span class="nav-text">4.锁降级（写锁降级成为读锁）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、LockSupport工具"><span class="nav-text">五、LockSupport工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六、Condition接口"><span class="nav-text">六、Condition接口</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Condition接口和示例"><span class="nav-text">1.Condition接口和示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Condition的实现分析"><span class="nav-text">2.Condition的实现分析</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、Lock接口"><span class="nav-text">一、Lock接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、队列同步器"><span class="nav-text">二、队列同步器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#队列同步器的接口与示例"><span class="nav-text">队列同步器的接口与示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#工作原理"><span class="nav-text">工作原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#队列同步器的实现分析"><span class="nav-text">队列同步器的实现分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-同步队列"><span class="nav-text">1.同步队列</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-text"></span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-独占式同步状态获取和释放"><span class="nav-text">2.独占式同步状态获取和释放</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-共享式同步状态获取和释放"><span class="nav-text">3.共享式同步状态获取和释放</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-独占式超时获取同步状态"><span class="nav-text">4.独占式超时获取同步状态</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、重入锁（ReentrantLock）"><span class="nav-text">三、重入锁（ReentrantLock）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-重入的实现"><span class="nav-text">1.重入的实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-公平锁与非公平锁的区别："><span class="nav-text">2.公平锁与非公平锁的区别：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、读写锁（ReentrantReadWriteLock）"><span class="nav-text">四、读写锁（ReentrantReadWriteLock）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#读写锁的实现分析"><span class="nav-text">读写锁的实现分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-读写状态的设计"><span class="nav-text">1.读写状态的设计</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-写锁的获取与释放"><span class="nav-text">2.写锁的获取与释放</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-读锁的获取与释放"><span class="nav-text">3.读锁的获取与释放</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-锁降级（写锁降级成为读锁）"><span class="nav-text">4.锁降级（写锁降级成为读锁）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、LockSupport工具"><span class="nav-text">五、LockSupport工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六、Condition接口"><span class="nav-text">六、Condition接口</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Condition接口和示例"><span class="nav-text">1.Condition接口和示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Condition的实现分析"><span class="nav-text">2.Condition的实现分析</span></a></li></ol></li></ol></div>
             
 
           </div>

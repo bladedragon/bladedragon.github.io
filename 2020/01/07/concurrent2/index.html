@@ -107,14 +107,15 @@
 
 
 
-<meta name="description" content="第二章 Java并发机制的底层实现原理">
+<meta name="description" content="《并发编程的艺术》阅读笔记第二章。主要针对volatiile和synchronized做了总结">
 <meta name="keywords" content="java,高并发">
 <meta property="og:type" content="article">
-<meta property="og:title" content="并发编程的艺术笔记（2）">
+<meta property="og:title" content="Java并发机制的底层实现原理">
 <meta property="og:url" content="http://site.zblade.top/2020/01/07/concurrent2/index.html">
 <meta property="og:site_name" content="Feel The Wind">
-<meta property="og:description" content="第二章 Java并发机制的底层实现原理">
+<meta property="og:description" content="《并发编程的艺术》阅读笔记第二章。主要针对volatiile和synchronized做了总结">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://cdn.zblade.top/qiniu_img/wallhaven-lqz9jr.jpg">
 <meta property="og:image" content="http://site.zblade.top/2020/01/07/concurrent2/image-20200107101326313.png">
 <meta property="og:image" content="http://site.zblade.top/2020/01/07/concurrent2/8694380-509ad307903635af.png">
 <meta property="og:image" content="http://site.zblade.top/2020/01/07/concurrent2/8694380-0d3b09e6c73f8892.png">
@@ -123,11 +124,11 @@
 <meta property="og:image" content="http://site.zblade.top/2020/01/07/concurrent2/image-20200106134012820.png">
 <meta property="og:image" content="http://site.zblade.top/2020/01/07/concurrent2/image-20200106134139128.png">
 <meta property="og:image" content="http://site.zblade.top/2020/01/07/concurrent2/image-20200106152852450.png">
-<meta property="og:updated_time" content="2020-02-27T05:05:04.031Z">
+<meta property="og:updated_time" content="2020-03-03T16:09:18.697Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="并发编程的艺术笔记（2）">
-<meta name="twitter:description" content="第二章 Java并发机制的底层实现原理">
-<meta name="twitter:image" content="http://site.zblade.top/2020/01/07/concurrent2/image-20200107101326313.png">
+<meta name="twitter:title" content="Java并发机制的底层实现原理">
+<meta name="twitter:description" content="《并发编程的艺术》阅读笔记第二章。主要针对volatiile和synchronized做了总结">
+<meta name="twitter:image" content="http://cdn.zblade.top/qiniu_img/wallhaven-lqz9jr.jpg">
 
 
 
@@ -188,7 +189,7 @@
 
 
 
-  <title>并发编程的艺术笔记（2） | Feel The Wind</title>
+  <title>Java并发机制的底层实现原理 | Feel The Wind</title>
   
 
 
@@ -442,7 +443,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">并发编程的艺术笔记（2）</h1>
+          <h1 class="post-title" itemprop="name headline">Java并发机制的底层实现原理</h1>
         
 
         <div class="post-meta">
@@ -470,7 +471,7 @@
 
           
           
-             <span id="/2020/01/07/concurrent2/" class="leancloud_visitors" data-flag-title="并发编程的艺术笔记（2）">
+             <span id="/2020/01/07/concurrent2/" class="leancloud_visitors" data-flag-title="Java并发机制的底层实现原理">
                <span class="post-meta-divider"></span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -500,7 +501,9 @@
       
 
       
-        <h1 id="第二章-Java并发机制的底层实现原理"><a href="#第二章-Java并发机制的底层实现原理" class="headerlink" title="第二章 Java并发机制的底层实现原理"></a>第二章 Java并发机制的底层实现原理</h1><a id="more"></a>
+        <p>《并发编程的艺术》阅读笔记第二章。主要针对volatiile和synchronized做了总结</p>
+<p><img src="http://cdn.zblade.top/qiniu_img/wallhaven-lqz9jr.jpg" alt></p>
+<a id="more"></a>
 
 <p><img src="/2020/01/07/concurrent2/image-20200107101326313.png" alt="image-20200107101326313"></p>
 <h2 id="一、volatile的应用"><a href="#一、volatile的应用" class="headerlink" title="一、volatile的应用"></a>一、volatile的应用</h2><p>如果volatile变量修饰符使用得当，它比synchronized的使用和执行成本更低，<br>因为它不会引起线程上下文的切换和调度。</p>
@@ -676,8 +679,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/01/07/concurrent1/" rel="next" title="并发编程的艺术笔记（1）">
-                <i class="fa fa-chevron-left"></i> 并发编程的艺术笔记（1）
+              <a href="/2020/01/07/concurrent1/" rel="next" title="并发编程的挑战">
+                <i class="fa fa-chevron-left"></i> 并发编程的挑战
               </a>
             
           </div>
@@ -686,8 +689,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/01/07/concurrent3/" rel="prev" title="并发编程艺术笔记(3)">
-                并发编程艺术笔记(3) <i class="fa fa-chevron-right"></i>
+              <a href="/2020/01/07/concurrent3/" rel="prev" title="Java内存模型">
+                Java内存模型 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -865,7 +868,7 @@
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
                   <span class="site-state-item-name">分类</span>
-				   <span class="site-state-item-count">2</span>
+				   <span class="site-state-item-count">4</span>
                 </a>
               </div>
             
@@ -909,7 +912,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#第二章-Java并发机制的底层实现原理"><span class="nav-text">第二章 Java并发机制的底层实现原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、volatile的应用"><span class="nav-text">一、volatile的应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-volatile的定义和实现原理"><span class="nav-text">1. volatile的定义和实现原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-volatile使用优化"><span class="nav-text">2. volatile使用优化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、synchronized的实现原理与应用（重量级锁）"><span class="nav-text">二、synchronized的实现原理与应用（重量级锁）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Synchronized在JVM中的实现原理"><span class="nav-text">Synchronized在JVM中的实现原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#monitor"><span class="nav-text">monitor</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1、java对象头"><span class="nav-text">1、java对象头</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、锁的升级与对比"><span class="nav-text">2、锁的升级与对比</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#偏向锁："><span class="nav-text">偏向锁：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#轻量级锁"><span class="nav-text">轻量级锁</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、锁的优缺点对比"><span class="nav-text">3、锁的优缺点对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自我理解"><span class="nav-text">自我理解</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、原子操作的实现原理"><span class="nav-text">三、原子操作的实现原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、术语"><span class="nav-text">1、术语</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、处理器实现原子操作"><span class="nav-text">2、处理器实现原子操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、Java实现原子操作（锁和循环CAS）"><span class="nav-text">3、Java实现原子操作（锁和循环CAS）</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、volatile的应用"><span class="nav-text">一、volatile的应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-volatile的定义和实现原理"><span class="nav-text">1. volatile的定义和实现原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-volatile使用优化"><span class="nav-text">2. volatile使用优化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、synchronized的实现原理与应用（重量级锁）"><span class="nav-text">二、synchronized的实现原理与应用（重量级锁）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Synchronized在JVM中的实现原理"><span class="nav-text">Synchronized在JVM中的实现原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#monitor"><span class="nav-text">monitor</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1、java对象头"><span class="nav-text">1、java对象头</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、锁的升级与对比"><span class="nav-text">2、锁的升级与对比</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#偏向锁："><span class="nav-text">偏向锁：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#轻量级锁"><span class="nav-text">轻量级锁</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、锁的优缺点对比"><span class="nav-text">3、锁的优缺点对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自我理解"><span class="nav-text">自我理解</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、原子操作的实现原理"><span class="nav-text">三、原子操作的实现原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、术语"><span class="nav-text">1、术语</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、处理器实现原子操作"><span class="nav-text">2、处理器实现原子操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、Java实现原子操作（锁和循环CAS）"><span class="nav-text">3、Java实现原子操作（锁和循环CAS）</span></a></li></ol></li></ol></div>
             
 
           </div>

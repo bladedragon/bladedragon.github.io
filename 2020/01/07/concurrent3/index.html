@@ -107,14 +107,15 @@
 
 
 
-<meta name="description" content="第三章 Java内存模型">
+<meta name="description" content="《并发编程的艺术》阅读笔记第三章,先从底层讲起。 基础不牢，地动山摇。">
 <meta name="keywords" content="java,高并发">
 <meta property="og:type" content="article">
-<meta property="og:title" content="并发编程艺术笔记(3)">
+<meta property="og:title" content="Java内存模型">
 <meta property="og:url" content="http://site.zblade.top/2020/01/07/concurrent3/index.html">
 <meta property="og:site_name" content="Feel The Wind">
-<meta property="og:description" content="第三章 Java内存模型">
+<meta property="og:description" content="《并发编程的艺术》阅读笔记第三章,先从底层讲起。 基础不牢，地动山摇。">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://cdn.zblade.top/qiniu_img/wallhaven-lqz9jr.jpg">
 <meta property="og:image" content="http://site.zblade.top/2020/01/ZZZ_files/学习/JAVA/并发编程/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3/image-20200107100818113.png">
 <meta property="og:image" content="http://site.zblade.top/2020/01/07/concurrent3/image-20200107102759253-1578457897461.png">
 <meta property="og:image" content="http://site.zblade.top/2020/01/ZZZ_files/学习/JAVA/并发编程/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3/image-20200107111012661.png">
@@ -127,11 +128,11 @@
 <meta property="og:image" content="http://site.zblade.top/2020/01/07/concurrent3/image-20200107205334303-1578457897461.png">
 <meta property="og:image" content="http://site.zblade.top/2020/01/07/concurrent3/image-20200107205635952-1578457897461.png">
 <meta property="og:image" content="http://site.zblade.top/2020/01/07/concurrent3/image-20200107205755222-1578457897461.png">
-<meta property="og:updated_time" content="2020-02-21T17:03:08.503Z">
+<meta property="og:updated_time" content="2020-03-03T16:09:16.645Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="并发编程艺术笔记(3)">
-<meta name="twitter:description" content="第三章 Java内存模型">
-<meta name="twitter:image" content="http://site.zblade.top/2020/01/ZZZ_files/学习/JAVA/并发编程/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3/image-20200107100818113.png">
+<meta name="twitter:title" content="Java内存模型">
+<meta name="twitter:description" content="《并发编程的艺术》阅读笔记第三章,先从底层讲起。 基础不牢，地动山摇。">
+<meta name="twitter:image" content="http://cdn.zblade.top/qiniu_img/wallhaven-lqz9jr.jpg">
 
 
 
@@ -192,7 +193,7 @@
 
 
 
-  <title>并发编程艺术笔记(3) | Feel The Wind</title>
+  <title>Java内存模型 | Feel The Wind</title>
   
 
 
@@ -446,7 +447,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">并发编程艺术笔记(3)</h1>
+          <h1 class="post-title" itemprop="name headline">Java内存模型</h1>
         
 
         <div class="post-meta">
@@ -474,7 +475,7 @@
 
           
           
-             <span id="/2020/01/07/concurrent3/" class="leancloud_visitors" data-flag-title="并发编程艺术笔记(3)">
+             <span id="/2020/01/07/concurrent3/" class="leancloud_visitors" data-flag-title="Java内存模型">
                <span class="post-meta-divider"></span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -504,7 +505,10 @@
       
 
       
-        <h1 id="第三章-Java内存模型"><a href="#第三章-Java内存模型" class="headerlink" title="第三章 Java内存模型"></a>第三章 Java内存模型</h1><a id="more"></a>
+        <p>《并发编程的艺术》阅读笔记第三章,先从底层讲起。</p>
+<p>基础不牢，地动山摇。</p>
+<p><img src="http://cdn.zblade.top/qiniu_img/wallhaven-lqz9jr.jpg" alt></p>
+<a id="more"></a>
 
 <h2 id="一、基础"><a href="#一、基础" class="headerlink" title="一、基础"></a>一、基础</h2><h3 id="1、并发的两个关键问题"><a href="#1、并发的两个关键问题" class="headerlink" title="1、并发的两个关键问题"></a>1、并发的两个关键问题</h3><p>线程间通信和线程间同步</p>
 <p>线程通信机制：</p>
@@ -837,8 +841,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/01/07/concurrent2/" rel="next" title="并发编程的艺术笔记（2）">
-                <i class="fa fa-chevron-left"></i> 并发编程的艺术笔记（2）
+              <a href="/2020/01/07/concurrent2/" rel="next" title="Java并发机制的底层实现原理">
+                <i class="fa fa-chevron-left"></i> Java并发机制的底层实现原理
               </a>
             
           </div>
@@ -847,8 +851,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/01/07/concurrent4/" rel="prev" title="并发编程艺术笔记（4）">
-                并发编程艺术笔记（4） <i class="fa fa-chevron-right"></i>
+              <a href="/2020/01/07/concurrent4/" rel="prev" title="线程间通信">
+                线程间通信 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -1026,7 +1030,7 @@
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
                   <span class="site-state-item-name">分类</span>
-				   <span class="site-state-item-count">2</span>
+				   <span class="site-state-item-count">4</span>
                 </a>
               </div>
             
@@ -1070,7 +1074,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#第三章-Java内存模型"><span class="nav-text">第三章 Java内存模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、基础"><span class="nav-text">一、基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、并发的两个关键问题"><span class="nav-text">1、并发的两个关键问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、java内存结构"><span class="nav-text">2、java内存结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、指令重排序"><span class="nav-text">3、指令重排序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、内存屏障分类"><span class="nav-text">4、内存屏障分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5、先行发生（happens-before）"><span class="nav-text">5、先行发生（happens-before）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、重排序"><span class="nav-text">二、重排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、顺序一致性内存模型"><span class="nav-text">三、顺序一致性内存模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、volatile内存语义"><span class="nav-text">四、volatile内存语义</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#volatile内存语义的实现"><span class="nav-text">volatile内存语义的实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、锁的内存语义"><span class="nav-text">五、锁的内存语义</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#分析ReentrantLock源码"><span class="nav-text">分析ReentrantLock源码</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#concurrent包的通用实现模式"><span class="nav-text">concurrent包的通用实现模式</span></a></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#六、final域的内存语义"><span class="nav-text">六、final域的内存语义</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、final域的重排序规则"><span class="nav-text">1、final域的重排序规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、写final域的重排序规则"><span class="nav-text">2、写final域的重排序规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、读final域的重排序规则"><span class="nav-text">3、读final域的重排序规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、当final域为引用类型"><span class="nav-text">4、当final域为引用类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5、为什么final域不能从构造函数内溢出"><span class="nav-text">5、为什么final域不能从构造函数内溢出</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#七、happens-before"><span class="nav-text">七、happens-before</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#八、双重检查锁定与延迟初始化"><span class="nav-text">八、双重检查锁定与延迟初始化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#JVM初始化期间的同步过程"><span class="nav-text">JVM初始化期间的同步过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#九、JAVA内存模型综述"><span class="nav-text">九、JAVA内存模型综述</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#处理器内存模型"><span class="nav-text">处理器内存模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#内存模型之间关系"><span class="nav-text">内存模型之间关系</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#JMM的内存可见性保证"><span class="nav-text">JMM的内存可见性保证</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#旧内存模型的修补"><span class="nav-text">旧内存模型的修补</span></a></li></ol></li></ol></li></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、基础"><span class="nav-text">一、基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、并发的两个关键问题"><span class="nav-text">1、并发的两个关键问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、java内存结构"><span class="nav-text">2、java内存结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、指令重排序"><span class="nav-text">3、指令重排序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、内存屏障分类"><span class="nav-text">4、内存屏障分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5、先行发生（happens-before）"><span class="nav-text">5、先行发生（happens-before）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、重排序"><span class="nav-text">二、重排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、顺序一致性内存模型"><span class="nav-text">三、顺序一致性内存模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、volatile内存语义"><span class="nav-text">四、volatile内存语义</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#volatile内存语义的实现"><span class="nav-text">volatile内存语义的实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、锁的内存语义"><span class="nav-text">五、锁的内存语义</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#分析ReentrantLock源码"><span class="nav-text">分析ReentrantLock源码</span></a></li></ol></li></ol><li class="nav-item nav-level-3"><a class="nav-link" href="#concurrent包的通用实现模式"><span class="nav-text">concurrent包的通用实现模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六、final域的内存语义"><span class="nav-text">六、final域的内存语义</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、final域的重排序规则"><span class="nav-text">1、final域的重排序规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、写final域的重排序规则"><span class="nav-text">2、写final域的重排序规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、读final域的重排序规则"><span class="nav-text">3、读final域的重排序规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、当final域为引用类型"><span class="nav-text">4、当final域为引用类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5、为什么final域不能从构造函数内溢出"><span class="nav-text">5、为什么final域不能从构造函数内溢出</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#七、happens-before"><span class="nav-text">七、happens-before</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#八、双重检查锁定与延迟初始化"><span class="nav-text">八、双重检查锁定与延迟初始化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#JVM初始化期间的同步过程"><span class="nav-text">JVM初始化期间的同步过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#九、JAVA内存模型综述"><span class="nav-text">九、JAVA内存模型综述</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#处理器内存模型"><span class="nav-text">处理器内存模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#内存模型之间关系"><span class="nav-text">内存模型之间关系</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#JMM的内存可见性保证"><span class="nav-text">JMM的内存可见性保证</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#旧内存模型的修补"><span class="nav-text">旧内存模型的修补</span></a></li></ol></li></ol></li></div>
             
 
           </div>
