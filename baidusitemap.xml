@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://site.zblade.top/2019/09/18/test/</loc>
+    <lastmod>2020-05-30</lastmod>
+  </url>  <url>
     <loc>http://site.zblade.top/2020/05/12/interview/</loc>
     <lastmod>2020-05-15</lastmod>
   </url>  <url>
@@ -9,9 +12,6 @@
   </url>  <url>
     <loc>http://site.zblade.top/2020/05/09/virtualenv/</loc>
     <lastmod>2020-05-15</lastmod>
-  </url>  <url>
-    <loc>http://site.zblade.top/2019/09/18/test/</loc>
-    <lastmod>2020-04-28</lastmod>
   </url>  <url>
     <loc>http://site.zblade.top/2020/03/10/collection1/</loc>
     <lastmod>2020-03-10</lastmod>
