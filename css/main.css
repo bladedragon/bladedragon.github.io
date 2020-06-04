@@ -1781,7 +1781,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #0eff5d;
+  background: #ff0b75;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -5436,7 +5436,6 @@ strong {
 ::selection {
   background: rgba(0,149,255,0.2);
   border-radius: 5px;
-  color: #fff;
 }
 main {
   padding-top: 50px;
