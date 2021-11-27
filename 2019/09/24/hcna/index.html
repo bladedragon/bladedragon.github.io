@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+
+
+
+
+<html class="theme-next pisces" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#da532c">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="google-site-verification" content="fRFpn2MbE7qpAtGAMkPwOq1xWyHF0BtvPVdE_P3qZFY">
+
+
+
+
+
+
+
+
+  <meta name="baidu-site-verification" content="t4cHu1Oo6Q">
+
+
+
+
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.loli.net/css?family=Sigmar One:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+
+  
+
+<link href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=0.0.50" rel="stylesheet" type="text/css">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=0.0.50">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/布丁.png?v=0.0.50">
+
+
+  <link rel="mask-icon" href="/safari-pinned-tab.svg?v=0.0.50" color="#da532c">
+
+
+
+
+
+
+  <meta name="keywords" content="ICT,计算机网络,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="大概一篇能讲完吧…">
+<meta name="keywords" content="ICT,计算机网络">
+<meta property="og:type" content="article">
+<meta property="og:title" content="各层常见协议首部格式解析">
+<meta property="og:url" content="http://site.zblade.top/2019/09/24/hcna/index.html">
+<meta property="og:site_name" content="Feel The Wind">
+<meta property="og:description" content="大概一篇能讲完吧…">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://site.zblade.top/2019/09/24/hcna/1569306865147.png">
+<meta property="og:image" content="http://site.zblade.top/2019/09/24/hcna/1569308653767.png">
+<meta property="og:image" content="http://site.zblade.top/2019/09/24/hcna/1569310494365.png">
+<meta property="og:image" content="http://site.zblade.top/2019/09/24/hcna/1569321637888.png">
+<meta property="og:image" content="http://site.zblade.top/2019/09/24/hcna/1569322039284.png">
+<meta property="og:image" content="http://site.zblade.top/2019/09/24/hcna/1569322479753.png">
+<meta property="og:updated_time" content="2020-03-04T01:44:10.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="各层常见协议首部格式解析">
+<meta name="twitter:description" content="大概一篇能讲完吧…">
+<meta name="twitter:image" content="http://site.zblade.top/2019/09/24/hcna/1569306865147.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '0.0.50',
+    sidebar: {"position":"right","display":"always","offset":52,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    since: '9/22/2019 11:30:00',
+    onlineAPI: '',
+    site: {
+      title: 'Feel The Wind',
+      subtitle: '',
+      author: '陌花采撷'
+    },
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    leancloud: {
+      enable: true,
+      appID: 'dTfoweWyLJr7wTEW4CUhKHJQ-gzGzoHsz',
+      appKey: 'xh7FpohCp7PmwlHYAyqSaXov'
+    },
+    favicon: {
+      visibilitychange: true,
+      narmal: '/images/布丁.png',
+      hidden: '/images/failure.ico',
+      show_text: '(/≧▽≦/)咦！又好了！',
+      hide_text: 'Warning! 404-NoFound'
+    }
+  };
+</script>
+
+
+
+
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+
+  <script type="text/javascript" src="null"></script>
+
+
+
+
+
+
+
+
+  <title>各层常见协议首部格式解析 | Feel The Wind</title>
+  
+
+
+
+
+
+
+
+
+ 
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans" class="theme-darling">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-首页">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-小项目">
+          <a href="javascript:;" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-flask"></i> <br>
+            
+            小项目
+          </a>
+          
+            <ul class="submenu submenu-小项目">
+              
+                
+                <li class="submenu-item submenu-item-old_blog">
+                  <a href="http://zblade.top:85/wordpress/" rel="section" target="_blank">
+                    Old_Blog
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-短网址生成">
+                  <a href="http://zblade.top:8081/" rel="section" target="_blank">
+                    短网址生成
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-资源站">
+                  <a href="http://inner.cquptict.com:90/" rel="section" target="_blank">
+                    资源站
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-ict-pan">
+                  <a href="http://www.cquptict.com:8000/" rel="section" target="_blank">
+                    ICT-Pan
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-招新系统">
+                  <a href="http://zblade.top:83/#/" rel="section" target="_blank">
+                    招新系统
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-领奖系统">
+                  <a href="https://github.com/bladedragon/PrizeTool" rel="section" target="_blank">
+                    领奖系统
+                  </a>
+                </li>
+              
+            </ul>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-归档">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-分类">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-server"></i> <br>
+            
+            分类
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-标签">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tag"></i> <br>
+            
+            标签
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-留言板">
+          <a href="/message/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-pencil"></i> <br>
+            
+            留言板
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-关于">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rocket"></i> <br>
+            
+            关于
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-coding_set">
+          <a href="https://bladedragon.github.io/coding_docs/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sign-language"></i> <br>
+            
+            Coding_Set
+          </a>
+          
+        </li>
+      
+
+      
+      <li class="menu-item search">
+          <form class="search-form">
+            <input name="keyword" type="text" class="search-input" placeholder="站内搜索">
+            <button type="submit" class="search-submit"><i class="fa fa-search"></i></button>
+          </form>
+      </li>
+      <!--<li class="menu-item online"><span id="online-count">?</span>人在线</li>-->
+    </ul>
+  
+
+  
+</nav>
+
+<div class="site-brand-wrapper" style="background-image: url(http://cdn.zblade.top/qiniu_img/wallhaven-6k1j7l.jpg)">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <div class="brand">
+        <span class="logo-line-before"><i></i></span>
+        <div class="site-title">
+          <div id="animate" class="animate">
+            <span>F</span><span>e</span><span>e</span><span>l</span><span> </span><span>T</span><span>h</span><span>e</span><span> </span><span>W</span><span>i</span><span>n</span><span>d</span>
+          </div>
+          <div id="guide" class="guide">
+            <span>F</span><span>e</span><span>e</span><span>l</span><span> </span><span>T</span><span>h</span><span>e</span><span> </span><span>W</span><span>i</span><span>n</span><span>d</span>
+          </div>
+        </div>
+        <span class="logo-line-after"><i></i></span>
+      </div>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<div class="site-master" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-master-avatar" itemprop="image" src="http://cdn.zblade.top/qiniu_img/zavatar2.jpg" alt="陌花采撷">
+    <h2 class="site-master-description" itemprop="description">
+        <span>即使天无雨，</span><span>吾亦留此地</span>
+    </h2>
+</div>
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-date">
+			<div class="post-month">09月</div>
+			<div class="post-day">24</div>
+	</div>
+  
+  <div class="post-badge">
+    
+      <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+        <a href="/categories/学习笔记/" itemprop="url" rel="index">
+          <span itemprop="name">学习笔记</span>
+        </a>
+      </span>
+    
+  </div>
+  
+
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://site.zblade.top/2019/09/24/hcna/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="陌花采撷">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="http://cdn.zblade.top/qiniu_img/zavatar2.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Feel The Wind">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">各层常见协议首部格式解析</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-24T14:23:16+08:00">2019-09-24</time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/09/24/hcna/" class="leancloud_visitors" data-flag-title="各层常见协议首部格式解析">
+               <span class="post-meta-divider"></span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">被</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+                 <span class="post-meta-item-text">人浏览</span>
+             </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>大概一篇能讲完吧…</p>
+<a id="more"></a>
+
+<h3 id="以太网帧"><a href="#以太网帧" class="headerlink" title="以太网帧"></a>以太网帧</h3><p>运行在以太网上的常见帧格式分为两种，分别是Ethenet_II帧格式、IEEE802.3帧格式（SNAP）</p>
+<p><img src="/2019/09/24/hcna/1569306865147.png" alt="1569306865147"></p>
+<ul>
+<li>ethenet II的type字段指定了上层的协议</li>
+<li>IEEE802.3相同位置是长度，同时对数据进行更加细粒度的控制</li>
+</ul>
+<h4 id="ETHENET-II"><a href="#ETHENET-II" class="headerlink" title="ETHENET_II"></a>ETHENET_II</h4><p>字段说明</p>
+<ol>
+<li><code>DMAC</code>是目的MAC地址。DMAC字段长度为<strong>6</strong><br>个字节，标识帧的接收者。</li>
+<li><code>SMAC</code>是源MAC地址。SMAC字段长度为<strong>6</strong>个字节<br>，标识帧的发送者。</li>
+<li>类型字段用于标识数据字段中包含的高层协议，该字段长<br>度为<strong>2</strong>个字节。类型字段取值为<strong>0x0800</strong>的帧代表<code>IP</code>协议帧；类型字<br>段取值为<strong>0x0806</strong>的帧代表<code>ARP</code>协议帧。</li>
+<li>数据字段是网络层数据，最小长度必须为<strong>46</strong>字节以保证帧长<br>至少为<strong>64</strong>字节，数据字段的最大长度为<strong>1500</strong>字节。</li>
+<li>循环冗余校验字段（``FCS`）提供了一种错误检测机制。该字段长度<br>为<strong>4</strong>个字节。</li>
+</ol>
+<h4 id="IEEE802-3"><a href="#IEEE802-3" class="headerlink" title="IEEE802.3"></a>IEEE802.3</h4><p><img src="/2019/09/24/hcna/1569308653767.png" alt="1569308653767"></p>
+<p>字段说明</p>
+<ul>
+<li>Length 代替ETHENET_II字段的Type字段，记录帧的字长</li>
+<li>LLC占用Data的3个字节<ul>
+<li>D.SAP 目的访问服务点</li>
+<li>S.SAP  源服务访问点</li>
+<li>Control 控制字段</li>
+</ul>
+</li>
+<li>SNAP 占用Data的5个字节<ul>
+<li>Org Code机构代码，一般为0</li>
+<li>Type字段和Ethenet相同</li>
+</ul>
+</li>
+</ul>
+<p>DSAP和SSAP作用解释</p>
+<ul>
+<li>当DSAP和SSAP都取特定值``0xff<code>时，802.3帧就变成了</code>Netware ETHERNET`帧，用来承载NetWare类型的数据。</li>
+<li>当DSAP和SSAP都取特定值``0xaa<code>时，802.3帧就变成了</code>ETHERNET_SNAP<code>帧。</code>ETHERNET_SNAP`帧可以用于传输多<br>种协议</li>
+<li>DSAP和SSAP其他的取值均为纯``IEEE802.3`帧。</li>
+</ul>
+<p>MAC地址（6字节48bit）</p>
+<ul>
+<li>前24bit是OUI 供应商代码，后24bit是序列号</li>
+<li>单播第1字节的第8bit为0；组播第1字节的第8bit为1；广播为全1</li>
+</ul>
+<h3 id="IPv4报文结构"><a href="#IPv4报文结构" class="headerlink" title="IPv4报文结构"></a>IPv4报文结构</h3><p><img src="/2019/09/24/hcna/1569310494365.png" alt="1569310494365"></p>
+<p>字段解释</p>
+<ul>
+<li><code>Version</code>  4字节，版本号</li>
+<li><code>Header Lenngth</code>  4字节，显示首部长度，一般首部长度为20字节</li>
+<li><code>DS Field</code>  8字节，区分服务,也叫<code>TOS</code></li>
+<li><code>Total Length</code>  16字节，报文总长度,理论上可到达65535字节</li>
+<li><code>identification</code>  16字节，标识，和分片有关</li>
+<li><code>Flags</code> 3字节  标志，和分片有关</li>
+<li><code>Fragment Offset</code>  13字节，片偏移，和分片有关</li>
+<li><code>Time To Live</code>  8字节 TTL</li>
+<li><code>Protocol</code>  8字节 协议，指定传输层协议</li>
+<li><code>Header Checksum</code>  16字节，首部校验和，只对首部进行差错检测</li>
+<li><code>Source IP Address</code>   32字节，源IP地址</li>
+<li><code>Destination IP Address</code> 32字节  目的IP地址</li>
+<li><code>IP OPtion</code>  可选项</li>
+<li><code>data</code>有效载荷</li>
+</ul>
+<h4 id="关于区分服务"><a href="#关于区分服务" class="headerlink" title="关于区分服务"></a>关于区分服务</h4><p>IPv4的DS Field字段提供Qos。</p>
+<p>原先定义为TOS（RFC791），TOS中的IP Precedence字段只能将报文分成8类，在实际生活中完全不够用，如下</p>
+<p><img src="/2019/09/24/hcna/1569321637888.png" alt="1569321637888"></p>
+<p>字段说明</p>
+<ul>
+<li><p><code>IP Precedence</code></p>
+<p>代表了报文的优先级</p>
+</li>
+<li><p><code>D/T/R</code></p>
+<p>D bit代表延迟（Delay），T bit代表吞吐量（Throughput），R bit代表可靠性<br>（Reliability）。</p>
+</li>
+</ul>
+<blockquote>
+<p>后来，在RFC2474中对IPv4报文头的ToS字段进行了重新定义，称为DS（Differentiated  Services）字段。</p>
+</blockquote>
+<p><img src="/2019/09/24/hcna/1569322039284.png" alt="1569322039284"></p>
+<p>字段说明</p>
+<ul>
+<li><p><code>DSCP</code>  </p>
+<p>DSCP有两种表达方式，一种是数值，范围是0~63（6个字节）；一种是关键字，分为CS、EF、AF、BE</p>
+</li>
+</ul>
+<p><img src="/2019/09/24/hcna/1569322479753.png" alt="1569322479753"></p>
+<p>其中xy表示不同类别，数字越小丢包概率越小</p>
+<ul>
+<li>CS6和CS7<strong>默认用于协议报文</strong>，而且是大多数厂商设备的硬件队列里<strong>最高优先</strong><br>级的报文，因为如果这些报文无法接收的话会引起协议中断。</li>
+<li>EF常用于<strong>承载语音</strong>的流量，因为语音要求低延迟，低抖动，低丢包率，是仅<br>次于协议报文的最重要的报文。</li>
+<li>AF4用来承载<strong>语音的信令流量</strong>,指电话的控制信令。</li>
+<li>AF3可以用来承载IPTV的<strong>直播流量</strong>，直播的实时性很强，需要连续性和大吞吐<br>量的保证。</li>
+<li>AF2可以用来承载VOD（Video on Demand：<strong>视频点播</strong>）的流量，相对于直播<br>流量来说，VOD对实时性要求没那么强烈，允许有时延或者缓冲。</li>
+<li>AF1可以用来<strong>承载普通上网业务</strong>。</li>
+<li>BE 是指传统IP的分组投递服务，<strong>只关注可达性</strong>，对其他方面不做要求，所有路由器必须支持BE</li>
+</ul>
+<h4 id="关于分片"><a href="#关于分片" class="headerlink" title="关于分片"></a>关于分片</h4><p>IP数据报分片主要考虑以下原因：</p>
+<ul>
+<li>数据链路层有不同的承载协议，不同协议承载的最大数据长度各不相同                                                                                                                                                                                                                                                                      </li>
+</ul>
+<p>使用IP分片将数据分片传输，从而使数据不会超过MTU，对此，IPv4提供了三个字段：标识、标志、片偏移</p>
+<p><code>Identification</code>：标识号,归属于同一个标识号的数据包分片具有相同的==标识号==、==源IP地址==、==目的地址== ，同时，发送主机通常为他发送的每一个数据报的标识号加1。</p>
+<p><code>flag</code>：用于判断后面是否还有片，flag分为<code>Reserve</code>,<code>DF</code>和<code>MF</code>三部分。Reserve是保留位；DF表示是否分片（DF=1表示不分片）；MF表示是否还有后续分片。可以看出，三位同时最多只能由一个值为1</p>
+<p><code>Fragment Offset</code>:片偏移，用来分片重组时进行定位，偏移以8字节为单位</p>
+<p><strong>分片的缺点</strong></p>
+<ol>
+<li><p>分片本身的划分和重组会带来资源消耗，尤其是接收方，在接受分片时要为每个分片提供内存空间，分片过多会导致资源消耗严重</p>
+</li>
+<li><p>由于IP层没有重传的策略，所以当数据波中的任意分片丢失时，整个数据报都需要依赖传输层进行重传，又因为IP层的分片相对于传输层是透明的，所以往往传输层会重传整个数据包，这样会浪费资源，影响网络中的传输质量。</p>
+</li>
+<li><p>同时，分片的存在会对网络安全造成隐患。利用最后一个分片没有被接受，所有分片就不会重组并释放内存空间的特点，故意不向接收方发送最后一个分片，如果这样的攻击迅速，大量，就会导致接收方的内存空间占满，无法处理正常业务，达到DOS效果。同时也可以使分片的偏移量出现差错，导致接收方无法正常重组数据报</p>
+</li>
+<li><p>值得注意的时IP分组只有第一个分片带有四层信息，因此其余分片有可能因此逃过防火墙等的检测，从而给黑客可乘之机</p>
+</li>
+</ol>
+<p>在实际应用中，应尽量避免使用IP分片。事实上，IPv6协议中已经取消分片的策略。</p>
+<p>由于TCP协议中存在MSS，限制了最大数据发送量，从而可以确保IP数据报大小不会超过数据链路层的MTU，因此，在TCP协议中不存在IP分片；但是在UDP协议下，不存在这样的保障机制，因此最好要在应用层就限定每个包的大小</p>
+<h4 id="关于校验"><a href="#关于校验" class="headerlink" title="关于校验"></a>关于校验</h4><p>IP层只对报文头部进行校验检错，不对数据进行差错检测，网络层实质上还是属于“尽最大努力交付”</p>
+<p>为什么链路层、IP层和传输层都需要校验？</p>
+<p>答：链路层的差错检验是为了保证数据在链路传输的完整性，</p>
+<p>IP层只对头部进行校验，一来是因为链路层的校验已经尽可能地降低了差错率，二来是因为IP层范围庞杂，如果每经过一个路由器都对数据进行校验，会对性能产生影响，可以但没必须。同时校验头部是为了保障IP协议自身的正确性，同时也存在对二层的不信任，以及四层协议有校验也有无校验，做一个最低限度的保障。甚至还有说法是历史遗留问题。总之算是一个complicated issue了🤣</p>
+<p>传输层协议例如TCP协议对整个报文段进行校验，也是出于对下层的不信任的原因。（大概吧）</p>
+<h4 id="关于选项"><a href="#关于选项" class="headerlink" title="关于选项"></a>关于选项</h4><p>选项允许IP首部被扩展，选项字段用来支持排错、测量以及安全等措施，一般较少使用</p>
+<h3 id="IPv6报文结构"><a href="#IPv6报文结构" class="headerlink" title="IPv6报文结构"></a>IPv6报文结构</h3><h3 id="传输层报文结构"><a href="#传输层报文结构" class="headerlink" title="传输层报文结构"></a>传输层报文结构</h3><h4 id="UDP"><a href="#UDP" class="headerlink" title="UDP"></a>UDP</h4><h4 id="TCP"><a href="#TCP" class="headerlink" title="TCP"></a>TCP</h4>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div class="post-share">分享到：</div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ICT/" rel="tag"># ICT</a>
+          
+            <a href="/tags/计算机网络/" rel="tag"># 计算机网络</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/23/python2/" rel="next" title="python学习（02）">
+                <i class="fa fa-chevron-left"></i> python学习（02）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/10/07/september-plan/" rel="prev" title="我的九月总结">
+                我的九月总结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+  <div class="comments" id="comments">
+      <div id="gitalk-container"></div>
+    </div>
+	
+  
+
+
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+        <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+		<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    
+		<script type="text/javascript">
+		const gitalk = new Gitalk({
+		clientID: '8c4098d1aa1409852b19',
+		clientSecret: 'cdc136702eaaa9600bc46ab7da3c95a8537116ef',
+		repo: 'Blog_message_repo',
+		owner: 'BladeDragon',
+		admin: ['BladeDragon'],
+		id: window.location.pathname,      // Ensure uniqueness and length less than 50
+		});
+		
+		gitalk.render('gitalk-container');
+		</script>
+
+    
+
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://cdn.zblade.top/qiniu_img/zcard2.png" alt="陌花采撷">
+            
+              <p class="site-author-name" itemprop="name"><span style="opacity:.2;"></span>陌花采撷</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/bladedragon" target="_blank" title="GitHub" data-balloon="GitHub" data-balloon-pos="up">
+                    
+                       <i class="fa fa-fw fa-github"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://telegram.com" target="_blank" title="telegram" data-balloon="telegram" data-balloon-pos="up">
+                    
+                       <i class="fa fa-fw fa-telegram"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:zaft1156673039@gmail.com" target="_blank" title="E-Mail" data-balloon="E-Mail" data-balloon-pos="up">
+                    
+                       <i class="fa fa-fw fa-envelope"></i></a>
+                </span>
+              
+            
+          </div>
+
+         
+
+          
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-name">日志</span>
+				  <span class="site-state-item-count">44</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-name">分类</span>
+				   <span class="site-state-item-count">4</span>
+                </a>
+              </div>
+            
+            
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+				 <span class="site-state-item-name">标签</span>
+				  <span class="site-state-item-count">26</span>
+                </a>
+              </div>
+            
+            
+
+          </nav>
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              
+            </div>
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#以太网帧"><span class="nav-text">以太网帧</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ETHENET-II"><span class="nav-text">ETHENET_II</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#IEEE802-3"><span class="nav-text">IEEE802.3</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IPv4报文结构"><span class="nav-text">IPv4报文结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#关于区分服务"><span class="nav-text">关于区分服务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#关于分片"><span class="nav-text">关于分片</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#关于校验"><span class="nav-text">关于校验</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#关于选项"><span class="nav-text">关于选项</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IPv6报文结构"><span class="nav-text">IPv6报文结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#传输层报文结构"><span class="nav-text">传输层报文结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#UDP"><span class="nav-text">UDP</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TCP"><span class="nav-text">TCP</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-image"></div>
+      <div class="footer-inner">
+        <p>本博客已出生<span id="since"></span><span class="my-face">(●'◡'●)ﾉ♥</span></p>
+<p></p>
+
+Theme By <a href="https://github.com/DIYgod/hexo-theme-sagiri" target="_blank" class="external" rel="nofollow">Sagiri</a>
+
+<p>Made with <i class="fa fa-heart throb" style="color: #d43f57;"></i> by <span class="author" itemprop="copyrightHolder">陌花采撷</span>. </p>
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    <canvas id="evanyou"></canvas>
+    <div id="aplayer-fixed"></div>
+
+    
+	
+  </div>
+
+	
+  <script type="text/javascript" src="/js/sagiri.min.js?v=0.0.50"></script>
+	
+  
+
+
+
+
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+  <!--<script>
+    // remove service worker cache
+    // from https://stackoverflow.com/questions/33704791/how-do-i-uninstall-a-service-worker
+    "use strict";
+    if(navigator.serviceWorker)
+    {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            for(let registration of registrations) {
+                registration.unregister()
+            }
+        })
+    }
+  </script>-->
+
+  <!--<script>
+    var serviceWorkerUri = '/sw.js';
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register(serviceWorkerUri).then(function() {
+          if (navigator.serviceWorker.controller) {
+            console.log('Assets cached by the controlling service worker.');
+          } else {
+            console.log('Please reload this page to allow the service worker to handle network operations.');
+          }
+        }).catch(function(error) {
+          console.log('ERROR: ' + error);
+        });
+    } else {
+        console.log('Service workers are not supported in the current browser.');
+    }
+  </script>-->
+  
+  
+
+	
+</body>
+</html>

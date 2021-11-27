@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+
+
+
+
+<html class="theme-next pisces" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#da532c">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="google-site-verification" content="fRFpn2MbE7qpAtGAMkPwOq1xWyHF0BtvPVdE_P3qZFY">
+
+
+
+
+
+
+
+
+  <meta name="baidu-site-verification" content="t4cHu1Oo6Q">
+
+
+
+
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.loli.net/css?family=Sigmar One:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+
+  
+
+<link href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=0.0.50" rel="stylesheet" type="text/css">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=0.0.50">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/布丁.png?v=0.0.50">
+
+
+  <link rel="mask-icon" href="/safari-pinned-tab.svg?v=0.0.50" color="#da532c">
+
+
+
+
+
+
+  <meta name="keywords" content="博客,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言花了大概三天的时间，总算大致把博客的雏形搞定了。虽然说很多东西最终都不是我自己完成的，只是在别人的基础上在表面进行敲敲打打（后悔自己学习了后端，囧Orz）但不管怎样，没有文章的博客终归只是没有灵魂的躯壳，尽管自己的水平有限，但是还是希望能通过书写自己的一点一滴来见证自己的成长吧！  现在就开始我们今天的内容——hexo博客的搭建">
+<meta name="keywords" content="博客">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo入门搭建">
+<meta property="og:url" content="http://site.zblade.top/2019/09/18/hexofirst/index.html">
+<meta property="og:site_name" content="Feel The Wind">
+<meta property="og:description" content="前言花了大概三天的时间，总算大致把博客的雏形搞定了。虽然说很多东西最终都不是我自己完成的，只是在别人的基础上在表面进行敲敲打打（后悔自己学习了后端，囧Orz）但不管怎样，没有文章的博客终归只是没有灵魂的躯壳，尽管自己的水平有限，但是还是希望能通过书写自己的一点一滴来见证自己的成长吧！  现在就开始我们今天的内容——hexo博客的搭建">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://site.zblade.top/2019/09/18/hexofirst/gitbash.png">
+<meta property="og:image" content="http://site.zblade.top/2019/09/18/hexofirst/hexo_bg.png">
+<meta property="og:image" content="http://site.zblade.top/2019/09/18/hexofirst/github1.png">
+<meta property="og:image" content="http://site.zblade.top/2019/09/18/hexofirst/github2.png">
+<meta property="og:image" content="http://site.zblade.top/2019/09/18/hexofirst/github3.png">
+<meta property="og:updated_time" content="2021-11-07T15:46:52.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hexo入门搭建">
+<meta name="twitter:description" content="前言花了大概三天的时间，总算大致把博客的雏形搞定了。虽然说很多东西最终都不是我自己完成的，只是在别人的基础上在表面进行敲敲打打（后悔自己学习了后端，囧Orz）但不管怎样，没有文章的博客终归只是没有灵魂的躯壳，尽管自己的水平有限，但是还是希望能通过书写自己的一点一滴来见证自己的成长吧！  现在就开始我们今天的内容——hexo博客的搭建">
+<meta name="twitter:image" content="http://site.zblade.top/2019/09/18/hexofirst/gitbash.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '0.0.50',
+    sidebar: {"position":"right","display":"always","offset":52,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    since: '9/22/2019 11:30:00',
+    onlineAPI: '',
+    site: {
+      title: 'Feel The Wind',
+      subtitle: '',
+      author: '陌花采撷'
+    },
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    leancloud: {
+      enable: true,
+      appID: 'dTfoweWyLJr7wTEW4CUhKHJQ-gzGzoHsz',
+      appKey: 'xh7FpohCp7PmwlHYAyqSaXov'
+    },
+    favicon: {
+      visibilitychange: true,
+      narmal: '/images/布丁.png',
+      hidden: '/images/failure.ico',
+      show_text: '(/≧▽≦/)咦！又好了！',
+      hide_text: 'Warning! 404-NoFound'
+    }
+  };
+</script>
+
+
+
+
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+
+  <script type="text/javascript" src="null"></script>
+
+
+
+
+
+
+
+
+  <title>Hexo入门搭建 | Feel The Wind</title>
+  
+
+
+
+
+
+
+
+
+ 
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans" class="theme-darling">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-首页">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-小项目">
+          <a href="javascript:;" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-flask"></i> <br>
+            
+            小项目
+          </a>
+          
+            <ul class="submenu submenu-小项目">
+              
+                
+                <li class="submenu-item submenu-item-old_blog">
+                  <a href="http://zblade.top:85/wordpress/" rel="section" target="_blank">
+                    Old_Blog
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-短网址生成">
+                  <a href="http://zblade.top:8081/" rel="section" target="_blank">
+                    短网址生成
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-资源站">
+                  <a href="http://inner.cquptict.com:90/" rel="section" target="_blank">
+                    资源站
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-ict-pan">
+                  <a href="http://www.cquptict.com:8000/" rel="section" target="_blank">
+                    ICT-Pan
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-招新系统">
+                  <a href="http://zblade.top:83/#/" rel="section" target="_blank">
+                    招新系统
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-领奖系统">
+                  <a href="https://github.com/bladedragon/PrizeTool" rel="section" target="_blank">
+                    领奖系统
+                  </a>
+                </li>
+              
+            </ul>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-归档">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-分类">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-server"></i> <br>
+            
+            分类
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-标签">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tag"></i> <br>
+            
+            标签
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-留言板">
+          <a href="/message/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-pencil"></i> <br>
+            
+            留言板
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-关于">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rocket"></i> <br>
+            
+            关于
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-coding_set">
+          <a href="https://bladedragon.github.io/coding_docs/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sign-language"></i> <br>
+            
+            Coding_Set
+          </a>
+          
+        </li>
+      
+
+      
+      <li class="menu-item search">
+          <form class="search-form">
+            <input name="keyword" type="text" class="search-input" placeholder="站内搜索">
+            <button type="submit" class="search-submit"><i class="fa fa-search"></i></button>
+          </form>
+      </li>
+      <!--<li class="menu-item online"><span id="online-count">?</span>人在线</li>-->
+    </ul>
+  
+
+  
+</nav>
+
+<div class="site-brand-wrapper" style="background-image: url(http://cdn.zblade.top/qiniu_img/wallhaven-6k1j7l.jpg)">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <div class="brand">
+        <span class="logo-line-before"><i></i></span>
+        <div class="site-title">
+          <div id="animate" class="animate">
+            <span>F</span><span>e</span><span>e</span><span>l</span><span> </span><span>T</span><span>h</span><span>e</span><span> </span><span>W</span><span>i</span><span>n</span><span>d</span>
+          </div>
+          <div id="guide" class="guide">
+            <span>F</span><span>e</span><span>e</span><span>l</span><span> </span><span>T</span><span>h</span><span>e</span><span> </span><span>W</span><span>i</span><span>n</span><span>d</span>
+          </div>
+        </div>
+        <span class="logo-line-after"><i></i></span>
+      </div>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<div class="site-master" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-master-avatar" itemprop="image" src="http://cdn.zblade.top/qiniu_img/zavatar2.jpg" alt="陌花采撷">
+    <h2 class="site-master-description" itemprop="description">
+        <span>即使天无雨，</span><span>吾亦留此地</span>
+    </h2>
+</div>
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-date">
+			<div class="post-month">09月</div>
+			<div class="post-day">18</div>
+	</div>
+  
+  <div class="post-badge">
+    
+      <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+        <a href="/categories/学习笔记/" itemprop="url" rel="index">
+          <span itemprop="name">学习笔记</span>
+        </a>
+      </span>
+    
+  </div>
+  
+
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://site.zblade.top/2019/09/18/hexofirst/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="陌花采撷">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="http://cdn.zblade.top/qiniu_img/zavatar2.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Feel The Wind">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Hexo入门搭建</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-18T19:07:12+08:00">2019-09-18</time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/09/18/hexofirst/" class="leancloud_visitors" data-flag-title="Hexo入门搭建">
+               <span class="post-meta-divider"></span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">被</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+                 <span class="post-meta-item-text">人浏览</span>
+             </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>花了大概三天的时间，总算大致把博客的雏形搞定了。虽然说很多东西最终都不是我自己完成的，只是在别人的基础上在表面进行敲敲打打（后悔自己学习了后端，囧Orz）但不管怎样，没有文章的博客终归只是没有灵魂的躯壳，尽管自己的水平有限，但是还是希望能通过书写自己的一点一滴来见证自己的成长吧！  现在就开始我们今天的内容——hexo博客的搭建  </p>
+<a id="more"></a>
+
+<hr>
+<h2 id="初识Hexo"><a href="#初识Hexo" class="headerlink" title="初识Hexo"></a>初识Hexo</h2><p>先让我们了解一下hexo：</p>
+<blockquote>
+<p> Hexo 是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。  </p>
+</blockquote>
+<p>比起它的前辈wordpress，hexo最大的特点就是使用markdown编写文章，同时以node.js作为运行环境，你只需要在服务器上安装好node.js环境，就可以轻松安装hexo，这时你再回头看看wordpress的LAMP环境，是不是觉得繁琐又笨重呢？（hh其实hexo还是wordpress都是非常主流的博客框架，两者的优劣我们之后有时间或许可以再讨论）  </p>
+<h2 id="Hexo基本搭建"><a href="#Hexo基本搭建" class="headerlink" title="Hexo基本搭建"></a>Hexo基本搭建</h2><p><strong>知识前提</strong></p>
+<p>安装hexo前你最好了解的基本知识  </p>
+<ol>
+<li>markdown语法基础 </li>
+<li>node.js基本认识（其实用不到多少，但是最好能了解一点语法基础） </li>
+<li>html、css基础（为你个性化博客很有帮助） </li>
+<li>github相关知识（程序猿必备）  </li>
+</ol>
+<p><strong>基础环境</strong></p>
+<p>本人用的Win10</p>
+<h3 id="搭建的基本流程"><a href="#搭建的基本流程" class="headerlink" title="搭建的基本流程"></a>搭建的基本流程</h3><blockquote>
+<p>环境配置-&gt;本地调试-&gt;服务器部署</p>
+</blockquote>
+<h4 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h4><p><strong>安装git bash</strong></p>
+<p>首先本地安装Git，具体可以自行百度。</p>
+<p>安装完后再任意目录下点击右键</p>
+<p><img src="/2019/09/18/hexofirst/gitbash.png" alt="gitbash"></p>
+<p>进入git bash，之后我们的操作都将在这里进行  </p>
+<p>（PS：实测cmd也可以，如果遇到一些操作在git bash里得不到响应可以在cmd中尝试进行，注意要在相同的路径下面）  </p>
+<p><strong>安装node.js</strong></p>
+<p>首先安装好node.js环境，直接<a href="https://www.baidu.com/link?url=tsLvkFN4hyDOi_ejiKpM3c6W8yAJ1rwGwDZotldsgjO&wd=&eqid=a2cbec9f00038dbd000000065cf3fb8d" target="_blank" rel="noopener">官网</a>下载就行了</p>
+<p>安装好后查看版本</p>
+<p>正常无误即可</p>
+<p><strong>安装hexo</strong></p>
+<p>进入gitbash，使用node.js的包管理器npm，输入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g hexo</span><br></pre></td></tr></table></figure>
+
+<p>等待安装完成即可</p>
+<h4 id="本地调试"><a href="#本地调试" class="headerlink" title="本地调试"></a>本地调试</h4><p>安装完成后在自己想要放博客的文件夹根目录下，输入</p>
+<p>可以看到hexo生成以下文件</p>
+<ul>
+<li>node_modules（项目依赖包）</li>
+<li>public（存放生成页面）</li>
+<li>scaffolds：命令生成文章等的模板</li>
+<li>source：资源库，放置比如文章、跳转页面等</li>
+<li>themes：主题</li>
+<li>_config.yml：整个博客的配置</li>
+<li>package.json：项目所需模块项目的配置信息</li>
+</ul>
+<p>这时你已经可以启动你的博客了，输入</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo clean    //清除之前的配置，防止博客配置出错的必要操作 </span><br><span class="line">hexo generate  //可缩写为hexo g   创建资源文件 </span><br><span class="line">hexo server    //可缩写为hexo s   启动server服务器</span><br></pre></td></tr></table></figure>
+
+<p>当显示下面代码时说明启动成功</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$INFO</span>  Start processing</span><br><span class="line"><span class="variable">$INFO</span>  Hexo is running at http://localhost:4000/. Press Ctrl+C to stop</span><br></pre></td></tr></table></figure>
+
+<p>按流程输入<code>localhost:4000</code>当你看到下图说明基本配置成功了</p>
+<p><img src="/2019/09/18/hexofirst/hexo_bg.png" alt="hexo_bg"></p>
+<h4 id="3-服务器部署"><a href="#3-服务器部署" class="headerlink" title="3.服务器部署"></a>3.服务器部署</h4><p>现在我们就要在公网上部署hexo了</p>
+<p>这里我用的是Github Page对博客进行托管，有条件的同学也可以自己部署到服务器上，这是暂时不提  </p>
+<p>首先需要在GitHub上新建一个仓库，命名形式为<code>yourusername.github.io</code>（<strong>yourusername是你的git账户,重要</strong>)  </p>
+<p>然后进入setting查看是否开启</p>
+<p><img src="/2019/09/18/hexofirst/github1.png" alt="github1"></p>
+<p><img src="/2019/09/18/hexofirst/github2.png" alt="github2"></p>
+<p>接着创建ssh密钥对，将公钥放在GitHub上</p>
+<p>在全局setting-&gt;SSH and GPG keys-&gt;new SSH keys添加  </p>
+<p><img src="/2019/09/18/hexofirst/github3.png" alt="github3"></p>
+<p>如何本地创建SSH密钥对，请查</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$git</span> config --global user.name <span class="string">"Your Name"</span></span><br><span class="line"><span class="variable">$git</span> config --global user.email <span class="string">"email@example.com"</span></span><br><span class="line"><span class="variable">$ssh</span>-keygen -t rsa -C <span class="string">"youremail@example.com"</span></span><br></pre></td></tr></table></figure>
+
+<p>接着打开博客文件夹根目录，前往_config.yml文件，找到如下字段，修改自己的repo  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deploy:   type: git   repo: git@github.com:yourusername/yourusername.github.io.git   branch: master</span><br></pre></td></tr></table></figure>
+
+<p>然后在gitbash输入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+
+<p>依次执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo generate  //可缩写为hexo g</span><br><span class="line">hexo deploy    //可缩写为hexo d  部署hexo</span><br></pre></td></tr></table></figure>
+
+<p>打开<code>https://yourgithubname.github.io</code>，看到与上一步相同的页面，证明博客搭建完成    </p>
+<p>至此，博客的基本搭建基本完成。</p>
+<p>接着如果需要书写博客，使用如下命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new &lt;layout&gt; &quot;title&quot;</span><br></pre></td></tr></table></figure>
+
+<p>这里的对应我们要添加的内容，如果是posts就是添加新的文章，如果是page就是添加新的页面。  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo publish &lt;layout&gt; &lt;filename&gt;</span><br></pre></td></tr></table></figure>
+
+<p>发布内容，实际上是将内容从drafts（草稿）文件夹移到posts（文章）文件夹。  接着重启就行  </p>
+<h2 id="hexo优化配置"><a href="#hexo优化配置" class="headerlink" title="hexo优化配置"></a>hexo优化配置</h2><p>虽然搭建了基本的博客，但是每次初始化时都要花很多时间（可以但没必要）  因此我们可以写一个脚本自动完成固定命令的执行  新建一个txt文件，输入  1 2 3 hexo clean hexo g hexo d 保存后将后缀名改成.bat就可以点击执行了  </p>
+<h3 id="个性化你的Hexo-博客"><a href="#个性化你的Hexo-博客" class="headerlink" title="个性化你的Hexo 博客"></a>个性化你的Hexo 博客</h3><p>真正让人充满激情的地方在于它可以让你个性化，真正把博客作为你自己的小天地，这次我就结合自己搭建博客的实例分析一下如何个性化自己的博客吧</p>
+<h4 id="添加主题NEXT"><a href="#添加主题NEXT" class="headerlink" title="添加主题NEXT"></a>添加主题NEXT</h4><h4 id="添加RSS"><a href="#添加RSS" class="headerlink" title="添加RSS"></a>添加RSS</h4><h4 id="菜单图标选择"><a href="#菜单图标选择" class="headerlink" title="菜单图标选择"></a>菜单图标选择</h4><p>如何选择博客上丰富的图标？难道要下载到本地？为了提升博客的打开速度，建议所有的静态资源能通过HTTP下载就HTTP下载，因为部署博客的服务器带宽终究有限，如果因为加载静态资源而占用带宽，会降低博客的阅读体验</p>
+<p>这里那<code>awesome icon</code>举例</p>
+<p>在首页寻找自己想要的图标，然后再<strong>主题配置文件</strong>的菜单图标项填<code>&lt;! class=&quot;fa fa-fw fa-envelope&gt;&lt;/i&gt;</code>即可</p>
+<h4 id="引入评论插件gitalk"><a href="#引入评论插件gitalk" class="headerlink" title="引入评论插件gitalk"></a>引入评论插件gitalk</h4><p>gitalk插件将GitHub作为你的数据库，评论用户通过GitHub账号登录并发表评论，非常适合国内的开发者进行及交流讨论</p>
+<ol>
+<li>注册oauth app</li>
+<li>下载gitalk插件</li>
+<li></li>
+</ol>
+<p><a href="https://segmentfault.com/a/1190000014085547" target="_blank" rel="noopener">集成Gitalk</a></p>
+<h3 id="引入Aplayer"><a href="#引入Aplayer" class="headerlink" title="引入Aplayer"></a>引入Aplayer</h3><p><a href="https://music.xf1433.com/?name=%E5%B0%91%E5%B9%B4%E5%B0%91%E5%A5%B3&type=kugou" target="_blank" rel="noopener">外链生成地址</a></p>
+<h4 id="踩坑"><a href="#踩坑" class="headerlink" title="踩坑"></a>踩坑</h4><p>搜索模块 config.yml没有注意空格  注意备份  require是node.js的语法。。</p>
+<p>打包js文件  出现各种都是npm包的问题</p>
+<p>json.package是用来处理依赖问题的，有了它，就不用像远古时代那样一个个install，同时写好webpack.comfig.js才可以打包成功</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div class="post-share">分享到：</div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/博客/" rel="tag"># 博客</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/18/jsoup/" rel="next" title="用java优雅爬虫——Jsoup">
+                <i class="fa fa-chevron-left"></i> 用java优雅爬虫——Jsoup
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/09/18/vrrp/" rel="prev" title="VRRP入门">
+                VRRP入门 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+  <div class="comments" id="comments">
+      <div id="gitalk-container"></div>
+    </div>
+	
+  
+
+
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+        <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+		<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    
+		<script type="text/javascript">
+		const gitalk = new Gitalk({
+		clientID: '8c4098d1aa1409852b19',
+		clientSecret: 'cdc136702eaaa9600bc46ab7da3c95a8537116ef',
+		repo: 'Blog_message_repo',
+		owner: 'BladeDragon',
+		admin: ['BladeDragon'],
+		id: window.location.pathname,      // Ensure uniqueness and length less than 50
+		});
+		
+		gitalk.render('gitalk-container');
+		</script>
+
+    
+
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://cdn.zblade.top/qiniu_img/zcard2.png" alt="陌花采撷">
+            
+              <p class="site-author-name" itemprop="name"><span style="opacity:.2;"></span>陌花采撷</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/bladedragon" target="_blank" title="GitHub" data-balloon="GitHub" data-balloon-pos="up">
+                    
+                       <i class="fa fa-fw fa-github"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://telegram.com" target="_blank" title="telegram" data-balloon="telegram" data-balloon-pos="up">
+                    
+                       <i class="fa fa-fw fa-telegram"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:zaft1156673039@gmail.com" target="_blank" title="E-Mail" data-balloon="E-Mail" data-balloon-pos="up">
+                    
+                       <i class="fa fa-fw fa-envelope"></i></a>
+                </span>
+              
+            
+          </div>
+
+         
+
+          
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-name">日志</span>
+				  <span class="site-state-item-count">44</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-name">分类</span>
+				   <span class="site-state-item-count">4</span>
+                </a>
+              </div>
+            
+            
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+				 <span class="site-state-item-name">标签</span>
+				  <span class="site-state-item-count">26</span>
+                </a>
+              </div>
+            
+            
+
+          </nav>
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              
+            </div>
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#初识Hexo"><span class="nav-text">初识Hexo</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hexo基本搭建"><span class="nav-text">Hexo基本搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#搭建的基本流程"><span class="nav-text">搭建的基本流程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#环境配置"><span class="nav-text">环境配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#本地调试"><span class="nav-text">本地调试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-服务器部署"><span class="nav-text">3.服务器部署</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hexo优化配置"><span class="nav-text">hexo优化配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#个性化你的Hexo-博客"><span class="nav-text">个性化你的Hexo 博客</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#添加主题NEXT"><span class="nav-text">添加主题NEXT</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#添加RSS"><span class="nav-text">添加RSS</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#菜单图标选择"><span class="nav-text">菜单图标选择</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#引入评论插件gitalk"><span class="nav-text">引入评论插件gitalk</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#引入Aplayer"><span class="nav-text">引入Aplayer</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#踩坑"><span class="nav-text">踩坑</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-image"></div>
+      <div class="footer-inner">
+        <p>本博客已出生<span id="since"></span><span class="my-face">(●'◡'●)ﾉ♥</span></p>
+<p></p>
+
+Theme By <a href="https://github.com/DIYgod/hexo-theme-sagiri" target="_blank" class="external" rel="nofollow">Sagiri</a>
+
+<p>Made with <i class="fa fa-heart throb" style="color: #d43f57;"></i> by <span class="author" itemprop="copyrightHolder">陌花采撷</span>. </p>
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    <canvas id="evanyou"></canvas>
+    <div id="aplayer-fixed"></div>
+
+    
+	
+  </div>
+
+	
+  <script type="text/javascript" src="/js/sagiri.min.js?v=0.0.50"></script>
+	
+  
+
+
+
+
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+  <!--<script>
+    // remove service worker cache
+    // from https://stackoverflow.com/questions/33704791/how-do-i-uninstall-a-service-worker
+    "use strict";
+    if(navigator.serviceWorker)
+    {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            for(let registration of registrations) {
+                registration.unregister()
+            }
+        })
+    }
+  </script>-->
+
+  <!--<script>
+    var serviceWorkerUri = '/sw.js';
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register(serviceWorkerUri).then(function() {
+          if (navigator.serviceWorker.controller) {
+            console.log('Assets cached by the controlling service worker.');
+          } else {
+            console.log('Please reload this page to allow the service worker to handle network operations.');
+          }
+        }).catch(function(error) {
+          console.log('ERROR: ' + error);
+        });
+    } else {
+        console.log('Service workers are not supported in the current browser.');
+    }
+  </script>-->
+  
+  
+
+	
+</body>
+</html>

@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+
+
+
+
+<html class="theme-next pisces" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#da532c">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="google-site-verification" content="fRFpn2MbE7qpAtGAMkPwOq1xWyHF0BtvPVdE_P3qZFY">
+
+
+
+
+
+
+
+
+  <meta name="baidu-site-verification" content="t4cHu1Oo6Q">
+
+
+
+
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.loli.net/css?family=Sigmar One:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+
+  
+
+<link href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=0.0.50" rel="stylesheet" type="text/css">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=0.0.50">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/布丁.png?v=0.0.50">
+
+
+  <link rel="mask-icon" href="/safari-pinned-tab.svg?v=0.0.50" color="#da532c">
+
+
+
+
+
+
+  <meta name="keywords" content="java,高并发,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="《并发编程的艺术》阅读笔记第三章,先从底层讲起。 基础不牢，地动山摇。">
+<meta name="keywords" content="java,高并发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java内存模型">
+<meta property="og:url" content="http://site.zblade.top/2019/12/29/concurrent3/index.html">
+<meta property="og:site_name" content="Feel The Wind">
+<meta property="og:description" content="《并发编程的艺术》阅读笔记第三章,先从底层讲起。 基础不牢，地动山摇。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://cdn.zblade.top/qiniu_img/wallhaven-lqz9jr.jpg">
+<meta property="og:image" content="http://site.zblade.top/2019/12/ZZZ_files/学习/JAVA/并发编程/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3/image-20200107100818113.png">
+<meta property="og:image" content="http://site.zblade.top/2019/12/29/concurrent3/image-20200107102759253-1578457897461.png">
+<meta property="og:image" content="http://site.zblade.top/2019/12/ZZZ_files/学习/JAVA/并发编程/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3/image-20200107111012661.png">
+<meta property="og:image" content="http://site.zblade.top/2019/12/ZZZ_files/学习/JAVA/并发编程/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3/image-20200107111032356.png">
+<meta property="og:image" content="http://site.zblade.top/2019/12/29/concurrent3/image-20200107144910441-1578457897461.png">
+<meta property="og:image" content="http://site.zblade.top/2019/12/29/concurrent3/image-20200107102759253.png">
+<meta property="og:image" content="http://site.zblade.top/2019/12/29/concurrent3/image-20200107152436294.png">
+<meta property="og:image" content="http://site.zblade.top/2019/12/29/concurrent3/image-20200107152444982.png">
+<meta property="og:image" content="http://site.zblade.top/2019/12/29/concurrent3/image-20200107174616024-1578457897461.png">
+<meta property="og:image" content="http://site.zblade.top/2019/12/29/concurrent3/image-20200107205334303-1578457897461.png">
+<meta property="og:image" content="http://site.zblade.top/2019/12/29/concurrent3/image-20200107205635952-1578457897461.png">
+<meta property="og:image" content="http://site.zblade.top/2019/12/29/concurrent3/image-20200107205755222-1578457897461.png">
+<meta property="og:updated_time" content="2020-03-03T17:22:14.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java内存模型">
+<meta name="twitter:description" content="《并发编程的艺术》阅读笔记第三章,先从底层讲起。 基础不牢，地动山摇。">
+<meta name="twitter:image" content="http://cdn.zblade.top/qiniu_img/wallhaven-lqz9jr.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '0.0.50',
+    sidebar: {"position":"right","display":"always","offset":52,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    since: '9/22/2019 11:30:00',
+    onlineAPI: '',
+    site: {
+      title: 'Feel The Wind',
+      subtitle: '',
+      author: '陌花采撷'
+    },
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    leancloud: {
+      enable: true,
+      appID: 'dTfoweWyLJr7wTEW4CUhKHJQ-gzGzoHsz',
+      appKey: 'xh7FpohCp7PmwlHYAyqSaXov'
+    },
+    favicon: {
+      visibilitychange: true,
+      narmal: '/images/布丁.png',
+      hidden: '/images/failure.ico',
+      show_text: '(/≧▽≦/)咦！又好了！',
+      hide_text: 'Warning! 404-NoFound'
+    }
+  };
+</script>
+
+
+
+
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+
+  <script type="text/javascript" src="null"></script>
+
+
+
+
+
+
+
+
+  <title>Java内存模型 | Feel The Wind</title>
+  
+
+
+
+
+
+
+
+
+ 
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans" class="theme-darling">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-首页">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-小项目">
+          <a href="javascript:;" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-flask"></i> <br>
+            
+            小项目
+          </a>
+          
+            <ul class="submenu submenu-小项目">
+              
+                
+                <li class="submenu-item submenu-item-old_blog">
+                  <a href="http://zblade.top:85/wordpress/" rel="section" target="_blank">
+                    Old_Blog
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-短网址生成">
+                  <a href="http://zblade.top:8081/" rel="section" target="_blank">
+                    短网址生成
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-资源站">
+                  <a href="http://inner.cquptict.com:90/" rel="section" target="_blank">
+                    资源站
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-ict-pan">
+                  <a href="http://www.cquptict.com:8000/" rel="section" target="_blank">
+                    ICT-Pan
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-招新系统">
+                  <a href="http://zblade.top:83/#/" rel="section" target="_blank">
+                    招新系统
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-领奖系统">
+                  <a href="https://github.com/bladedragon/PrizeTool" rel="section" target="_blank">
+                    领奖系统
+                  </a>
+                </li>
+              
+            </ul>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-归档">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-分类">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-server"></i> <br>
+            
+            分类
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-标签">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tag"></i> <br>
+            
+            标签
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-留言板">
+          <a href="/message/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-pencil"></i> <br>
+            
+            留言板
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-关于">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rocket"></i> <br>
+            
+            关于
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-coding_set">
+          <a href="https://bladedragon.github.io/coding_docs/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sign-language"></i> <br>
+            
+            Coding_Set
+          </a>
+          
+        </li>
+      
+
+      
+      <li class="menu-item search">
+          <form class="search-form">
+            <input name="keyword" type="text" class="search-input" placeholder="站内搜索">
+            <button type="submit" class="search-submit"><i class="fa fa-search"></i></button>
+          </form>
+      </li>
+      <!--<li class="menu-item online"><span id="online-count">?</span>人在线</li>-->
+    </ul>
+  
+
+  
+</nav>
+
+<div class="site-brand-wrapper" style="background-image: url(http://cdn.zblade.top/qiniu_img/wallhaven-6k1j7l.jpg)">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <div class="brand">
+        <span class="logo-line-before"><i></i></span>
+        <div class="site-title">
+          <div id="animate" class="animate">
+            <span>F</span><span>e</span><span>e</span><span>l</span><span> </span><span>T</span><span>h</span><span>e</span><span> </span><span>W</span><span>i</span><span>n</span><span>d</span>
+          </div>
+          <div id="guide" class="guide">
+            <span>F</span><span>e</span><span>e</span><span>l</span><span> </span><span>T</span><span>h</span><span>e</span><span> </span><span>W</span><span>i</span><span>n</span><span>d</span>
+          </div>
+        </div>
+        <span class="logo-line-after"><i></i></span>
+      </div>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<div class="site-master" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-master-avatar" itemprop="image" src="http://cdn.zblade.top/qiniu_img/zavatar2.jpg" alt="陌花采撷">
+    <h2 class="site-master-description" itemprop="description">
+        <span>即使天无雨，</span><span>吾亦留此地</span>
+    </h2>
+</div>
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-date">
+			<div class="post-month">12月</div>
+			<div class="post-day">29</div>
+	</div>
+  
+  <div class="post-badge">
+    
+      <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+        <a href="/categories/学习笔记/" itemprop="url" rel="index">
+          <span itemprop="name">学习笔记</span>
+        </a>
+      </span>
+    
+  </div>
+  
+
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://site.zblade.top/2019/12/29/concurrent3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="陌花采撷">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="http://cdn.zblade.top/qiniu_img/zavatar2.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Feel The Wind">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java内存模型</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-12-29T19:02:13+08:00">2019-12-29</time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/12/29/concurrent3/" class="leancloud_visitors" data-flag-title="Java内存模型">
+               <span class="post-meta-divider"></span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">被</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+                 <span class="post-meta-item-text">人浏览</span>
+             </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>《并发编程的艺术》阅读笔记第三章,先从底层讲起。</p>
+<p>基础不牢，地动山摇。</p>
+<p><img src="http://cdn.zblade.top/qiniu_img/wallhaven-lqz9jr.jpg" alt></p>
+<a id="more"></a>
+
+<h2 id="一、基础"><a href="#一、基础" class="headerlink" title="一、基础"></a>一、基础</h2><h3 id="1、并发的两个关键问题"><a href="#1、并发的两个关键问题" class="headerlink" title="1、并发的两个关键问题"></a>1、并发的两个关键问题</h3><p>线程间通信和线程间同步</p>
+<p>线程通信机制：</p>
+<ul>
+<li><strong>==共享内存==：隐式通信，显式同步</strong></li>
+<li><strong>==消息传递==：显式通信，隐式同步</strong></li>
+</ul>
+<p>Java的并发采用的是共享内存模型。</p>
+<h3 id="2、java内存结构"><a href="#2、java内存结构" class="headerlink" title="2、java内存结构"></a>2、java内存结构</h3><blockquote>
+<p>java中所有的实例域、静态域和数组元素都存储在堆内存中；局部变量、方法定义参数、异常处理器参数不会在线程之间共享</p>
+</blockquote>
+<p>JMM定义了线程和主内存之间的抽象关系：线程之间的共享变量存储在<strong>主内存</strong>中，每个线程都有一个私有<strong>的本地内存</strong>，本地内存中存储了该线程<strong>读/写共享变量的副本</strong>。</p>
+<blockquote>
+<p>本地内存是JMM的一个抽象概念，并不真实存在，涵盖了缓存、写缓冲区、寄存器以及其他的硬件和编译器优化</p>
+</blockquote>
+<img src="/2019/12/29/concurrent3/../../ZZZ_files/学习/JAVA/并发编程/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3/image-20200107100818113.png" alt="image-20200107100818113" style="zoom:50%;">
+
+<p>线程A与线程B之间要通信必须经过两个步骤：</p>
+<ol>
+<li>线程A把本地内存A中更新过的共享变量刷新到主内存中去</li>
+<li>线程B到主内存中去读取A之前已更新过的共享变量</li>
+</ol>
+<p><strong>JMM通过控制主内存与每个线程的本地内存之间的交互来为java程序员提供内存可见性保证</strong></p>
+<h3 id="3、指令重排序"><a href="#3、指令重排序" class="headerlink" title="3、指令重排序"></a>3、指令重排序</h3><ol>
+<li><strong>编译器优化的重排序</strong>。编译器在不改变单线程程序语义的前提下，可以重新安排语句的执行顺序。</li>
+<li><strong>指令级并行的重排序</strong>。现代处理器采用了指令级并行技术（Instruction-Level Parallelism，ILP）来将多条指令重叠执行。如果不存在数据依赖性，处理器可以改变语句对应机器指令的执行顺序。</li>
+<li><strong>内存系统的重排序</strong>。由于处理器使用缓存和读/写缓冲区，这使得加载和存储操作看上去可能是在乱序执行。</li>
+</ol>
+<blockquote>
+<p>java最终执行的指令序列:</p>
+<p>源码——–》编译器优化重排序——-》指令级并行重排序———-》内存系统重排序———》最终的指令序列</p>
+</blockquote>
+<p>第一个属于==编译器重排序==，后面两个属于==处理器的重排序==,JMM通过禁止特定类型的编译器重排序和处理器重排序，为程序员提供一致的内存可见性保证</p>
+<p>对于编译器，JMM的编译器会禁止特定类型的编译器重排序。==对于处理器重排序，JMM的处理器重排序规则会要求Java编译器在生成指令序列时，插入特定的内存屏障指令==，从而禁止特定类型的处理器重排序。</p>
+<h3 id="4、内存屏障分类"><a href="#4、内存屏障分类" class="headerlink" title="4、内存屏障分类"></a>4、内存屏障分类</h3><p><strong>load：读缓冲区</strong></p>
+<p><strong>store：写缓冲区</strong></p>
+<p>四种内存屏障：</p>
+<ul>
+<li><code>LoadLoad Barriers</code>：确保load1的数据先于laod2及后续所有load指令进行装载</li>
+<li><code>StoreStore Barriers</code>：确保store1的数据对其他处理器的可见性先于store2及后续所有存储指令</li>
+<li><code>LoadStore Barriers</code>：确保load装载先于store的存储刷新到内存</li>
+<li><code>StoreLoad Barriers</code>：该屏障前的指令全部完成之后才会执行后面的指令（开销大）</li>
+</ul>
+<p><img src="/2019/12/29/concurrent3/image-20200107102759253-1578457897461.png" alt="image-20200107102759253"></p>
+<h3 id="5、先行发生（happens-before）"><a href="#5、先行发生（happens-before）" class="headerlink" title="5、先行发生（happens-before）"></a>5、先行发生（happens-before）</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">程序员必须遵循的编程原则</span><br></pre></td></tr></table></figure>
+
+<p>==JMM中，如果一个操作执行的结果需要对另一个操作可见，那么这两个操作之间必须存在happens-before关系。==</p>
+<p>其中一些顺序规则（针对程序员）：</p>
+<ul>
+<li>程序顺序规则：一个线程中的每个操作，happens-before于该线程中的任意后续操作</li>
+<li>监视器锁规则：对一个锁的解锁，happens-before于随后对这个锁的加锁。</li>
+<li>volatile变量规则：对一个volatile域的写，happens-before于任意后续对这个volatile域的读。</li>
+<li>传递性：如果A happens-before B，且B happens-before C，那么A happens-before C。</li>
+</ul>
+<blockquote>
+<p>happens-before仅仅要求前一个操作（执行的结果）对后一个操作可见，且前一个操作按顺序排在第二个操作之前，，并不意味着前一个操作必须要在后一个操作之前执行！</p>
+</blockquote>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">前一个要求对后一个操纵可见不是意味着前一个操作必须在后一个操作之前执行？</span><br><span class="line"></span><br><span class="line">JMM要求如果A happens-before B那么首先必须保证执行结果（A的执行结果对B <span class="strong">**不一定可见**</span> ）必须和逻辑中的happens-before相同，其次，A的排序顺序在B之前（这里是指重排序之前的顺序，后期允许通过重排序调整A和B的操作顺序），但是最终结果必须和逻辑上的保持一致，因此从表面上看是按序执行了</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、重排序"><a href="#二、重排序" class="headerlink" title="二、重排序"></a>二、重排序</h2><p><strong>数据依赖性</strong></p>
+<p>在单线程程序中，对存在控制依赖的操作重排序不会改变执行结果；但在多线程程序中，对存在控制依赖的操作重排序，可能会改变程序的执行结果。</p>
+<pre><code>详见30页的例子</code></pre><p><strong>as-if-serial</strong></p>
+<blockquote>
+<p>不管怎么重排序（编译器和处理器为了提高并行度），（单线程）程序的执行结果不能被改变。编译器、runtime和处理器都必须遵守as-if-serial语义</p>
+</blockquote>
+<h2 id="三、顺序一致性内存模型"><a href="#三、顺序一致性内存模型" class="headerlink" title="三、顺序一致性内存模型"></a>三、顺序一致性内存模型</h2><blockquote>
+<p>如果程序是正确同步的，程序的执行将具有顺序一致性（Sequentially Consistent）——即程序的执行结果与该程序在顺序一致性内存模型中的执行结果相同</p>
+</blockquote>
+<ul>
+<li>一个线程中的所有操作必须按照程序的顺序来执行。</li>
+<li>（不管程序是否同步）所有线程都只能看到一个单一的操作执行顺序。在顺序一致性内存模型中，每个操作都必须原子执行且立刻对所有线程可见。</li>
+</ul>
+<img src="/2019/12/29/concurrent3/../../ZZZ_files/学习/JAVA/并发编程/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3/image-20200107111012661.png" alt="image-20200107111012661" style="zoom:50%;">
+
+<img src="/2019/12/29/concurrent3/../../ZZZ_files/学习/JAVA/并发编程/java_concurrent_art-master/java_concurrent_art-master/src/chapter3/chapter3/image-20200107111032356.png" alt="image-20200107111032356" style="zoom:50%;">
+
+<p><strong>未同步程序在顺序一致性模型中给虽然整体执行顺序是无序的但是所有线程都只能看见一个一致的的整体执行顺序。</strong>之所以能得到这个保证是因为顺序一致性内存模型中的每个操作必须立即对任意线程可见</p>
+<blockquote>
+<p>JMM就没有这个保证。因为只有当前线程把本地内存中写过的数据刷新到主内存之后，这个写操作才能对其他线程可见。</p>
+<p>JMM的处理逻辑：<strong>临界区内的代码可以重排序；JMM会在退出临界区和进入临界区这两个关键时间点做一些特别处理，使得线程在这两个时间点具有与顺序一致性模型相同的内存视图</strong></p>
+<p>JMM的具体实现的基本方针：在不改变（正确同步的）程序执行结果的前提下，尽可能地为编译器和处理器的优化打开方便之门</p>
+</blockquote>
+<p>顺序一致性内存模型和JMM区别</p>
+<ol>
+<li>顺序一致性模型保证单线程内的操作会按程序的顺序执行，而JMM不保证单线程内的操作会按程序的顺序执行（比如上面正确同步的多线程程序在临界区内的重排序）。这一点前面已经讲过了，这里就不再赘述。</li>
+<li>顺序一致性模型保证所有线程只能看到一致的操作执行顺序，而JMM不保证所有线程能看到一致的操作执行顺序。这一点前面也已经讲过，这里就不再赘述。</li>
+<li>==JMM不保证对64位的long型和double型变量的写操作具有原子性，而顺序一致性模型保证对所有的内存读/写操作都具有原子性。==</li>
+</ol>
+<p><strong>处理器总线工作机制</strong></p>
+<blockquote>
+<p>在计算机中，数据通过总线在处理器和内存之间传递。每次处理器和内存之间的数据传递都是通过一系列步骤来完成的</p>
+<p>总线事务包括<strong>读事务（Read Transaction）</strong>和<strong>写事务（Write Transaction）</strong>。读事务从内存传送数据到处理器，写事务从处理器传送数据到内存，每个事务会读/写内存中一个或多个物理上连续的字</p>
+</blockquote>
+<ul>
+<li>总线会同步试图并发使用总线的事务。在一个处理器执行总线事务期间，总线会禁止其他的处理器和I/O设备执行内存的读/写 (从而保证当单个总线事务之中的内存读写具有原子性)</li>
+<li>在一些32位的处理器上，如果要求对64位数据的写操作具有原子性，会有比较大的开销。==当JVM在这种处理器上运行时，可能会把一个64位long/double型变量的写<br>操作拆分为两个32位的写操作来执行==</li>
+</ul>
+<blockquote>
+<p>注意，在JSR-133之前的旧内存模型中，一个64位long/double型变量的读/写操作可以被拆分为两个32位的读/写操作来执行。从JSR-133内存模型开始（即从JDK5开始），<strong>仅仅只允许把一个64位long/double型变量的写操作拆分为两个32位的写操作来执行，任意的读操作在JSR-133中都必须具有原子性</strong>（即任意读操作必须要在单个读事务中执行）。</p>
+</blockquote>
+<h2 id="四、volatile内存语义"><a href="#四、volatile内存语义" class="headerlink" title="四、volatile内存语义"></a>四、volatile内存语义</h2><p>volatile变量特性：</p>
+<pre><code>可见性：对一个volatile变量的读，总是能看到（任意线程）对这个变量最后的写入
+原子性：对任意单个volatile变量的读、写具有原子性（包括long、double），但类似volatile++
+这种复合操作不具有原子性。</code></pre><p>volatile写-读的内存语义：</p>
+<p>写：当写一个volatile变量时，JMM会把线程对应的==本地内存中的共享变量值刷新到主内存==</p>
+<p>读：当读一个volatile变量时，JMM会把该线程==对应的本地内存置为无效==。线程接下来从主内存中读取共享变量</p>
+<p><img src="/2019/12/29/concurrent3/image-20200107144910441-1578457897461.png" alt="image-20200107144910441"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">volatile读的时候必须保证主内存中的数据不会更改，因此volatile读如果是第一个操作怎不能实现重排序</span><br><span class="line">volatile写的时候必须保证之前的数据能正常写入主内存，因此volatile写如果是第二个操作的话不能实现重排序</span><br><span class="line">普通读写是在本地内存，但是有概率会写入主内存，因此具有随机性</span><br></pre></td></tr></table></figure>
+
+<h3 id="volatile内存语义的实现"><a href="#volatile内存语义的实现" class="headerlink" title="volatile内存语义的实现"></a>volatile内存语义的实现</h3><p>为了实现volatile的内存语义，编译器在生成字节码时，会在指令序列中插入内存屏障来禁止特定类型的处理器重排序。</p>
+<p>JMM内存屏障插入策略(保守!)：</p>
+<ul>
+<li>在每个<code>volatile写操作</code><strong>前面</strong>插入<code>StoreStore</code>屏障</li>
+<li>在每个<code>volatile写操作</code><strong>后面</strong>插入<code>StoreLoad</code>屏障</li>
+<li>在每个<code>volatile读操作</code><strong>后面</strong>插入一个<code>LoadLoad</code>、一个<code>LoadStore</code></li>
+</ul>
+<p><img src="/2019/12/29/concurrent3/image-20200107102759253.png" alt="image-20200107102759253"></p>
+<img src="/2019/12/29/concurrent3/image-20200107152436294.png" alt="image-20200107152436294" style="zoom:50%;">
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">为什么volatile写操作之前不用插入loadstore来避免普通读和volatile写之间的重排序？</span><br><span class="line">猜测：内存屏障之间存在包含关系，比如storeload就可以实现其他三个所有功能</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>volatile写-读内存语义的常见使用模式是：一个写线程写volatile变量，多个读线程读同一个volatile变量。当读线程的数量大大超过写线程时，选择在volatile写之后插入StoreLoad屏障将带来可观的执行效率的提升</p>
+</blockquote>
+<img src="/2019/12/29/concurrent3/image-20200107152444982.png" alt="image-20200107152444982" style="zoom: 50%;">
+
+
+
+<blockquote>
+<p>实际情况编译器在生成字节码的时候可以优化选择是否添加内存屏障，但是注意一般最后一个storelaod不能省略，因为无法判断return后是否还会有下一个volatile读/写出现</p>
+<p>不同的处理器平台也会对内存屏障做出优化</p>
+</blockquote>
+<p><strong>在功能上，锁比volatile更强大；在可伸缩性和执行性能上，volatile更有优势</strong></p>
+<h2 id="五、锁的内存语义"><a href="#五、锁的内存语义" class="headerlink" title="五、锁的内存语义"></a>五、锁的内存语义</h2><p><strong>锁的释放和获取的内存语义</strong>（和volatile一样）</p>
+<ul>
+<li>线程释放锁时，会把本地内存中的共享变量刷新到主内存中（对应volatile写）</li>
+<li>线程获取锁时，会将线程对应的本地内存置为无效，从而临界区代码必须从主内存读取共享变量（对应volatile读）</li>
+</ul>
+<p><strong>锁内存语义的实现</strong>：</p>
+<h5 id="分析ReentrantLock源码"><a href="#分析ReentrantLock源码" class="headerlink" title="分析ReentrantLock源码"></a>分析ReentrantLock源码</h5><blockquote>
+<p><code>ReentrantLock</code>的实现依赖于Java同步器框架<code>AbstractQueuedSynchronizer</code>（本文简称之为<code>AQS</code>）。<code>AQS</code>使用一个整型的<code>volatile</code>变量（命名为<code>state</code>）来维护同步状态，这个<code>volatile</code>变量是<code>ReentrantLock</code>内存语义实现的关键。</p>
+</blockquote>
+<p>ReentrantLock锁分为公平锁和非公平锁</p>
+<p>公平锁</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">现在tryAcqyuire方法有点变化，在查看是不是第一个获取锁的对象处添加了hasQueuedPredecessors()方法，一个用来查询是否有线程比现在线程等待时间更长</span><br></pre></td></tr></table></figure>
+
+<p>非公平锁<br>调用CAS：如果当前状态值等于预期值，则以原子方式将同步状态设置为给定的更新值。</p>
+<p><strong>公平锁和非公平锁语义总结：</strong></p>
+<ul>
+<li>公平锁和非公平锁释放时，==最后都要写一个volatile变量state==</li>
+<li>公平锁获取时，==首先会去读volatile变量==</li>
+<li>非公平锁获取时，首先会==用CAS更新volatile变量，这个操作同时具有volatile读和volatile写的内存语义==</li>
+</ul>
+<p>可以看出：<strong>锁释放-获取的内存语义的实现至少有下面两种方式</strong></p>
+<ol>
+<li>利用volatile变量的写-读所具有的内存语义</li>
+<li>利用CAS所附带的volatile读和volatile写的内存语义</li>
+</ol>
+<p><strong>CAS是如何同时具有volatile读和volatile写的内存语义的？</strong></p>
+<blockquote>
+<p>多处理器环境，会为cmpxchg指令加上lock前缀，单处理器不用加（单处理器会维护自身的顺序一致性）</p>
+</blockquote>
+<ul>
+<li>原先使用总线锁定，后来考虑开销使用缓存锁定，大大降低lock前缀指令的执行开销</li>
+<li>lock指令能防止重排序</li>
+<li>把写缓冲区中的所有数据刷新到内存中</li>
+</ul>
+<p>上面2、3两点具有的内存屏障效果，足以同时实现volatile读和volatile写的内存语义</p>
+<h3 id="concurrent包的通用实现模式"><a href="#concurrent包的通用实现模式" class="headerlink" title="concurrent包的通用实现模式"></a>concurrent包的通用实现模式</h3><ol>
+<li>==<strong>首先，声明共享变量为<code>volatile</code></strong>==</li>
+<li>==<strong>然后，使用<code>CAS</code>的原子条件更新来实现线程之间的同步</strong>==</li>
+<li>==<strong>同时，配合以<code>volatile</code>的读、写和<code>CAS</code>所具有的<code>volatile</code>读和写的内存语义来实现线程之间的通信</strong>==</li>
+</ol>
+<p><img src="/2019/12/29/concurrent3/image-20200107174616024-1578457897461.png" alt="image-20200107174616024"></p>
+<h2 id="六、final域的内存语义"><a href="#六、final域的内存语义" class="headerlink" title="六、final域的内存语义"></a>六、final域的内存语义</h2><h3 id="1、final域的重排序规则"><a href="#1、final域的重排序规则" class="headerlink" title="1、final域的重排序规则"></a>1、final域的重排序规则</h3><p>（1）写：在==构造函数内对==一个final域的写入，与==随后把这个被构造对象的引用赋值给一个引用变量==，这两个操作不能重排序</p>
+<p>（2）读：初次读一个包含final域的对象的引用，与==随后初次读这个final域==，这两个操作不能重排序。</p>
+<h3 id="2、写final域的重排序规则"><a href="#2、写final域的重排序规则" class="headerlink" title="2、写final域的重排序规则"></a>2、写final域的重排序规则</h3><p>==禁止把final域的写重排序到构造函数之外==包含两方面：</p>
+<pre><code>1、编译器： JMM禁止编译器把final域的写重排序到构造函数之外
+2、处理器： 编译器会在final域的写之后，构造函数return之前，插入一个StoreStore屏障。这个屏障禁止处理器把final域的写重排序到构造函数之外</code></pre><p>上述规则可以确保：</p>
+<p>在对象引用为任意线程可见之前，对象的final域已经被正确初始化过了，而普通域不具有这个保障。</p>
+<h3 id="3、读final域的重排序规则"><a href="#3、读final域的重排序规则" class="headerlink" title="3、读final域的重排序规则"></a>3、读final域的重排序规则</h3><p>处理器：在一个线程中，初次读对象引用与初次读该对象所包含的final域，JMM禁止处理器重排序这两个操作</p>
+<p>编译器：编译器会在读final域操作的前面插入一个<code>LoadLoad</code>屏障·</p>
+<p>上述重排序规则可以确保：在读一个对象的final域之前，一定会先读包含这个final域的对象的引用（针对少数处理器存在间接依赖关系的操作做重排序）</p>
+<h3 id="4、当final域为引用类型"><a href="#4、当final域为引用类型" class="headerlink" title="4、当final域为引用类型"></a>4、当final域为引用类型</h3><p>对于引用类型，写final域的重排序规则增加下面的约束：</p>
+<pre><code>在构造函数内对一个final引用对象的成员域的写入，与随后在构造函数外把这个被构造对象的引用赋值给一个引用变量，这两个操作不能重排序。</code></pre><p>对于存在数据竞争的线程无法保证可见性</p>
+<h3 id="5、为什么final域不能从构造函数内溢出"><a href="#5、为什么final域不能从构造函数内溢出" class="headerlink" title="5、为什么final域不能从构造函数内溢出"></a>5、为什么final域不能从构造函数内溢出</h3><p>在构造函数返回前，被构造对象的引用不能为其他线程所见，因为此时的final域可能还没有初始化  (构造函数内可能发生重排序)。</p>
+<p>==(在引用变量为任意线程和可见之前，引用变量所指向的对象的final域必须要正确初始化,这是写final域的重排序规则)==</p>
+<h2 id="七、happens-before"><a href="#七、happens-before" class="headerlink" title="七、happens-before"></a>七、happens-before</h2><p>as-if-serial语义给编写单线程程序的程序员创造了一个幻境：<strong>单线程程序是按程序的顺序执行的。</strong></p>
+<p>happens-before关系给编写正确同步的多线程程序员创造了一个幻境：<strong>正确同步的多线程程序是按happens-before指定的顺序执行的。</strong></p>
+<p>这么做的目的：为了在不改变程序的执行结果的前提下，尽可能地提高程序执行的并行度。</p>
+<p><strong>完整hgappen-before规则</strong></p>
+<ul>
+<li><strong>程序顺序规则</strong>：一个线程中的每个操作，happens-before于该线程中的任意后续操作</li>
+<li><strong>监视器锁规则</strong>：对一个锁的解锁，happens-before于随后对这个锁的加锁。</li>
+<li><strong>volatile变量规则</strong>：对一个volatile域的写，happens-before于任意后续对这个volatile域的读。</li>
+<li><strong>传递性</strong>：如果A happens-before B，且B happens-before C，那么A happens-before C。</li>
+<li><strong>start()规则</strong>：如果线程A执行操作ThreadB.start()（启动线程B），那么A线程的ThreadB.start()操作happens-before于线程B中的任意操作。</li>
+<li><strong>join()规则</strong>：如果线程A执行操作ThreadB.join()并成功返回，那么线程B中的任意操作happens-before于线程A从ThreadB.join()操作成功返回</li>
+</ul>
+<h2 id="八、双重检查锁定与延迟初始化"><a href="#八、双重检查锁定与延迟初始化" class="headerlink" title="八、双重检查锁定与延迟初始化"></a>八、双重检查锁定与延迟初始化</h2><p><strong>双重检查锁定</strong></p>
+<p>问题描述：(一般是单例模式)在上锁之前加一个非空判断，上锁后再次非空判断，实现双重检查锁定</p>
+<p>原因：在构造实例时，对象引用指针的操作和初始化操作可能会被重排序，这就导致在if(instance==null)的时候认为对象已经创建，但这个时候还没有进行初始化</p>
+<pre><code>1.分配对象的内存空间
+2.初始化对象
+3.设置instance指向内存空间
+4.初次访问对象
+
+3和2可能会被重排序，导致1342这样的问题</code></pre><blockquote>
+<p>一开始单例模式一旦出现并发，就可能出现初始化两个对象的问题</p>
+<p>后来选择加锁，<strong>加锁能解决问题，但是出现严重的性能开销</strong></p>
+<p>后来就选择在加锁前加一层非空判断，这样就可以只在第一次初始化，后期不用加锁但</p>
+<p>是正是由于添加了一层非空判断，导致多线程在进行这个判断的时候，<strong>读取操作跳过了等待时间直接读取对象，但此时由于锁内空间的重排序，导致此时对象还没有初始化完成。</strong>从而造成严重的后果</p>
+</blockquote>
+<p>解决方式：</p>
+<ol>
+<li><p>volatile。利用volatile的语义禁止重排序。<strong>在单例的懒汉模式中，必须给实例添加volatile修饰符</strong></p>
+<p>优势: ==除了可以对静态字段实现延迟初始化外，还可以对实例字段实现延迟初始化。==</p>
+</li>
+<li><p>基于类初始化的解决方案,使得线程访问之前就完成初始化</p>
+<blockquote>
+<p>JVM在类的初始化阶段（即在Class被加载后，且被线程使用之前），会执行类的初始化。<strong>在</strong><br><strong>执行类的初始化期间，JVM会去获取一个锁。这个锁可以同步多个线程对同一个类的初始化。</strong></p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">备注：类初始化的几种情况</span><br><span class="line">1）T是一个类，而且一个T类型的实例被创建。</span><br><span class="line">2）T是一个类，且T中声明的一个静态方法被调用。</span><br><span class="line">3）T中声明的一个静态字段被赋值。</span><br><span class="line">4）T中声明的一个静态字段被使用，而且这个字段不是一个常量字段。</span><br><span class="line">5）T是一个顶级类（Top Level Class，见Java语言规范），而且一个断言语句嵌套在T内部被执行。</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ol>
+<h3 id="JVM初始化期间的同步过程"><a href="#JVM初始化期间的同步过程" class="headerlink" title="JVM初始化期间的同步过程"></a><strong>JVM初始化期间的同步过程</strong></h3><p><strong>初始化阶段</strong></p>
+<ul>
+<li><p><strong>第1阶段：通过在Class对象上同步（即获取Class对象的==初始化锁==），来控制类或接口的初始化。这个获取锁的线程会一直等待，直到当前线程能够获取到这个初始化锁。</strong></p>
+<p>==此时只有一个线程给能获得初始化锁==</p>
+</li>
+<li><p><strong>第2阶段：线程A执行类的初始化,，同时线程B在初始化锁对应的<code>condition</code>上等待</strong></p>
+<p>初始化instance过程(==可能发生重排序，但是对于其他线程不可见==)</p>
+<ol>
+<li>分配内存空间</li>
+<li>复制给引用变量</li>
+<li>初始化对象</li>
+</ol>
+</li>
+<li><p><strong>第3阶段：线程A设置初始化完成标志，然后唤醒在condition中等待的所有线程。</strong></p>
+</li>
+<li><p><strong>第4阶段：线程B结束类的初始化处理。</strong></p>
+<p>线程A在第2阶段的A1执行类的初始化，并在第3阶段的A4释放初始化锁；</p>
+<p>线程B在第4段的B1获取==同一个初始化锁==，并在第4阶段的B4之后才开始访问这个类</p>
+</li>
+<li><p><strong>第5阶段：线程C执行类的初始化的处理。</strong></p>
+<p>线程A在第2阶段的A1执行类的初始化，并在第3阶段的A4释放锁；``</p>
+<p>线程C在第5阶段的C1获取==同一个锁==，并在在第5阶段的C4之后才开始访问这个类</p>
+</li>
+</ul>
+<h3 id="九、JAVA内存模型综述"><a href="#九、JAVA内存模型综述" class="headerlink" title="九、JAVA内存模型综述"></a>九、JAVA内存模型综述</h3><h4 id="处理器内存模型"><a href="#处理器内存模型" class="headerlink" title="处理器内存模型"></a>处理器内存模型</h4><p>常见 处理器内存模型</p>
+<ul>
+<li><p><strong>Total Store Ordering内存模型(TSO)</strong></p>
+<p>放松程序中==写-读==操作的顺序</p>
+</li>
+<li><p><strong>Total Store Ordering内存模型（PSO)</strong></p>
+<p>继续放松程序中==写-写==操作的顺序</p>
+</li>
+<li><p><strong>Relaxed Memory Order内存模型（RMO）</strong></p>
+<p>继续放松程序中==读-写==操作的顺序</p>
+</li>
+<li><p><strong>PowerPC内存模型</strong></p>
+<p>继续放松==读-读==操作的顺序</p>
+</li>
+</ul>
+<p><img src="/2019/12/29/concurrent3/image-20200107205334303-1578457897461.png" alt="image-20200107205334303"></p>
+<blockquote>
+<p>所有处理器内存模型都允许写-读重排序，原因：<strong>它们都使用了写缓存区.</strong></p>
+<ol>
+<li><p>写缓存区可能导致写-读操作重排序</p>
+</li>
+<li><p>由于写缓存区仅对当前处理器可见，这个特性导致当前处理器可以比其他处理器先看到临时保存在自己写缓存区中的写。</p>
+</li>
+</ol>
+</blockquote>
+<p><img src="/2019/12/29/concurrent3/image-20200107205635952-1578457897461.png" alt="image-20200107205635952"></p>
+<h4 id="内存模型之间关系"><a href="#内存模型之间关系" class="headerlink" title="内存模型之间关系"></a>内存模型之间关系</h4><p>同处理器内存模型一样，越是追求执行性能的语言，内存模型设计得会越弱。</p>
+<p><img src="/2019/12/29/concurrent3/image-20200107205755222-1578457897461.png" alt="image-20200107205755222"></p>
+<h4 id="JMM的内存可见性保证"><a href="#JMM的内存可见性保证" class="headerlink" title="JMM的内存可见性保证"></a>JMM的内存可见性保证</h4><p>按程序类型可分为</p>
+<ul>
+<li><p><strong>单线程程序</strong>：</p>
+<p>不会出现内存可见性问题</p>
+</li>
+<li><p><strong>正确同步的多线程程序</strong></p>
+<p>具有顺序一致性（程序的执行结果与该程序在顺序一致性内存模型中的执行结果相同）</p>
+</li>
+<li><p><strong>未同步/未正确同步的多线程程序</strong></p>
+<p>JMM为它们提供了最小安全性保障：线程执行时读取到的值，要么是之前某个线程写入的值，要么是默认值（0、null、false）。</p>
+<blockquote>
+<p>但最小安全性并不保证线程读取到的值，一定是某个线程写完后的值。==最小安全性保证线程读取到的值不会无中生有的冒出来，但并不保证线程读取到的值一定是正确的==。</p>
+</blockquote>
+</li>
+</ul>
+<h4 id="旧内存模型的修补"><a href="#旧内存模型的修补" class="headerlink" title="旧内存模型的修补"></a>旧内存模型的修补</h4><p>JDK1.5之后对volatile的内存语义、final的内存语义做了增强</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div class="post-share">分享到：</div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+            <a href="/tags/高并发/" rel="tag"># 高并发</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/12/15/concurrent2/" rel="next" title="Java并发机制的底层实现原理">
+                <i class="fa fa-chevron-left"></i> Java并发机制的底层实现原理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/01/05/year-end-summery/" rel="prev" title="2019年终总结">
+                2019年终总结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+  <div class="comments" id="comments">
+      <div id="gitalk-container"></div>
+    </div>
+	
+  
+
+
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+        <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+		<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    
+		<script type="text/javascript">
+		const gitalk = new Gitalk({
+		clientID: '8c4098d1aa1409852b19',
+		clientSecret: 'cdc136702eaaa9600bc46ab7da3c95a8537116ef',
+		repo: 'Blog_message_repo',
+		owner: 'BladeDragon',
+		admin: ['BladeDragon'],
+		id: window.location.pathname,      // Ensure uniqueness and length less than 50
+		});
+		
+		gitalk.render('gitalk-container');
+		</script>
+
+    
+
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://cdn.zblade.top/qiniu_img/zcard2.png" alt="陌花采撷">
+            
+              <p class="site-author-name" itemprop="name"><span style="opacity:.2;"></span>陌花采撷</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/bladedragon" target="_blank" title="GitHub" data-balloon="GitHub" data-balloon-pos="up">
+                    
+                       <i class="fa fa-fw fa-github"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://telegram.com" target="_blank" title="telegram" data-balloon="telegram" data-balloon-pos="up">
+                    
+                       <i class="fa fa-fw fa-telegram"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:zaft1156673039@gmail.com" target="_blank" title="E-Mail" data-balloon="E-Mail" data-balloon-pos="up">
+                    
+                       <i class="fa fa-fw fa-envelope"></i></a>
+                </span>
+              
+            
+          </div>
+
+         
+
+          
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-name">日志</span>
+				  <span class="site-state-item-count">44</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-name">分类</span>
+				   <span class="site-state-item-count">4</span>
+                </a>
+              </div>
+            
+            
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+				 <span class="site-state-item-name">标签</span>
+				  <span class="site-state-item-count">26</span>
+                </a>
+              </div>
+            
+            
+
+          </nav>
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              
+            </div>
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、基础"><span class="nav-text">一、基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、并发的两个关键问题"><span class="nav-text">1、并发的两个关键问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、java内存结构"><span class="nav-text">2、java内存结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、指令重排序"><span class="nav-text">3、指令重排序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、内存屏障分类"><span class="nav-text">4、内存屏障分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5、先行发生（happens-before）"><span class="nav-text">5、先行发生（happens-before）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、重排序"><span class="nav-text">二、重排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、顺序一致性内存模型"><span class="nav-text">三、顺序一致性内存模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、volatile内存语义"><span class="nav-text">四、volatile内存语义</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#volatile内存语义的实现"><span class="nav-text">volatile内存语义的实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、锁的内存语义"><span class="nav-text">五、锁的内存语义</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#分析ReentrantLock源码"><span class="nav-text">分析ReentrantLock源码</span></a></li></ol></li></ol><li class="nav-item nav-level-3"><a class="nav-link" href="#concurrent包的通用实现模式"><span class="nav-text">concurrent包的通用实现模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六、final域的内存语义"><span class="nav-text">六、final域的内存语义</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、final域的重排序规则"><span class="nav-text">1、final域的重排序规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、写final域的重排序规则"><span class="nav-text">2、写final域的重排序规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、读final域的重排序规则"><span class="nav-text">3、读final域的重排序规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、当final域为引用类型"><span class="nav-text">4、当final域为引用类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5、为什么final域不能从构造函数内溢出"><span class="nav-text">5、为什么final域不能从构造函数内溢出</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#七、happens-before"><span class="nav-text">七、happens-before</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#八、双重检查锁定与延迟初始化"><span class="nav-text">八、双重检查锁定与延迟初始化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#JVM初始化期间的同步过程"><span class="nav-text">JVM初始化期间的同步过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#九、JAVA内存模型综述"><span class="nav-text">九、JAVA内存模型综述</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#处理器内存模型"><span class="nav-text">处理器内存模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#内存模型之间关系"><span class="nav-text">内存模型之间关系</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#JMM的内存可见性保证"><span class="nav-text">JMM的内存可见性保证</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#旧内存模型的修补"><span class="nav-text">旧内存模型的修补</span></a></li></ol></li></ol></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-image"></div>
+      <div class="footer-inner">
+        <p>本博客已出生<span id="since"></span><span class="my-face">(●'◡'●)ﾉ♥</span></p>
+<p></p>
+
+Theme By <a href="https://github.com/DIYgod/hexo-theme-sagiri" target="_blank" class="external" rel="nofollow">Sagiri</a>
+
+<p>Made with <i class="fa fa-heart throb" style="color: #d43f57;"></i> by <span class="author" itemprop="copyrightHolder">陌花采撷</span>. </p>
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    <canvas id="evanyou"></canvas>
+    <div id="aplayer-fixed"></div>
+
+    
+	
+  </div>
+
+	
+  <script type="text/javascript" src="/js/sagiri.min.js?v=0.0.50"></script>
+	
+  
+
+
+
+
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+  <!--<script>
+    // remove service worker cache
+    // from https://stackoverflow.com/questions/33704791/how-do-i-uninstall-a-service-worker
+    "use strict";
+    if(navigator.serviceWorker)
+    {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            for(let registration of registrations) {
+                registration.unregister()
+            }
+        })
+    }
+  </script>-->
+
+  <!--<script>
+    var serviceWorkerUri = '/sw.js';
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register(serviceWorkerUri).then(function() {
+          if (navigator.serviceWorker.controller) {
+            console.log('Assets cached by the controlling service worker.');
+          } else {
+            console.log('Please reload this page to allow the service worker to handle network operations.');
+          }
+        }).catch(function(error) {
+          console.log('ERROR: ' + error);
+        });
+    } else {
+        console.log('Service workers are not supported in the current browser.');
+    }
+  </script>-->
+  
+  
+
+	
+</body>
+</html>

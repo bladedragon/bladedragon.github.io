@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+
+
+
+
+<html class="theme-next pisces" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#da532c">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="google-site-verification" content="fRFpn2MbE7qpAtGAMkPwOq1xWyHF0BtvPVdE_P3qZFY">
+
+
+
+
+
+
+
+
+  <meta name="baidu-site-verification" content="t4cHu1Oo6Q">
+
+
+
+
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.loli.net/css?family=Sigmar One:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+
+  
+
+<link href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=0.0.50" rel="stylesheet" type="text/css">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=0.0.50">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/布丁.png?v=0.0.50">
+
+
+  <link rel="mask-icon" href="/safari-pinned-tab.svg?v=0.0.50" color="#da532c">
+
+
+
+
+
+
+  <meta name="keywords" content="java,高并发,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="《并发编程的艺术》阅读笔记第二章。主要针对volatiile和synchronized做了总结">
+<meta name="keywords" content="java,高并发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java并发机制的底层实现原理">
+<meta property="og:url" content="http://site.zblade.top/2019/12/15/concurrent2/index.html">
+<meta property="og:site_name" content="Feel The Wind">
+<meta property="og:description" content="《并发编程的艺术》阅读笔记第二章。主要针对volatiile和synchronized做了总结">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://cdn.zblade.top/qiniu_img/wallhaven-lqz9jr.jpg">
+<meta property="og:image" content="http://site.zblade.top/2019/12/15/concurrent2/image-20200107101326313.png">
+<meta property="og:image" content="http://site.zblade.top/2019/12/15/concurrent2/8694380-509ad307903635af.png">
+<meta property="og:image" content="http://site.zblade.top/2019/12/15/concurrent2/8694380-0d3b09e6c73f8892.png">
+<meta property="og:image" content="http://site.zblade.top/2019/12/15/concurrent2/8694380-c4a60ba68bcc7704-1578395574451.png">
+<meta property="og:image" content="http://site.zblade.top/2019/12/15/concurrent2/image-20200106133558588.png">
+<meta property="og:image" content="http://site.zblade.top/2019/12/15/concurrent2/image-20200106134012820.png">
+<meta property="og:image" content="http://site.zblade.top/2019/12/15/concurrent2/image-20200106134139128.png">
+<meta property="og:image" content="http://site.zblade.top/2019/12/15/concurrent2/image-20200106152852450.png">
+<meta property="og:updated_time" content="2020-03-03T17:21:48.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java并发机制的底层实现原理">
+<meta name="twitter:description" content="《并发编程的艺术》阅读笔记第二章。主要针对volatiile和synchronized做了总结">
+<meta name="twitter:image" content="http://cdn.zblade.top/qiniu_img/wallhaven-lqz9jr.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '0.0.50',
+    sidebar: {"position":"right","display":"always","offset":52,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    since: '9/22/2019 11:30:00',
+    onlineAPI: '',
+    site: {
+      title: 'Feel The Wind',
+      subtitle: '',
+      author: '陌花采撷'
+    },
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    leancloud: {
+      enable: true,
+      appID: 'dTfoweWyLJr7wTEW4CUhKHJQ-gzGzoHsz',
+      appKey: 'xh7FpohCp7PmwlHYAyqSaXov'
+    },
+    favicon: {
+      visibilitychange: true,
+      narmal: '/images/布丁.png',
+      hidden: '/images/failure.ico',
+      show_text: '(/≧▽≦/)咦！又好了！',
+      hide_text: 'Warning! 404-NoFound'
+    }
+  };
+</script>
+
+
+
+
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+
+  <script type="text/javascript" src="null"></script>
+
+
+
+
+
+
+
+
+  <title>Java并发机制的底层实现原理 | Feel The Wind</title>
+  
+
+
+
+
+
+
+
+
+ 
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans" class="theme-darling">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-首页">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-小项目">
+          <a href="javascript:;" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-flask"></i> <br>
+            
+            小项目
+          </a>
+          
+            <ul class="submenu submenu-小项目">
+              
+                
+                <li class="submenu-item submenu-item-old_blog">
+                  <a href="http://zblade.top:85/wordpress/" rel="section" target="_blank">
+                    Old_Blog
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-短网址生成">
+                  <a href="http://zblade.top:8081/" rel="section" target="_blank">
+                    短网址生成
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-资源站">
+                  <a href="http://inner.cquptict.com:90/" rel="section" target="_blank">
+                    资源站
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-ict-pan">
+                  <a href="http://www.cquptict.com:8000/" rel="section" target="_blank">
+                    ICT-Pan
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-招新系统">
+                  <a href="http://zblade.top:83/#/" rel="section" target="_blank">
+                    招新系统
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-领奖系统">
+                  <a href="https://github.com/bladedragon/PrizeTool" rel="section" target="_blank">
+                    领奖系统
+                  </a>
+                </li>
+              
+            </ul>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-归档">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-分类">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-server"></i> <br>
+            
+            分类
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-标签">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tag"></i> <br>
+            
+            标签
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-留言板">
+          <a href="/message/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-pencil"></i> <br>
+            
+            留言板
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-关于">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rocket"></i> <br>
+            
+            关于
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-coding_set">
+          <a href="https://bladedragon.github.io/coding_docs/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sign-language"></i> <br>
+            
+            Coding_Set
+          </a>
+          
+        </li>
+      
+
+      
+      <li class="menu-item search">
+          <form class="search-form">
+            <input name="keyword" type="text" class="search-input" placeholder="站内搜索">
+            <button type="submit" class="search-submit"><i class="fa fa-search"></i></button>
+          </form>
+      </li>
+      <!--<li class="menu-item online"><span id="online-count">?</span>人在线</li>-->
+    </ul>
+  
+
+  
+</nav>
+
+<div class="site-brand-wrapper" style="background-image: url(http://cdn.zblade.top/qiniu_img/wallhaven-6k1j7l.jpg)">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <div class="brand">
+        <span class="logo-line-before"><i></i></span>
+        <div class="site-title">
+          <div id="animate" class="animate">
+            <span>F</span><span>e</span><span>e</span><span>l</span><span> </span><span>T</span><span>h</span><span>e</span><span> </span><span>W</span><span>i</span><span>n</span><span>d</span>
+          </div>
+          <div id="guide" class="guide">
+            <span>F</span><span>e</span><span>e</span><span>l</span><span> </span><span>T</span><span>h</span><span>e</span><span> </span><span>W</span><span>i</span><span>n</span><span>d</span>
+          </div>
+        </div>
+        <span class="logo-line-after"><i></i></span>
+      </div>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<div class="site-master" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-master-avatar" itemprop="image" src="http://cdn.zblade.top/qiniu_img/zavatar2.jpg" alt="陌花采撷">
+    <h2 class="site-master-description" itemprop="description">
+        <span>即使天无雨，</span><span>吾亦留此地</span>
+    </h2>
+</div>
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-date">
+			<div class="post-month">12月</div>
+			<div class="post-day">15</div>
+	</div>
+  
+  <div class="post-badge">
+    
+      <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+        <a href="/categories/学习笔记/" itemprop="url" rel="index">
+          <span itemprop="name">学习笔记</span>
+        </a>
+      </span>
+    
+  </div>
+  
+
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://site.zblade.top/2019/12/15/concurrent2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="陌花采撷">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="http://cdn.zblade.top/qiniu_img/zavatar2.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Feel The Wind">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java并发机制的底层实现原理</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-12-15T19:01:51+08:00">2019-12-15</time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/12/15/concurrent2/" class="leancloud_visitors" data-flag-title="Java并发机制的底层实现原理">
+               <span class="post-meta-divider"></span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">被</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+                 <span class="post-meta-item-text">人浏览</span>
+             </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>《并发编程的艺术》阅读笔记第二章。主要针对volatiile和synchronized做了总结</p>
+<p><img src="http://cdn.zblade.top/qiniu_img/wallhaven-lqz9jr.jpg" alt></p>
+<a id="more"></a>
+
+<p><img src="/2019/12/15/concurrent2/image-20200107101326313.png" alt="image-20200107101326313"></p>
+<h2 id="一、volatile的应用"><a href="#一、volatile的应用" class="headerlink" title="一、volatile的应用"></a>一、volatile的应用</h2><p>如果volatile变量修饰符使用得当，它比synchronized的使用和执行成本更低，<br>因为它不会引起线程上下文的切换和调度。</p>
+<h2 id="1-volatile的定义和实现原理"><a href="#1-volatile的定义和实现原理" class="headerlink" title="1. volatile的定义和实现原理"></a>1. volatile的定义和实现原理</h2><p>有volatile变量修饰符的共享变量进行写操作的时候会多出一个lock前缀的指令</p>
+<p>lock前缀的指令在多核处理器中引发两件事情</p>
+<p><strong>（1）将当前处理器缓存行的数据写回内存</strong></p>
+<p>但是锁总线开销比较大，因此现在的LOCK信号基本锁缓存，使用<mark>缓存一致性机制</mark>确保修改的原子性（<strong>缓存锁定</strong>）</p>
+<p>（<strong>2）这个写回内存的操作会使在其他CPU里缓存了该内存地址的数据无效</strong></p>
+<ul>
+<li><mark><strong>MESI(修改、独占、共享、无效)控制协议</strong></mark>维护内存和其他处理器缓存一致性</li>
+<li>嗅探技术保证内部缓存、系统内存和其他数据缓存在总线上保持一致</li>
+</ul>
+<blockquote>
+<p><mark>为了提高处理速度，处理器不直接和内存通信，而是先将内存中的数据读到cache中再进行操作，但操作完全不知道何时会写到内存</mark>。如果对声明了volatile变量的进行写操作，JVM就会向处理器发送一条Lock前缀的指令，将这个变量所在缓存行的数据写回到系统内存。但是，就算写回到内存，如果其他处理器缓存的值还是旧的，再进行计算操作就会有问题。所以，多处理器下，要实行缓存一致性协议，每个处理器通过<mark>嗅探</mark>在总线上传播的数据来检查自己缓存的值是不是过期，如果过期，就将当前处理器的缓存行设置成无效状态，当处理器对这个数据进行修改操作的时候，会重新从系统内存中把数据读到处理器缓存中。</p>
+</blockquote>
+<h3 id="2-volatile使用优化"><a href="#2-volatile使用优化" class="headerlink" title="2. volatile使用优化"></a>2. volatile使用优化</h3><p>将共享变量追加到64字节(貌似不生效了，在源码中没看到)</p>
+<p><mark><strong>LinkedTransferQueue</strong></mark></p>
+<p>一些处理器的Cache的高速缓存行是64字节，不支持部分填充缓存行。通过追加到64字节的方式来填满高速缓冲区的缓存行，避免头结点和尾节点加载到同一个缓存行，使头、尾节点在修改时不会互相锁定。</p>
+<p><strong>并不是所有使用volatile变量的时候都要追加到64字节</strong></p>
+<ol>
+<li>缓存行非64字节宽的处理器不适用</li>
+<li>共享变量不会被频繁读写的情况不适用，反而会因为追加字节导致性能消耗增加</li>
+</ol>
+<h2 id="二、synchronized的实现原理与应用（重量级锁）"><a href="#二、synchronized的实现原理与应用（重量级锁）" class="headerlink" title="二、synchronized的实现原理与应用（重量级锁）"></a>二、synchronized的实现原理与应用（重量级锁）</h2><p>synchronize基础：java中的每个对象都可以作为锁。具体表现为3种形式：</p>
+<ol>
+<li>对于普通同步方法，锁是当前实例对象</li>
+<li>对于静态同步方法，锁是当前类的class对象</li>
+<li>对于同步方法块，锁是synchronize括号里的对象</li>
+</ol>
+<blockquote>
+<p>锁到底存在哪里？锁里面会存储什么信息？·</p>
+</blockquote>
+<h3 id="Synchronized在JVM中的实现原理"><a href="#Synchronized在JVM中的实现原理" class="headerlink" title="Synchronized在JVM中的实现原理"></a>Synchronized在JVM中的实现原理</h3><p>JVM基于进入和退出<code>Monitor</code>对象来实现<mark>方法同步和代码块同步</mark>，但两者的表现细节不同。</p>
+<p><mark>代码块同步</mark>使用<code>monitorenter</code>和<code>monitorexit</code>指令实现，而<mark>方法同步</mark>是使用另外一种实现方式实现的，细节并没有在JVM中说明。但是，方法同步同样可以使用上述两个指令实现。</p>
+<ul>
+<li><code>monitorenter</code>指令是在编译后插入到同步代码块的<strong>开始位置</strong>，而<code>monitorexit</code>是插入到<strong>方法结束处和异常处</strong>，JVM要保证每个<code>monitorenter</code>必须有对应的<code>monitorexit</code>与之配对。</li>
+<li>任何对象都有一个<code>monitor</code>与之关联，且当一个<code>monitor</code>被持有后，它将处于锁定状态。线程执行到<code>monitorenter</code>指令时，将会尝试获取对象所对应的<code>monitor</code>的所有权，即尝试获得对象的锁。</li>
+</ul>
+<p>同步方法:JVM使用<code>ACC_SYNCHRONIZED</code>标识来实现。即JVM通过在方法访问标识符(<code>flags</code>)中加入<strong><code>ACC_SYNCHRONIZED</code></strong>来实现同步功能。同步方法会在class文件中的<code>access_flags</code>中存放<strong><code>ACC_SYNCHRONIZED</code></strong>，而<code>access_flags</code>是存放在常量池的</p>
+<blockquote>
+<p>同步方法是隐式的。一个同步方法会在运行时常量池中的<strong>method_info</strong>结构体中存放<strong>ACC_SYNCHRONIZED</strong>标识符。当一个线程访问方法时，会去检查是否存在<strong>ACC_SYNCHRONIZED</strong>标识，如果存在，则先要获得对应的<strong>monitor</strong>锁，然后执行方法。当方法执行结束(不管是正常<strong>return</strong>还是抛出异常)都会释放对应的<strong>monitor</strong>锁。如果此时有其他线程也想要访问这个方法时，会因得不到<strong>monitor</strong>锁而阻塞。当同步方法中抛出异常且方法内没有捕获，则在向外抛出时会先释放已获得的<strong>monitor</strong>锁</p>
+</blockquote>
+<h4 id="monitor"><a href="#monitor" class="headerlink" title="monitor"></a>monitor</h4><blockquote>
+<p>管程 (英语：<strong>Monitors</strong>，也称为监视器) 是一种程序结构，结构内的多个子程序（对象或模块）形成的多个工作线程互斥访问共享资源。</p>
+<p>这是一个概念，目的是为了简化同步调用的过程，封装了同步操作，避免直接使用PV信号量。在java中的具体实现就是<strong>ObjectMonitor</strong></p>
+</blockquote>
+<p><strong>ObjcetMonitor</strong>的关键字段</p>
+<ul>
+<li><code>_count</code>：记录owner线程获取锁的次数。这句话很好理解，这也决定了synchronized是可重入的。</li>
+<li><code>_owner</code>：指向拥有该对象的线程</li>
+<li><code>_WaitSet</code>：存放处于wait状态的线程队列。</li>
+<li><code>_EntryList</code>：存放等待锁而被block的线程队列。</li>
+</ul>
+<p><img src="/2019/12/15/concurrent2/8694380-509ad307903635af.png" alt="img"></p>
+<p><img src="/2019/12/15/concurrent2/8694380-0d3b09e6c73f8892.png" alt="img"></p>
+<ul>
+<li>想要获取monitor的线程先进入monitor的__EntryList队列阻塞等待</li>
+<li>如果在程序里调用了wait()方法，则该线程进入_WaitSet队列，wait()会释放monitor锁，即将_owner赋值为null并进入_WaitSet队列阻塞等待</li>
+<li>当程序里其他线程调用了notify/notifyAll方法时，就会唤醒_WaitSet中的某个线程，这个线程就会再次尝试获取monitor锁。如果成功，则就会成为monitor的owner。</li>
+</ul>
+<p><strong>具体实现</strong></p>
+<p><img src="/2019/12/15/concurrent2/8694380-c4a60ba68bcc7704-1578395574451.png" alt="img"></p>
+<pre><code>在博客上找一下</code></pre><h3 id="1、java对象头"><a href="#1、java对象头" class="headerlink" title="1、java对象头"></a>1、java对象头</h3><p><code>synchronized</code>用的锁是存在java对象头里的</p>
+<p>数组类型3个字宽（3*4字节）</p>
+<p>非数字类型2个字宽（2*4字节）</p>
+<p><img src="/2019/12/15/concurrent2/image-20200106133558588.png" alt="image-20200106133558588"></p>
+<p>mark word里存储的数据会随着锁标志位的变化而变化</p>
+<p><img src="/2019/12/15/concurrent2/image-20200106134012820.png" alt="image-20200106134012820"></p>
+<p>64位虚拟机下的存储结构</p>
+<p><img src="/2019/12/15/concurrent2/image-20200106134139128.png" alt="image-20200106134139128"></p>
+<h3 id="2、锁的升级与对比"><a href="#2、锁的升级与对比" class="headerlink" title="2、锁的升级与对比"></a>2、锁的升级与对比</h3><blockquote>
+<p>from JDK1.6</p>
+</blockquote>
+<p>锁一共有4中状态，由低到高为：无锁、偏向锁、轻量级锁、重量级锁，这几个状态会随着竞争情况逐渐升级。<br>锁可以升级但不能降级（提高获得锁和释放锁的效率）</p>
+<h4 id="偏向锁："><a href="#偏向锁：" class="headerlink" title="偏向锁："></a>偏向锁：</h4><p>大多数情况下，锁不仅不存在多线程竞争，而且总是由同一线程多次获得，为了让线程获得锁的代价更低，引入了偏向锁。</p>
+<p>当一个线程访问同步块并获取锁时，会在<mark>对象头和栈帧的锁记录</mark>里存储锁偏向的<code>线程ID</code>，以后该线程在进入和退出同步块时不需要进行CAS操作来加锁和解锁，只需简单测试对象头里的<code>mark word</code>里是否存储着指向当前线程的偏向锁。</p>
+<p>如果测试成功，表示线程已经获得了锁。如果测试失败，则需要再测试一下<code>mark word</code>中偏向锁的标识是否设置成1：如果没有设置，则使用<code>CAS竞争锁</code>；如果设置了，则尝试<mark>使用CAS将对象头的偏向锁指向当前线程</mark>。</p>
+<p><strong>（1）偏向锁的撤销</strong></p>
+<p>偏向锁使用了一种等到竞争出现才释放锁的机制，所以当其他线程尝试竞争偏向锁时，持有偏向锁的线程才会释放锁。偏向锁的撤销，需要等待<mark>全局安全点</mark>（在这个时间上没有正在执行的<mark>字节码</mark>）。</p>
+<p>首先==暂停==拥有偏向锁的线程，然后检查持有偏向锁的线程是否活着，如果线程不处于活动状态，则将对象头设置成无锁状态；如果线程仍然活着，<mark>拥有偏向锁的<strong>栈</strong>会被执行，遍历偏向对象的锁记录</mark>，栈中的锁记录和对象头的<code>mark word</code>要么重新偏向于其他线程，要么恢复到无锁或者标记对象不适合作为偏向锁。</p>
+<pre><code>这一块还是不清楚，得上网再看看
+如果另外的线程和现有线程竞争偏向锁，是如何判断是否继续偏向的？</code></pre><p><strong>（2）关闭偏向锁</strong></p>
+<p>java6、7默认启用偏向锁，但是在程序启动后会有几秒延迟，如有必要可以关闭延迟<br><code>-XX:BiasedLockingStartupDelay=0</code>,如果确定程序里所有的锁通常处于竞争状态，可以通过JVM参数关闭偏向锁：<code>-XX:UseBaisedLocking=false</code>,那么程序会默认进入轻量级锁状态</p>
+<h4 id="轻量级锁"><a href="#轻量级锁" class="headerlink" title="轻量级锁"></a>轻量级锁</h4><p>（1）加锁</p>
+<p>线程在执行同步块之前，JVM会先在当前线程的<strong>栈帧</strong>中<mark>创建用于存储锁记录的空间</mark>，并将对象头中的<code>Mark word</code>复制到锁记录中（<code>Displaced Mark World</code>）。然后线程尝试使用CAS将对象头中的<code>Mark word</code>替换为指向锁记录的指针。如果成功，当前线程获得锁，如果失败，表示其他线程竞争锁，当前线程便尝试使用<mark>自旋</mark>来获取锁。</p>
+<p>（2）解锁</p>
+<p>解锁时，会使用原子的CAS操作将<code>Displaced Mark Word</code>替换回到对象头，如果成功，则表示没有竞争发生。如果失败，表示当前锁存在竞争，锁就会膨胀成重量级锁。</p>
+<p>因为自旋会消耗CPU，为了避免无用的自旋，一旦升级成重量级锁，就不会再恢复到轻量级锁状态。当锁处于这个状态下，其他线程试图获取锁时，都会被阻塞住，当持有锁的线程释放锁之后会唤醒这些线程，被唤醒的线程就会进行新一轮的夺锁之争。</p>
+<h3 id="3、锁的优缺点对比"><a href="#3、锁的优缺点对比" class="headerlink" title="3、锁的优缺点对比"></a>3、锁的优缺点对比</h3><ul>
+<li><p>偏向锁：</p>
+<pre><code>优点：加锁解锁不需要额外的消耗
+缺点：如果线程间存在锁竞争，会带来额外的锁撤销的消耗</code></pre><p>​    适用场景：<mark>适用于只有一个线程访问同步块的场景</mark></p>
+</li>
+<li><p>轻量级锁：</p>
+<pre><code>优点：竞争的线程&lt;mark&gt;不会阻塞&lt;/mark&gt;，提高了程序的响应速度
+缺点：如果始终得不到锁竞争的线程，使用自旋会消耗CPU
+使用场景：追求**响应时间**，同步执行速度非常快</code></pre></li>
+<li><p>重量级锁：</p>
+<pre><code>优点：&lt;mark&gt;线程竞争不使用自旋，不会消耗CPU&lt;/mark&gt;
+缺点：线程阻塞，响应时间慢
+适用场景：追求**吞吐量**，同步块执行时间较长</code></pre></li>
+</ul>
+<h3 id="自我理解"><a href="#自我理解" class="headerlink" title="自我理解"></a>自我理解</h3><ul>
+<li><p>偏向锁一开始指向持有锁的线程，之后出现锁竞争后撤销偏向锁，偏向锁是否会进化到轻量级锁存疑。</p>
+</li>
+<li><p>轻量级锁一开始需要复制一份markworld内容（即hashcode或者其他所锁信息）到本地线程栈帧，然后markworld修改为指向线程的指针</p>
+</li>
+<li><p>如果出现锁竞争，markworld将膨胀为重量级锁</p>
+</li>
+</ul>
+<h2 id="三、原子操作的实现原理"><a href="#三、原子操作的实现原理" class="headerlink" title="三、原子操作的实现原理"></a>三、原子操作的实现原理</h2><h3 id="1、术语"><a href="#1、术语" class="headerlink" title="1、术语"></a>1、术语</h3><pre><code>CAS：比较并交换
+缓存行：缓存的最小操作单位
+内存顺序冲突：一般由假共享引起，出现内存顺序冲突时，CPU必须清空流水线
+假共享：多个CPU同时修改同一个缓存行的不同部分而引起其中一个CPU的操作无效</code></pre><h3 id="2、处理器实现原子操作"><a href="#2、处理器实现原子操作" class="headerlink" title="2、处理器实现原子操作"></a>2、处理器实现原子操作</h3><p><strong>（1）通过总线锁保证原子性</strong></p>
+<p>如果多个处理器同时对共享变量进行读改写操作（i++），那么共享变量就会被多个处理器同时进行操作，这样读改写操作就不是原子的，操作完之后共享变量的值会和期望的不一致。</p>
+<p>总线锁：当一个处理器在总线上输出<code>LOCK#</code>信号时，其他处理器的请求将被阻塞住，那么该处理器可以独占共享内存。</p>
+<p><strong>（2）使用缓存锁保证原子性</strong></p>
+<p>总线锁定把CPU和内存之间的通信锁住了，锁定期间，其他处理器不能操作其他内存地址的数据，因此总线锁定的开销比较大。</p>
+<p>缓存锁定：内存区域如果被缓存在处理器的缓存行中，并且在<code>LOCK</code>期间被锁定，那么当他执行锁操作会写到内存时，处理器不在总线上声言<code>LOCK #</code>信号，而是修改内部的<strong>内存地址</strong>，并允许它的<mark>缓存一致性机制</mark>来保证操作的原子性，因为<mark>缓存一致性机制会阻止同时修改由两个以上处理器缓存的内存区域数据，当其他处理器回写已被锁定的缓存行的数据时，会使缓存行无效。</mark></p>
+<pre><code>两种情况不会使用缓存锁定：
+    1、数据不能被缓存在处理器内部，或操作的数据跨多个缓存行，此时用总线锁定
+    2、有些处理器不支持缓存锁定</code></pre><h3 id="3、Java实现原子操作（锁和循环CAS）"><a href="#3、Java实现原子操作（锁和循环CAS）" class="headerlink" title="3、Java实现原子操作（锁和循环CAS）"></a>3、Java实现原子操作（锁和循环CAS）</h3><p>（1）循环CAS机制</p>
+<p>处理器的<code>CMPXCHG</code>指令</p>
+<p>自旋CAS：循环进行CAS操作直至成功为止</p>
+<p>CAS实现原子操作的三大问题：</p>
+<ol>
+<li><p>ABA问题：A到B再到A，CAS检查值时会以为没有发生变化，实际却发生了变化，解决方式是在变量前面追加<mark>版本号</mark>：1A到2B到3C</p>
+<p>AtomicStampedReference类解决方法：</p>
+<p><img src="/2019/12/15/concurrent2/image-20200106152852450.png" alt="image-20200106152852450"></p>
+</li>
+</ol>
+<ol start="2">
+<li><p>循环时间长开销大：自旋CAS如果长时间不成功，会给CPU带来非常大的执行开销。</p>
+</li>
+<li><p><mark>只能保证一个共享变量的原子操作</mark>：此时用<strong>锁</strong>或者将几个共享变量<strong>合并</strong></p>
+</li>
+</ol>
+<p>（2）锁机制</p>
+<p>除了偏向锁，另外两种锁都使用了循环CAS机制,即当一个线程进入同步块的时候使用循环CAS的方式获取锁，当他退出同步块的时候使用循环CAS释放锁。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div class="post-share">分享到：</div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+            <a href="/tags/高并发/" rel="tag"># 高并发</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/12/10/ipv6/" rel="next" title="IPv6地址解析">
+                <i class="fa fa-chevron-left"></i> IPv6地址解析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/12/29/concurrent3/" rel="prev" title="Java内存模型">
+                Java内存模型 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+  <div class="comments" id="comments">
+      <div id="gitalk-container"></div>
+    </div>
+	
+  
+
+
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+        <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+		<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    
+		<script type="text/javascript">
+		const gitalk = new Gitalk({
+		clientID: '8c4098d1aa1409852b19',
+		clientSecret: 'cdc136702eaaa9600bc46ab7da3c95a8537116ef',
+		repo: 'Blog_message_repo',
+		owner: 'BladeDragon',
+		admin: ['BladeDragon'],
+		id: window.location.pathname,      // Ensure uniqueness and length less than 50
+		});
+		
+		gitalk.render('gitalk-container');
+		</script>
+
+    
+
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://cdn.zblade.top/qiniu_img/zcard2.png" alt="陌花采撷">
+            
+              <p class="site-author-name" itemprop="name"><span style="opacity:.2;"></span>陌花采撷</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/bladedragon" target="_blank" title="GitHub" data-balloon="GitHub" data-balloon-pos="up">
+                    
+                       <i class="fa fa-fw fa-github"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://telegram.com" target="_blank" title="telegram" data-balloon="telegram" data-balloon-pos="up">
+                    
+                       <i class="fa fa-fw fa-telegram"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:zaft1156673039@gmail.com" target="_blank" title="E-Mail" data-balloon="E-Mail" data-balloon-pos="up">
+                    
+                       <i class="fa fa-fw fa-envelope"></i></a>
+                </span>
+              
+            
+          </div>
+
+         
+
+          
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-name">日志</span>
+				  <span class="site-state-item-count">44</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-name">分类</span>
+				   <span class="site-state-item-count">4</span>
+                </a>
+              </div>
+            
+            
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+				 <span class="site-state-item-name">标签</span>
+				  <span class="site-state-item-count">26</span>
+                </a>
+              </div>
+            
+            
+
+          </nav>
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              
+            </div>
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、volatile的应用"><span class="nav-text">一、volatile的应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-volatile的定义和实现原理"><span class="nav-text">1. volatile的定义和实现原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-volatile使用优化"><span class="nav-text">2. volatile使用优化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、synchronized的实现原理与应用（重量级锁）"><span class="nav-text">二、synchronized的实现原理与应用（重量级锁）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Synchronized在JVM中的实现原理"><span class="nav-text">Synchronized在JVM中的实现原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#monitor"><span class="nav-text">monitor</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1、java对象头"><span class="nav-text">1、java对象头</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、锁的升级与对比"><span class="nav-text">2、锁的升级与对比</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#偏向锁："><span class="nav-text">偏向锁：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#轻量级锁"><span class="nav-text">轻量级锁</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、锁的优缺点对比"><span class="nav-text">3、锁的优缺点对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自我理解"><span class="nav-text">自我理解</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、原子操作的实现原理"><span class="nav-text">三、原子操作的实现原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、术语"><span class="nav-text">1、术语</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、处理器实现原子操作"><span class="nav-text">2、处理器实现原子操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、Java实现原子操作（锁和循环CAS）"><span class="nav-text">3、Java实现原子操作（锁和循环CAS）</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-image"></div>
+      <div class="footer-inner">
+        <p>本博客已出生<span id="since"></span><span class="my-face">(●'◡'●)ﾉ♥</span></p>
+<p></p>
+
+Theme By <a href="https://github.com/DIYgod/hexo-theme-sagiri" target="_blank" class="external" rel="nofollow">Sagiri</a>
+
+<p>Made with <i class="fa fa-heart throb" style="color: #d43f57;"></i> by <span class="author" itemprop="copyrightHolder">陌花采撷</span>. </p>
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    <canvas id="evanyou"></canvas>
+    <div id="aplayer-fixed"></div>
+
+    
+	
+  </div>
+
+	
+  <script type="text/javascript" src="/js/sagiri.min.js?v=0.0.50"></script>
+	
+  
+
+
+
+
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+  <!--<script>
+    // remove service worker cache
+    // from https://stackoverflow.com/questions/33704791/how-do-i-uninstall-a-service-worker
+    "use strict";
+    if(navigator.serviceWorker)
+    {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            for(let registration of registrations) {
+                registration.unregister()
+            }
+        })
+    }
+  </script>-->
+
+  <!--<script>
+    var serviceWorkerUri = '/sw.js';
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register(serviceWorkerUri).then(function() {
+          if (navigator.serviceWorker.controller) {
+            console.log('Assets cached by the controlling service worker.');
+          } else {
+            console.log('Please reload this page to allow the service worker to handle network operations.');
+          }
+        }).catch(function(error) {
+          console.log('ERROR: ' + error);
+        });
+    } else {
+        console.log('Service workers are not supported in the current browser.');
+    }
+  </script>-->
+  
+  
+
+	
+</body>
+</html>

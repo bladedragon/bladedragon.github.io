@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+
+
+
+
+<html class="theme-next pisces" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#da532c">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="google-site-verification" content="fRFpn2MbE7qpAtGAMkPwOq1xWyHF0BtvPVdE_P3qZFY">
+
+
+
+
+
+
+
+
+  <meta name="baidu-site-verification" content="t4cHu1Oo6Q">
+
+
+
+
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.loli.net/css?family=Sigmar One:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+
+  
+
+<link href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=0.0.50" rel="stylesheet" type="text/css">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=0.0.50">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/布丁.png?v=0.0.50">
+
+
+  <link rel="mask-icon" href="/safari-pinned-tab.svg?v=0.0.50" color="#da532c">
+
+
+
+
+
+
+  <meta name="keywords" content="JVM,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="var ap = new APlayer({             element: document.getElementById(&quot;aplayer-CXvjqCPb&quot;),             narrow: false,             autoplay: false,             s">
+<meta name="keywords" content="JVM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JVM调试的一次经历">
+<meta property="og:url" content="http://site.zblade.top/2021/11/07/jvm-commands/index.html">
+<meta property="og:site_name" content="Feel The Wind">
+<meta property="og:description" content="var ap = new APlayer({             element: document.getElementById(&quot;aplayer-CXvjqCPb&quot;),             narrow: false,             autoplay: false,             s">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://site.zblade.top/2021/11/07/jvm-commands/2772438ff8f3977c7e64456975d5cd4b6139c6fc.jpg@942w_1292h_progressive.webp">
+<meta property="og:image" content="https://img-blog.csdn.net/20181012170445536?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3pjMTk5MjEyMTU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta property="og:image" content="https://snailclimb.gitee.io/javaguide/docs/java/jvm/pictures/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/01d330d8-2710-4fad-a91c-7bbbfaaefc0e.png">
+<meta property="og:updated_time" content="2021-11-23T15:00:21.378Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JVM调试的一次经历">
+<meta name="twitter:description" content="var ap = new APlayer({             element: document.getElementById(&quot;aplayer-CXvjqCPb&quot;),             narrow: false,             autoplay: false,             s">
+<meta name="twitter:image" content="http://site.zblade.top/2021/11/07/jvm-commands/2772438ff8f3977c7e64456975d5cd4b6139c6fc.jpg@942w_1292h_progressive.webp">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '0.0.50',
+    sidebar: {"position":"right","display":"always","offset":52,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    since: '9/22/2019 11:30:00',
+    onlineAPI: '',
+    site: {
+      title: 'Feel The Wind',
+      subtitle: '',
+      author: '陌花采撷'
+    },
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    leancloud: {
+      enable: true,
+      appID: 'dTfoweWyLJr7wTEW4CUhKHJQ-gzGzoHsz',
+      appKey: 'xh7FpohCp7PmwlHYAyqSaXov'
+    },
+    favicon: {
+      visibilitychange: true,
+      narmal: '/images/布丁.png',
+      hidden: '/images/failure.ico',
+      show_text: '(/≧▽≦/)咦！又好了！',
+      hide_text: 'Warning! 404-NoFound'
+    }
+  };
+</script>
+
+
+
+
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+
+  <script type="text/javascript" src="null"></script>
+
+
+
+
+
+
+
+
+  <title>JVM调试的一次经历 | Feel The Wind</title>
+  
+
+
+
+
+
+
+
+
+ 
+<link rel="stylesheet" href="\assets\css\APlayer.min.css" class="aplayer-style-marker">
+<script src="\assets\js\APlayer.min.js" class="aplayer-script-marker"></script>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans" class="theme-darling">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-首页">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-小项目">
+          <a href="javascript:;" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-flask"></i> <br>
+            
+            小项目
+          </a>
+          
+            <ul class="submenu submenu-小项目">
+              
+                
+                <li class="submenu-item submenu-item-old_blog">
+                  <a href="http://zblade.top:85/wordpress/" rel="section" target="_blank">
+                    Old_Blog
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-短网址生成">
+                  <a href="http://zblade.top:8081/" rel="section" target="_blank">
+                    短网址生成
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-资源站">
+                  <a href="http://inner.cquptict.com:90/" rel="section" target="_blank">
+                    资源站
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-ict-pan">
+                  <a href="http://www.cquptict.com:8000/" rel="section" target="_blank">
+                    ICT-Pan
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-招新系统">
+                  <a href="http://zblade.top:83/#/" rel="section" target="_blank">
+                    招新系统
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-领奖系统">
+                  <a href="https://github.com/bladedragon/PrizeTool" rel="section" target="_blank">
+                    领奖系统
+                  </a>
+                </li>
+              
+            </ul>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-归档">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-分类">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-server"></i> <br>
+            
+            分类
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-标签">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tag"></i> <br>
+            
+            标签
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-留言板">
+          <a href="/message/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-pencil"></i> <br>
+            
+            留言板
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-关于">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rocket"></i> <br>
+            
+            关于
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-coding_set">
+          <a href="https://bladedragon.github.io/coding_docs/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sign-language"></i> <br>
+            
+            Coding_Set
+          </a>
+          
+        </li>
+      
+
+      
+      <li class="menu-item search">
+          <form class="search-form">
+            <input name="keyword" type="text" class="search-input" placeholder="站内搜索">
+            <button type="submit" class="search-submit"><i class="fa fa-search"></i></button>
+          </form>
+      </li>
+      <!--<li class="menu-item online"><span id="online-count">?</span>人在线</li>-->
+    </ul>
+  
+
+  
+</nav>
+
+<div class="site-brand-wrapper" style="background-image: url(http://cdn.zblade.top/qiniu_img/wallhaven-6k1j7l.jpg)">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <div class="brand">
+        <span class="logo-line-before"><i></i></span>
+        <div class="site-title">
+          <div id="animate" class="animate">
+            <span>F</span><span>e</span><span>e</span><span>l</span><span> </span><span>T</span><span>h</span><span>e</span><span> </span><span>W</span><span>i</span><span>n</span><span>d</span>
+          </div>
+          <div id="guide" class="guide">
+            <span>F</span><span>e</span><span>e</span><span>l</span><span> </span><span>T</span><span>h</span><span>e</span><span> </span><span>W</span><span>i</span><span>n</span><span>d</span>
+          </div>
+        </div>
+        <span class="logo-line-after"><i></i></span>
+      </div>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<div class="site-master" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-master-avatar" itemprop="image" src="http://cdn.zblade.top/qiniu_img/zavatar2.jpg" alt="陌花采撷">
+    <h2 class="site-master-description" itemprop="description">
+        <span>即使天无雨，</span><span>吾亦留此地</span>
+    </h2>
+</div>
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-date">
+			<div class="post-month">11月</div>
+			<div class="post-day">07</div>
+	</div>
+  
+  <div class="post-badge">
+    
+      <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+        <a href="/categories/技术探索/" itemprop="url" rel="index">
+          <span itemprop="name">技术探索</span>
+        </a>
+      </span>
+    
+  </div>
+  
+
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://site.zblade.top/2021/11/07/jvm-commands/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="陌花采撷">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="http://cdn.zblade.top/qiniu_img/zavatar2.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Feel The Wind">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">JVM调试的一次经历</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-11-07T23:01:12+08:00">2021-11-07</time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2021/11/07/jvm-commands/" class="leancloud_visitors" data-flag-title="JVM调试的一次经历">
+               <span class="post-meta-divider"></span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">被</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+                 <span class="post-meta-item-text">人浏览</span>
+             </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+        <div id="aplayer-CXvjqCPb" class="aplayer aplayer-tag-marker" style="margin-bottom: 20px;">
+            <pre class="aplayer-lrc-content"></pre>
+        </div>
+        <script>
+          var ap = new APlayer({
+            element: document.getElementById("aplayer-CXvjqCPb"),
+            narrow: false,
+            autoplay: false,
+            showlrc: false,
+            music: {
+              title: "少年少女",
+              author: "银杏BOYZ",
+              url: "https://sharefs.ali.kugou.com/202111211220/2e649d44aa9f0a556b475deead519772/KGTX/CLTX001/9073bdd808ac142de731f73d28aa9f74.mp3",
+              pic: "http://y.qq.com/music/photo_new/T002R300x300M000002fLaUt1Pydsn_2.jpg?max_age=2592000",
+              lrc: ""
+            }
+          });
+          window.aplayers || (window.aplayers = []);
+          window.aplayers.push(ap);
+        </script>
+
+<blockquote>
+<p>像是经历了一次漂流，最终依然要选择回归现实</p>
+</blockquote>
+<img src="/2021/11/07/jvm-commands/2772438ff8f3977c7e64456975d5cd4b6139c6fc.jpg@942w_1292h_progressive.webp" style="zoom:50%;">
+
+<p>记录一次工作中遇到的GC分配失败问题</p>
+<a id="more"></a>
+
+<p>之前在工作中遇到一次IO占用异常的情况，通过<code>iotop</code>查看IO占用最高的进程，发现都是业务相关的java进程,于是通过查阅<code>gc.log</code>发现了类似如下的异常（图源网络，当场场景已不可复现, 当时场景与下图几乎类似）</p>
+<p><img src="https://img-blog.csdn.net/20181012170445536?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3pjMTk5MjEyMTU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img"></p>
+<p>问题最关键的是异常一直在输出，这让人不由得怀疑业务逻辑中存在的问题，事实上，通过这些，导致问题的原因其实已经能比较容易就能联想到，但是，本着务实求真（大雾）的态度，还是要细细了解其中出现的个中缘由</p>
+<h2 id="基础概念"><a href="#基础概念" class="headerlink" title="基础概念"></a>基础概念</h2><p>既然看到了内存分配的字样，我们首先自然得先复习一下JVM内存分配的基础概念。</p>
+<p>我们知道，JVM中采用分代的内存分配策略，将java堆分成了新生代，老年代。仔细分的话，新生代又能分成eden区和survivor区（分为0和1两个区域，这也是为了更好的进行垃圾回收，比如使用复制算法）</p>
+<p><img src="https://snailclimb.gitee.io/javaguide/docs/java/jvm/pictures/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/01d330d8-2710-4fad-a91c-7bbbfaaefc0e.png" alt="img"></p>
+<p>一个对象从创建之初就有两种选择</p>
+<ul>
+<li>小对象进入新生代</li>
+<li>大对象进入老年代</li>
+</ul>
+<p>我们以小对象举例，在进入新生代后，对象首先会被分配到<code>eden</code>区，在这个过程中，就会经历到垃圾回收（<code>GC</code>）。<code>GC</code>又分为<code>minor GC</code>和<code>fullGC</code>（还有<code>major GC</code>，这里不作解释，通常可以认为是<code>fullGC</code>等价）<code>minorGC</code>仅进行新生代范围的垃圾回收，因为范围少，所以回收快，一般不会对执行中的进程 造成很大影响（视收集器算法而不同，<code>minor GC</code>也会暂停线程工作，导致<code>STW</code>），当<code>eden</code>区满后，就会执行一次<code>minorGC</code>， 经过一次<code>minorGC</code>之后，如果对象存活，就会进入<code>survivor</code>区</p>
+<p><code>survivor</code>区的对象存活时间会稍长，因为当存活对象经历了数次GC之后（默认是<code>15</code>次，每进行一次对象年龄+1），对象才会进入老年代。</p>
+<p>大对象和经历数次回收的对象存活在老年代，这里区域很大，数据变动也不频繁，代价就是垃圾回收的时候影响很大。如果老年代区域空间占满导致<code>full GC</code>，就会<code>stop the world</code>（暂停当前所有线程工作，会影响任务执行）</p>
+<p>至此，一个对象从出生到死亡的整个过程就结束了。现在回到开始，我们可以通过查看<code>gc.log</code>来观察对象内存分配情况</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[GC (Allocation Failure) [ParNew: 367523K-&gt;1293K(410432K), 0.0023988 secs] 522739K-&gt;156516K(1322496K), 0.0025301 secs] [Times: user=0.04 sys=0.00, real=0.01 secs]</span><br></pre></td></tr></table></figure>
+
+<p>这是其中一条记录。我们分别看看这些参数代表什么含义：</p>
+<p><strong>GC</strong>：代表进行了一次垃圾回收，前面没有<code>full</code>修饰，说明是<code>minor GC</code>，因此单论这次<code>GC</code>，本身不会对任务造成太大影响·</p>
+<p><strong>Allocation Failure</strong>: 结合上面的<code>minor GC</code>可以得出此次内存分配失败是新生代没有足够的空间导致的，因此会触发<code>minor GC</code>，让部分对象进入老年代</p>
+<p><strong>parNew</strong> 说明这次<code>GC</code>发生在新生代，同时使用的收集器是<code>parNew</code>收集器，<code>ParNew</code>是一个<code>Serial</code>收集器的多线程版本，会使用多个<code>CPU</code>和线程完成垃圾收集工作，该收集器采用复制算法回收内存，期间会停止其他工作线程,造成<code>STW</code>。</p>
+<p>之后的参数代表 <code>GC前内存区域使用容量-&gt;GC后内存区域使用容量(内存区总容量)</code> 后面的时间代表耗时</p>
+<p>接着又是一组数据，代表<code>堆区垃圾回收前的大小-&gt;堆区垃圾回收后的大小(堆区总大小)</code> 以及该内存区域<code>GC</code>耗时</p>
+<p>最后的<code>Times</code>则是总耗时，分别代表 <code>用户态耗时 内核态耗时 总耗时</code></p>
+<p>分析下可以得出结论：</p>
+<ul>
+<li>该次<code>GC</code>新生代减少了<code>367523-1293=366239K</code></li>
+<li><code>Heap</code>区总共减少了<code>522739-156516=366223K</code></li>
+</ul>
+<p><code>366239 – 366223 =16K</code>，说明该次共有<code>16K</code>内存从年轻代移到了老年代，可以看出来数量并不多，说明都是生命周期短的对象，只是这种对象有很多。</p>
+<p>我们需要的是尽量避免<code>Full GC</code>的发生，让对象尽可能的在年轻代就回收掉，所以这里可以稍微增加一点年轻代的大小，让那<code>17K</code>的数据也保存在年轻代中。</p>
+<p>(这里介绍几个修改JVM的参数)</p>
+<h2 id="排查方法"><a href="#排查方法" class="headerlink" title="排查方法"></a>排查方法</h2><p>这里针对排查<code>java</code>出现的异常，做一下简单的命令行记录。</p>
+<p><code>jdk</code>内置了若干命令行工具，这些命令在 <code>JDK</code>安装目录下的 <code>bin</code>目录下：</p>
+<ul>
+<li><strong><code>jps</code></strong> (JVM Process Status）: 类似 <code>UNIX</code>的 <code>ps</code> 命令。用户查看所有 Java 进程的启动类、传入参数和 Java 虚拟机参数等信息；</li>
+<li><strong><code>jstat</code></strong>（ JVM Statistics Monitoring Tool）: 用于收集 <code>HotSpot</code>虚拟机各方面的运行数据;</li>
+<li><strong><code>jinfo</code></strong> (Configuration Info for Java) : 显示虚拟机配置信息;</li>
+<li><strong><code>jmap</code></strong> (Memory Map for Java) :生成堆转储快照;</li>
+<li><strong><code>jhat</code></strong> (JVM Heap Dump Browser ) : 用于分析 <code>heapdump</code>文件，它会建立一个 HTTP/HTML 服务器，让用户可以在浏览器上查看分析结果;</li>
+<li><strong><code>jstack</code></strong> (Stack Trace for Java):生成虚拟机当前时刻的线程快照，线程快照就是当前虚拟机内每一条线程正在执行的方法堆栈的集合。</li>
+</ul>
+<h3 id="jps"><a href="#jps" class="headerlink" title="jps"></a>jps</h3><p>显示虚拟机执行主类名称以及这些进程的本地虚拟机唯一 <code>ID</code>（<code>Local Virtual Machine Identifier,LVMID</code>）</p>
+<p><strong>*注意：必须要在进程执行的对应用户权限下操作</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\SnailClimb&gt;jps</span><br><span class="line">7360 NettyClient2</span><br><span class="line">17396</span><br><span class="line">7972 Launcher</span><br><span class="line">16504 Jps</span><br><span class="line">17340 NettyServer</span><br></pre></td></tr></table></figure>
+
+<p>参数</p>
+<p><code>jps -l</code>：输出主类的全名，如果进程执行的是 <code>Jar</code>包，输出 <code>Jar</code>路径</p>
+<p><code>jps -q</code>：只输出进程的本地虚拟机唯一 <code>ID</code></p>
+<p><code>jps -v</code> : 输出虚拟机进程启动时候<code>JVM</code>参数</p>
+<p><code>jps -m</code>： 输出传递给<code>main</code>函数的参数·</p>
+<h3 id="jstat"><a href="#jstat" class="headerlink" title="jstat"></a>jstat</h3><p>使用于监视虚拟机各种运行状态信息的命令行工具</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jstat -&lt;option&gt; [-t] [-h&lt;lines&gt;] &lt;vmid&gt; [&lt;interval&gt; [&lt;count&gt;]]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>jstat -class vmid</code> ：显示 <code>ClassLoader</code>的相关信息；</li>
+<li><code>jstat -compiler vmid</code> ：显示 <code>JIT</code>编译的相关信息；</li>
+<li><code>jstat -gc vmid</code> ：显示与 <code>GC</code> 相关的堆信息；</li>
+<li><code>jstat -gccapacity vmid</code> ：显示各个代的容量及使用情况；</li>
+<li><code>jstat -gcnew vmid</code> ：显示新生代信息；</li>
+<li><code>jstat -gcnewcapcacity vmid</code> ：显示新生代大小与使用情况；</li>
+<li><code>jstat -gcold vmid</code> ：显示老年代和永久代的信息；</li>
+<li><code>jstat -gcoldcapacity vmid</code> ：显示老年代的大小；</li>
+<li><code>jstat -gcpermcapacity vmid</code> ：显示永久代大小；</li>
+<li><code>jstat -gcutil vmid</code> ：显示垃圾收集信息；</li>
+<li><code>jstat -t</code> : 在输出信息上加一个 <code>Timestamp</code>列，显示程序的运行时间。</li>
+</ul>
+<h3 id="jinfo"><a href="#jinfo" class="headerlink" title="jinfo"></a>jinfo</h3><p>输出当前 <code>jvm</code> 进程的全部参数和系统属性 (第一部分是系统的属性，第二部分是 JVM 的参数)。</p>
+<p><strong>*使用 jinfo 可以在不重启虚拟机的情况下，可以动态的修改 jvm 的参数</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\SnailClimb&gt;jinfo  -flag MaxHeapSize 17340</span><br><span class="line">-XX:MaxHeapSize=2124414976</span><br><span class="line">C:\Users\SnailClimb&gt;jinfo  -flag PrintGC 17340</span><br><span class="line">-XX:-PrintGC</span><br></pre></td></tr></table></figure>
+
+<p><code>jinfo -flag [+|-]name vmid</code> : 开启或者关闭对应名称的参数。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\SnailClimb&gt;jinfo  -flag  PrintGC 17340</span><br><span class="line">-XX:-PrintGC</span><br><span class="line"></span><br><span class="line">C:\Users\SnailClimb&gt;jinfo  -flag  +PrintGC 17340</span><br><span class="line"></span><br><span class="line">C:\Users\SnailClimb&gt;jinfo  -flag  PrintGC 17340</span><br><span class="line">-XX:+PrintGC</span><br></pre></td></tr></table></figure>
+
+<h3 id="jmap"><a href="#jmap" class="headerlink" title="jmap"></a>jmap</h3><p>用于生成堆转储快照<code>.dump</code>文件，除此之外生成<code>dump</code>文件的方法还有</p>
+<ul>
+<li><code>-XX:+HeapDumpOnOutOfMemoryError</code> 参数让虚拟机在 <code>OOM</code>异常出现之后自动生成 <code>dump</code>文件</li>
+<li><code>Linux</code>命令下可以通过 <code>kill -3</code> 发送进程退出信号也能拿到 <code>dump</code>文件</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\SnailClimb&gt;jmap -dump:format=b,file=C:\Users\SnailClimb\Desktop\heap.hprof 17340</span><br><span class="line">Dumping heap to C:\Users\SnailClimb\Desktop\heap.hprof ...</span><br><span class="line">Heap dump file created</span><br></pre></td></tr></table></figure>
+
+<h3 id="jhat"><a href="#jhat" class="headerlink" title="jhat"></a>jhat</h3><p>用于分析 <code>heapdump</code>文件，它会建立一个<code>HTTP/HTML</code>服务器，让用户可以在浏览器上查看分析结果。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\SnailClimb&gt;jhat C:\Users\SnailClimb\Desktop\heap.hprof</span><br><span class="line">Reading from C:\Users\SnailClimb\Desktop\heap.hprof...</span><br><span class="line">Dump file created Sat May 04 12:30:31 CST 2019</span><br><span class="line">Snapshot read, resolving...</span><br><span class="line">Resolving 131419 objects...</span><br><span class="line">Chasing references, expect 26 dots..........................</span><br><span class="line">Eliminating duplicate references..........................</span><br><span class="line">Snapshot resolved.</span><br><span class="line">Started HTTP server on port 7000</span><br><span class="line">Server is ready.</span><br></pre></td></tr></table></figure>
+
+<h3 id="jstack"><a href="#jstack" class="headerlink" title="jstack"></a>jstack</h3><p>用于生成虚拟机当前时刻的线程快照。线程快照就是当前虚拟机内每一条线程正在执行的方法堆栈的集合.</p>
+<p>·查找耗时时间长的线程的通用方法：</p>
+<ol>
+<li>使用<code>jps</code>查找出<code>java</code>进程的<code>pid</code>，如<code>7777</code><br>或<code>ps -ef | grep java</code></li>
+<li>使用<code>top -p 7777</code>观察进程情况，然后<code>Shift+h</code>,显示该进程的所有线程。</li>
+<li>找出<code>CPU</code>消耗较多的线程``id<code>，如</code>7788<code>，将</code>7788<code>转换为16进制</code>0x1e6c`，注意是小写。</li>
+<li>使用<code>jstack 7777 | grep -A 10 0x1e6c</code>来查询出具体的线程状态。<br><code>-A 10</code>表示查找到所在行的后<code>10</code>行</li>
+</ol>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>现在有了这些知识储备，相信解决一些常见问题应该不会无从下手了。现在返回到最上面的问题。当时出现了一直打印内存失败的信息，首先判断出这是<code>minor ``GC</code>，如果出现频率低那可以暂时不用考虑，属于正常现象；但是依然需要去思考优化如何减少<code>GC</code>。这次的问题在于一直在有对象进入老年代，可见如果持续i下去，内存必然占满。因此，很可能是代码逻辑出现了问题，例如死循环等，让任务一直不断执行，不断生成新对象，消灭老对象。最后查看代码逻辑，果然定位到了问题所在。</p>
+<p>当然，如果是经验丰富的老手一定能在第一时间判断出问题的根源。但是我依然还在不断学习，还是需要通过记录的方式，总结经验，提升能力。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div class="post-share">分享到：</div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JVM/" rel="tag"># JVM</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/10/04/october_first/" rel="next" title="十一回家小记">
+                <i class="fa fa-chevron-left"></i> 十一回家小记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/11/21/smart-switch/" rel="prev" title="搭建一个关灯神器">
+                搭建一个关灯神器 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+  <div class="comments" id="comments">
+      <div id="gitalk-container"></div>
+    </div>
+	
+  
+
+
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+        <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+		<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    
+		<script type="text/javascript">
+		const gitalk = new Gitalk({
+		clientID: '8c4098d1aa1409852b19',
+		clientSecret: 'cdc136702eaaa9600bc46ab7da3c95a8537116ef',
+		repo: 'Blog_message_repo',
+		owner: 'BladeDragon',
+		admin: ['BladeDragon'],
+		id: window.location.pathname,      // Ensure uniqueness and length less than 50
+		});
+		
+		gitalk.render('gitalk-container');
+		</script>
+
+    
+
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://cdn.zblade.top/qiniu_img/zcard2.png" alt="陌花采撷">
+            
+              <p class="site-author-name" itemprop="name"><span style="opacity:.2;"></span>陌花采撷</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/bladedragon" target="_blank" title="GitHub" data-balloon="GitHub" data-balloon-pos="up">
+                    
+                       <i class="fa fa-fw fa-github"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://telegram.com" target="_blank" title="telegram" data-balloon="telegram" data-balloon-pos="up">
+                    
+                       <i class="fa fa-fw fa-telegram"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:zaft1156673039@gmail.com" target="_blank" title="E-Mail" data-balloon="E-Mail" data-balloon-pos="up">
+                    
+                       <i class="fa fa-fw fa-envelope"></i></a>
+                </span>
+              
+            
+          </div>
+
+         
+
+          
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-name">日志</span>
+				  <span class="site-state-item-count">44</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-name">分类</span>
+				   <span class="site-state-item-count">4</span>
+                </a>
+              </div>
+            
+            
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+				 <span class="site-state-item-name">标签</span>
+				  <span class="site-state-item-count">26</span>
+                </a>
+              </div>
+            
+            
+
+          </nav>
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              
+            </div>
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基础概念"><span class="nav-text">基础概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#排查方法"><span class="nav-text">排查方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#jps"><span class="nav-text">jps</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jstat"><span class="nav-text">jstat</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jinfo"><span class="nav-text">jinfo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jmap"><span class="nav-text">jmap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jhat"><span class="nav-text">jhat</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jstack"><span class="nav-text">jstack</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结语"><span class="nav-text">结语</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-image"></div>
+      <div class="footer-inner">
+        <p>本博客已出生<span id="since"></span><span class="my-face">(●'◡'●)ﾉ♥</span></p>
+<p></p>
+
+Theme By <a href="https://github.com/DIYgod/hexo-theme-sagiri" target="_blank" class="external" rel="nofollow">Sagiri</a>
+
+<p>Made with <i class="fa fa-heart throb" style="color: #d43f57;"></i> by <span class="author" itemprop="copyrightHolder">陌花采撷</span>. </p>
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    <canvas id="evanyou"></canvas>
+    <div id="aplayer-fixed"></div>
+
+    
+	
+  </div>
+
+	
+  <script type="text/javascript" src="/js/sagiri.min.js?v=0.0.50"></script>
+	
+  
+
+
+
+
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+  <!--<script>
+    // remove service worker cache
+    // from https://stackoverflow.com/questions/33704791/how-do-i-uninstall-a-service-worker
+    "use strict";
+    if(navigator.serviceWorker)
+    {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            for(let registration of registrations) {
+                registration.unregister()
+            }
+        })
+    }
+  </script>-->
+
+  <!--<script>
+    var serviceWorkerUri = '/sw.js';
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register(serviceWorkerUri).then(function() {
+          if (navigator.serviceWorker.controller) {
+            console.log('Assets cached by the controlling service worker.');
+          } else {
+            console.log('Please reload this page to allow the service worker to handle network operations.');
+          }
+        }).catch(function(error) {
+          console.log('ERROR: ' + error);
+        });
+    } else {
+        console.log('Service workers are not supported in the current browser.');
+    }
+  </script>-->
+  
+  
+
+	
+</body>
+</html>

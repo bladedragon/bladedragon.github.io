@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+
+
+
+
+<html class="theme-next pisces" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#da532c">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="google-site-verification" content="fRFpn2MbE7qpAtGAMkPwOq1xWyHF0BtvPVdE_P3qZFY">
+
+
+
+
+
+
+
+
+  <meta name="baidu-site-verification" content="t4cHu1Oo6Q">
+
+
+
+
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.loli.net/css?family=Sigmar One:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+
+  
+
+<link href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=0.0.50" rel="stylesheet" type="text/css">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=0.0.50">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/布丁.png?v=0.0.50">
+
+
+  <link rel="mask-icon" href="/safari-pinned-tab.svg?v=0.0.50" color="#da532c">
+
+
+
+
+
+
+  <meta name="keywords" content="设计,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="最近正在做前端的UI，本来以为会是一件很简单的事情，但一来二去也搞了整整一天。其中最让我郁闷的是在了PS设置画布尺寸的时候没有做充分的调查，理解错了同学口中的尺寸意义，导致UI画完了才发现尺寸整整小了一圈😂怎么办？重画呗~ 这次我吸取教训，整理了相关资料，这次一定要一举击破像素尺寸问题！">
+<meta name="keywords" content="设计">
+<meta property="og:type" content="article">
+<meta property="og:title" content="UI设计尺寸问题——移动端">
+<meta property="og:url" content="http://site.zblade.top/2019/09/18/ui/index.html">
+<meta property="og:site_name" content="Feel The Wind">
+<meta property="og:description" content="最近正在做前端的UI，本来以为会是一件很简单的事情，但一来二去也搞了整整一天。其中最让我郁闷的是在了PS设置画布尺寸的时候没有做充分的调查，理解错了同学口中的尺寸意义，导致UI画完了才发现尺寸整整小了一圈😂怎么办？重画呗~ 这次我吸取教训，整理了相关资料，这次一定要一举击破像素尺寸问题！">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://site.zblade.top/2019/09/18/ui/16ac3a65a02a95cd.png">
+<meta property="og:image" content="http://site.zblade.top/2019/09/18/ui/16ac3a653fc492ca.jpg">
+<meta property="og:image" content="http://site.zblade.top/2019/09/18/ui/equation.svg">
+<meta property="og:image" content="http://site.zblade.top/2019/09/18/ui/16ac3a658fe8b6ff.jpg">
+<meta property="og:image" content="http://site.zblade.top/2019/09/18/ui/16ac3a664842c93c.jpg">
+<meta property="og:updated_time" content="2020-03-04T01:49:58.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="UI设计尺寸问题——移动端">
+<meta name="twitter:description" content="最近正在做前端的UI，本来以为会是一件很简单的事情，但一来二去也搞了整整一天。其中最让我郁闷的是在了PS设置画布尺寸的时候没有做充分的调查，理解错了同学口中的尺寸意义，导致UI画完了才发现尺寸整整小了一圈😂怎么办？重画呗~ 这次我吸取教训，整理了相关资料，这次一定要一举击破像素尺寸问题！">
+<meta name="twitter:image" content="http://site.zblade.top/2019/09/18/ui/16ac3a65a02a95cd.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '0.0.50',
+    sidebar: {"position":"right","display":"always","offset":52,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    since: '9/22/2019 11:30:00',
+    onlineAPI: '',
+    site: {
+      title: 'Feel The Wind',
+      subtitle: '',
+      author: '陌花采撷'
+    },
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    leancloud: {
+      enable: true,
+      appID: 'dTfoweWyLJr7wTEW4CUhKHJQ-gzGzoHsz',
+      appKey: 'xh7FpohCp7PmwlHYAyqSaXov'
+    },
+    favicon: {
+      visibilitychange: true,
+      narmal: '/images/布丁.png',
+      hidden: '/images/failure.ico',
+      show_text: '(/≧▽≦/)咦！又好了！',
+      hide_text: 'Warning! 404-NoFound'
+    }
+  };
+</script>
+
+
+
+
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+
+  <script type="text/javascript" src="null"></script>
+
+
+
+
+
+
+
+
+  <title>UI设计尺寸问题——移动端 | Feel The Wind</title>
+  
+
+
+
+
+
+
+
+
+ 
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans" class="theme-darling">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-首页">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-小项目">
+          <a href="javascript:;" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-flask"></i> <br>
+            
+            小项目
+          </a>
+          
+            <ul class="submenu submenu-小项目">
+              
+                
+                <li class="submenu-item submenu-item-old_blog">
+                  <a href="http://zblade.top:85/wordpress/" rel="section" target="_blank">
+                    Old_Blog
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-短网址生成">
+                  <a href="http://zblade.top:8081/" rel="section" target="_blank">
+                    短网址生成
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-资源站">
+                  <a href="http://inner.cquptict.com:90/" rel="section" target="_blank">
+                    资源站
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-ict-pan">
+                  <a href="http://www.cquptict.com:8000/" rel="section" target="_blank">
+                    ICT-Pan
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-招新系统">
+                  <a href="http://zblade.top:83/#/" rel="section" target="_blank">
+                    招新系统
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-领奖系统">
+                  <a href="https://github.com/bladedragon/PrizeTool" rel="section" target="_blank">
+                    领奖系统
+                  </a>
+                </li>
+              
+            </ul>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-归档">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-分类">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-server"></i> <br>
+            
+            分类
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-标签">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tag"></i> <br>
+            
+            标签
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-留言板">
+          <a href="/message/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-pencil"></i> <br>
+            
+            留言板
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-关于">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rocket"></i> <br>
+            
+            关于
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-coding_set">
+          <a href="https://bladedragon.github.io/coding_docs/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sign-language"></i> <br>
+            
+            Coding_Set
+          </a>
+          
+        </li>
+      
+
+      
+      <li class="menu-item search">
+          <form class="search-form">
+            <input name="keyword" type="text" class="search-input" placeholder="站内搜索">
+            <button type="submit" class="search-submit"><i class="fa fa-search"></i></button>
+          </form>
+      </li>
+      <!--<li class="menu-item online"><span id="online-count">?</span>人在线</li>-->
+    </ul>
+  
+
+  
+</nav>
+
+<div class="site-brand-wrapper" style="background-image: url(http://cdn.zblade.top/qiniu_img/wallhaven-6k1j7l.jpg)">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <div class="brand">
+        <span class="logo-line-before"><i></i></span>
+        <div class="site-title">
+          <div id="animate" class="animate">
+            <span>F</span><span>e</span><span>e</span><span>l</span><span> </span><span>T</span><span>h</span><span>e</span><span> </span><span>W</span><span>i</span><span>n</span><span>d</span>
+          </div>
+          <div id="guide" class="guide">
+            <span>F</span><span>e</span><span>e</span><span>l</span><span> </span><span>T</span><span>h</span><span>e</span><span> </span><span>W</span><span>i</span><span>n</span><span>d</span>
+          </div>
+        </div>
+        <span class="logo-line-after"><i></i></span>
+      </div>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<div class="site-master" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-master-avatar" itemprop="image" src="http://cdn.zblade.top/qiniu_img/zavatar2.jpg" alt="陌花采撷">
+    <h2 class="site-master-description" itemprop="description">
+        <span>即使天无雨，</span><span>吾亦留此地</span>
+    </h2>
+</div>
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-date">
+			<div class="post-month">09月</div>
+			<div class="post-day">18</div>
+	</div>
+  
+  <div class="post-badge">
+    
+      <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+        <a href="/categories/学习笔记/" itemprop="url" rel="index">
+          <span itemprop="name">学习笔记</span>
+        </a>
+      </span>
+    
+  </div>
+  
+
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://site.zblade.top/2019/09/18/ui/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="陌花采撷">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="http://cdn.zblade.top/qiniu_img/zavatar2.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Feel The Wind">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">UI设计尺寸问题——移动端</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-18T19:09:08+08:00">2019-09-18</time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/09/18/ui/" class="leancloud_visitors" data-flag-title="UI设计尺寸问题——移动端">
+               <span class="post-meta-divider"></span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">被</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+                 <span class="post-meta-item-text">人浏览</span>
+             </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近正在做前端的UI，本来以为会是一件很简单的事情，但一来二去也搞了整整一天。其中最让我郁闷的是在了PS设置画布尺寸的时候没有做充分的调查，理解错了同学口中的尺寸意义，导致UI画完了才发现尺寸整整小了一圈😂怎么办？重画呗~</p>
+<p>这次我吸取教训，整理了相关资料，这次一定要一举击破像素尺寸问题！</p>
+<a id="more"></a>
+
+<h2 id="物理尺寸"><a href="#物理尺寸" class="headerlink" title="物理尺寸"></a>物理尺寸</h2><h3 id="英寸"><a href="#英寸" class="headerlink" title="英寸"></a>英寸</h3><p>英寸(inch)是衡量设备尺寸的常用单位</p>
+<p>它代表的是屏幕对角线的长度</p>
+<blockquote>
+<p>一英寸≈2.54cm</p>
+</blockquote>
+<p><img src="/2019/09/18/ui/16ac3a65a02a95cd.png" alt="img"></p>
+<h2 id="分辨率"><a href="#分辨率" class="headerlink" title="分辨率"></a>分辨率</h2><h3 id="像素"><a href="#像素" class="headerlink" title="像素"></a>像素</h3><p>像素是屏幕的最小单位，所有图片都是由无数个像素点构成。</p>
+<p>像素应该是用来衡量尺寸的，像素点和尺寸成正比</p>
+<h3 id="屏幕分辨率"><a href="#屏幕分辨率" class="headerlink" title="屏幕分辨率"></a>屏幕分辨率</h3><blockquote>
+<p>分辨率即垂直和水平方向上的像素点数,例如<code>1080*1920</code></p>
+</blockquote>
+<p>指具体设备的屏幕像素尺寸，一般我们所说的手机或者电脑等物理设备的分辨率的时候就是指屏幕分辨率</p>
+<p>屏幕分辨率越高不代表屏幕越清晰，这还要取决设备的物理尺寸。换句话说，分辨率要和物理尺寸搭配才能体现清晰度，因为它直接能表现的是屏幕所能容纳的总的像素点数，如果设备物理尺寸不同，比较分辨率应该意义不大。当然这里的像素应该指的是物理像素，这点之后会提到。</p>
+<p><strong>这里要记住的是屏幕分辨率/设备独立像素(逻辑像素) = 倍率（设备像素比）这个结果才能真正定义清晰度</strong></p>
+<h3 id="图像分辨率"><a href="#图像分辨率" class="headerlink" title="图像分辨率"></a>图像分辨率</h3><p>即图片所含的像素点数，表示一张图片在垂直和水平方向上的像素点数</p>
+<p>和屏幕分辨率的定义差不多，只不过一个是定义屏幕的一个是定义图片的。同一尺寸下分辩率越高，图片越清晰</p>
+<p><img src="/2019/09/18/ui/16ac3a653fc492ca.jpg" alt="img"></p>
+<h3 id="PPI（Pixel-per-Inch）"><a href="#PPI（Pixel-per-Inch）" class="headerlink" title="PPI（Pixel per Inch）"></a>PPI（Pixel per Inch）</h3><blockquote>
+<p>每英尺包含的像素点数，可以用来描述屏幕的清晰程度</p>
+</blockquote>
+<p>PPI越高，图片质量越清晰。</p>
+<p>这里注意在设计的时候一般约定</p>
+<p><mark><strong>手机屏幕使用72PPI，海报使用300PPI</strong></mark></p>
+<p>据说PPI达到300以上，就会给人真实感，因此海报的PPI要达到这个数值，而手机屏幕如果<code>PPI</code>设置过大，会导致加载过慢，卡顿的现象，一般<code>72PPI</code>也够用了</p>
+<p><strong>PPI的计算公式</strong></p>
+<p><img src="/2019/09/18/ui/equation.svg" alt="img"></p>
+<p><strong>DPI（Dot per Inch）</strong></p>
+<p>每英寸包括的点数。它可以是屏幕像素点、图片像素点也可以是打印机的墨点。</p>
+<p><strong>在描述图片和屏幕的时候可以认为DPI和PPI两者等价</strong></p>
+<p>在使用打印机的时候，由于打印机打印的点不是规则排列的，打印点之间会存在空隙，因此<code>DPI</code>也被称之为打印点的密度</p>
+<p>打印机的DPI越高，打印图像的精细程度越高，同时墨点的耗费量和打印时间也越长</p>
+<h2 id="逻辑像素和物理像素"><a href="#逻辑像素和物理像素" class="headerlink" title="逻辑像素和物理像素"></a>逻辑像素和物理像素</h2><p>以上我们看到的像素都是真实的像素，是物理像素</p>
+<p>但是随着技术的发展出现了逻辑像素，即由多个物理像素组成一个逻辑像素。</p>
+<p>这是由乔布斯在<code>Iphone4</code>的发布会上发布的视网膜屏幕（<code>Retina Display</code>）首次提出的</p>
+<p><img src="/2019/09/18/ui/16ac3a658fe8b6ff.jpg" alt="img"></p>
+<p>一个很直观的对比就是，由逻辑像素（假设一个逻辑像素由3个物理像素组成）组成的分辨率为1080<em>1920的图片，和一个由物理像素组成的分辨率为`1080</em>1920`的图片，在像素总量一定的前提下，前者的图片尺寸是后者的3倍，试想想如果把这个3倍的尺寸图片压缩到1倍的图片中，是不是清晰度骤然就提升了呢？</p>
+<h3 id="设备独立像素"><a href="#设备独立像素" class="headerlink" title="设备独立像素"></a>设备独立像素</h3><p>设备独立像素，指设备的原始尺寸，这里的像素是逻辑像素</p>
+<p>打开<code>chrome</code>的开发者工具，我们可以模拟各个手机型号的显示情况，每种型号上面会显示一个尺寸，比如<code>iPhone X</code>显示的尺寸是<code>375x812</code>，实际<code>iPhone X</code>的分辨率会比这高很多，这里显示的就是设备独立像素。</p>
+<p><img src="/2019/09/18/ui/16ac3a664842c93c.jpg" alt="img"></p>
+<h3 id="设备像素比DPR"><a href="#设备像素比DPR" class="headerlink" title="设备像素比DPR"></a>设备像素比DPR</h3><p><code>device pixel ratio</code>简称<code>DIP</code>或<code>DP</code>,指设备的物理像素和逻辑像素之比，也称之为倍数</p>
+<h2 id="开发问题"><a href="#开发问题" class="headerlink" title="开发问题"></a>开发问题</h2><h3 id="移动端"><a href="#移动端" class="headerlink" title="移动端"></a>移动端</h3><p><code>iOS</code>的尺寸单位为<code>pt</code>，<code>Android</code>的尺寸单位为<code>dp</code>，<code>React Native</code>中没有指定明确的单位，它们其实都是设备独立像素<code>dp(Device Pixel)</code>。</p>
+<h3 id="WEB端"><a href="#WEB端" class="headerlink" title="WEB端"></a>WEB端</h3><p>CSS像素使用的是设备独立像素(逻辑像素)</p>
+<p>UI准备图的时候根据屏幕的质量（2倍屏或3倍屏）准备2倍和3倍的像素尺寸进行绘图</p>
+<p>在写<code>CSS</code>时，我们用到最多的单位是<code>px</code>，即<code>CSS像素</code>，当页面缩放比例为<code>100%</code>时，一个CSS像素等于一个设备独立像素。</p>
+<p>但是CSS像素是很容易被改变的，当用户对浏览器进行了放大，CSS像素会被放大，这时一个CSS像素会跨越更多的物理像素。</p>
+<blockquote>
+<p>页面的缩放系数 = CSS像素 / 设备独立像素</p>
+</blockquote>
+<h2 id="屏幕问题"><a href="#屏幕问题" class="headerlink" title="屏幕问题"></a>屏幕问题</h2><p>我们常使用P和K衡量屏幕质量</p>
+<blockquote>
+<p><strong>P代表的屏幕纵向的像素个数</strong></p>
+</blockquote>
+<p>1080P即代表屏幕纵向有1080个像素</p>
+<blockquote>
+<p><strong>K代表的屏幕横向的像素个数</strong></p>
+</blockquote>
+<p>K代表屏幕横向有几个1024像素，像像素超过4096一般就称之为4K屏</p>
+<p>参考文章：<a href="https://juejin.im/post/5cddf289f265da038f77696c#heading-46" target="_blank" rel="noopener">关于移动端适配，你必须要知道的</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div class="post-share">分享到：</div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/设计/" rel="tag"># 设计</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/18/destiney/" rel="next" title="当我们面对命运的时候，我们在想些什么？">
+                <i class="fa fa-chevron-left"></i> 当我们面对命运的时候，我们在想些什么？
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/09/22/python1/" rel="prev" title="python学习(01)">
+                python学习(01) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+  <div class="comments" id="comments">
+      <div id="gitalk-container"></div>
+    </div>
+	
+  
+
+
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+        <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+		<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    
+		<script type="text/javascript">
+		const gitalk = new Gitalk({
+		clientID: '8c4098d1aa1409852b19',
+		clientSecret: 'cdc136702eaaa9600bc46ab7da3c95a8537116ef',
+		repo: 'Blog_message_repo',
+		owner: 'BladeDragon',
+		admin: ['BladeDragon'],
+		id: window.location.pathname,      // Ensure uniqueness and length less than 50
+		});
+		
+		gitalk.render('gitalk-container');
+		</script>
+
+    
+
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://cdn.zblade.top/qiniu_img/zcard2.png" alt="陌花采撷">
+            
+              <p class="site-author-name" itemprop="name"><span style="opacity:.2;"></span>陌花采撷</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/bladedragon" target="_blank" title="GitHub" data-balloon="GitHub" data-balloon-pos="up">
+                    
+                       <i class="fa fa-fw fa-github"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://telegram.com" target="_blank" title="telegram" data-balloon="telegram" data-balloon-pos="up">
+                    
+                       <i class="fa fa-fw fa-telegram"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:zaft1156673039@gmail.com" target="_blank" title="E-Mail" data-balloon="E-Mail" data-balloon-pos="up">
+                    
+                       <i class="fa fa-fw fa-envelope"></i></a>
+                </span>
+              
+            
+          </div>
+
+         
+
+          
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-name">日志</span>
+				  <span class="site-state-item-count">44</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-name">分类</span>
+				   <span class="site-state-item-count">4</span>
+                </a>
+              </div>
+            
+            
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+				 <span class="site-state-item-name">标签</span>
+				  <span class="site-state-item-count">26</span>
+                </a>
+              </div>
+            
+            
+
+          </nav>
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              
+            </div>
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#物理尺寸"><span class="nav-text">物理尺寸</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#英寸"><span class="nav-text">英寸</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分辨率"><span class="nav-text">分辨率</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#像素"><span class="nav-text">像素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#屏幕分辨率"><span class="nav-text">屏幕分辨率</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图像分辨率"><span class="nav-text">图像分辨率</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PPI（Pixel-per-Inch）"><span class="nav-text">PPI（Pixel per Inch）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#逻辑像素和物理像素"><span class="nav-text">逻辑像素和物理像素</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#设备独立像素"><span class="nav-text">设备独立像素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设备像素比DPR"><span class="nav-text">设备像素比DPR</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开发问题"><span class="nav-text">开发问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#移动端"><span class="nav-text">移动端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WEB端"><span class="nav-text">WEB端</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#屏幕问题"><span class="nav-text">屏幕问题</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-image"></div>
+      <div class="footer-inner">
+        <p>本博客已出生<span id="since"></span><span class="my-face">(●'◡'●)ﾉ♥</span></p>
+<p></p>
+
+Theme By <a href="https://github.com/DIYgod/hexo-theme-sagiri" target="_blank" class="external" rel="nofollow">Sagiri</a>
+
+<p>Made with <i class="fa fa-heart throb" style="color: #d43f57;"></i> by <span class="author" itemprop="copyrightHolder">陌花采撷</span>. </p>
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    <canvas id="evanyou"></canvas>
+    <div id="aplayer-fixed"></div>
+
+    
+	
+  </div>
+
+	
+  <script type="text/javascript" src="/js/sagiri.min.js?v=0.0.50"></script>
+	
+  
+
+
+
+
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+  <!--<script>
+    // remove service worker cache
+    // from https://stackoverflow.com/questions/33704791/how-do-i-uninstall-a-service-worker
+    "use strict";
+    if(navigator.serviceWorker)
+    {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            for(let registration of registrations) {
+                registration.unregister()
+            }
+        })
+    }
+  </script>-->
+
+  <!--<script>
+    var serviceWorkerUri = '/sw.js';
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register(serviceWorkerUri).then(function() {
+          if (navigator.serviceWorker.controller) {
+            console.log('Assets cached by the controlling service worker.');
+          } else {
+            console.log('Please reload this page to allow the service worker to handle network operations.');
+          }
+        }).catch(function(error) {
+          console.log('ERROR: ' + error);
+        });
+    } else {
+        console.log('Service workers are not supported in the current browser.');
+    }
+  </script>-->
+  
+  
+
+	
+</body>
+</html>
