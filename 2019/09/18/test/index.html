@@ -183,7 +183,7 @@
 
 
 
-  <title>markdown常用格式测试 | Feel The Wind</title>
+  <title>Feel The Wind</title>
   
 
 
@@ -194,8 +194,6 @@
 
 
  
-<script src="/assets/js/DPlayer.min.js"></script><link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><link rel="stylesheet" href="\assets\css\APlayer.min.css" class="aplayer-style-marker">
-<script src="\assets\js\APlayer.min.js" class="aplayer-script-marker"></script>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans" class="theme-darling">
@@ -205,7 +203,8 @@
     
   
 
-  <div class="container sidebar-position-right page-post-detail">
+  <div class="container sidebar-position-right 
+  ">
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><nav class="site-nav">
   
@@ -409,211 +408,15 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-
-  <div id="posts" class="posts-expand">
+  <section id="posts" class="posts-expand">
     
+  </section>
 
   
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-date">
-			<div class="post-month">09月</div>
-			<div class="post-day">18</div>
-	</div>
-  
-
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://site.zblade.top/2019/09/18/test/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="陌花采撷">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="http://cdn.zblade.top/qiniu_img/zavatar2.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Feel The Wind">
-    </span>
-
+  <nav class="pagination">
     
-      <header class="post-header">
+  </nav>
 
-        
-        
-          <h1 class="post-title" itemprop="name headline">markdown常用格式测试</h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-18T17:36:26+08:00">2019-09-18</time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2019/09/18/test/" class="leancloud_visitors" data-flag-title="markdown常用格式测试">
-               <span class="post-meta-divider"></span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">被</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-                 <span class="post-meta-item-text">人浏览</span>
-             </span>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <p>这是对hexo 渲染的markdown模板的测试，同时也贴一下常用的markdown书写格式和插件使用，做一下备忘~</p>
-<a id="more"></a>
-
-<p>以下所有代码只需要复制到markdown编辑器即可使用，同时要注意编辑器的版本和兼容性，比如我之间用的typora就总是不能正常显示html格式🤣，还好博客重建前更新了版本又可以用了…</p>
-<h2 id="插件测试"><a href="#插件测试" class="headerlink" title="插件测试"></a>插件测试</h2><h3 id="Aplayer播放测试"><a href="#Aplayer播放测试" class="headerlink" title="Aplayer播放测试"></a>Aplayer播放测试</h3>
-        <div id="aplayer-FYlgrVFi" class="aplayer aplayer-tag-marker" style="margin-bottom: 20px;">
-            <pre class="aplayer-lrc-content"></pre>
-        </div>
-        <script>
-          var ap = new APlayer({
-            element: document.getElementById("aplayer-FYlgrVFi"),
-            narrow: false,
-            autoplay: false,
-            showlrc: false,
-            music: {
-              title: "三轮学",
-              author: "Jeff Williams",
-              url: "http://music.163.com/song/media/outer/url?id=5231510.mp3",
-              pic: "",
-              lrc: ""
-            }
-          });
-          window.aplayers || (window.aplayers = []);
-          window.aplayers.push(ap);
-        </script>
-
-<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#123;% aplayer <span class="string">"可以了"</span> <span class="string">"陈奕迅"</span> <span class="string">"音乐地址"</span> <span class="string">"图片地址"</span>  %&#125;</span><br><span class="line">外链地址http:<span class="comment">//music.163.com/song/media/outer/url?id=478384.mp3</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="Dplayer播放测试"><a href="#Dplayer播放测试" class="headerlink" title="Dplayer播放测试"></a>Dplayer播放测试</h3><div id="dplayer0" class="dplayer hexo-tag-dplayer-mark" style="margin-bottom: 20px;"></div><script>(function(){var player = new DPlayer({"container":document.getElementById("dplayer0"),"theme":"#FADFA3","loop":true,"video":{"url":"http://lc-dtfowewy.cn-n1.lcfile.com/e84e4b6519b04ed3c497/400%E7%B1%B3.mp4","pic":"http://devtest.qiniudn.com/若能绽放光芒.png"}});window.dplayers||(window.dplayers=[]);window.dplayers.push(player);})()</script>
-
-<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% dplayer <span class="string">"url=视频地址"</span> <span class="string">"pic=图片地址"</span> <span class="string">"loop=yes"</span> <span class="string">"theme=#FADFA3"</span> <span class="string">"autoplay=false"</span>%&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="MARKDOWN格式测试"><a href="#MARKDOWN格式测试" class="headerlink" title="MARKDOWN格式测试"></a>MARKDOWN格式测试</h2><p><mark>我是黑体字(不，你是高亮)</mark></p>
-<p><font face="微软雅黑">我是微软雅黑</font></p>
-<p><font face="STCAIYUN">我是华文彩云</font></p>
-<p><font color="red">我是红色</font></p>
-<p><font color="#008000">我是绿色</font></p>
-<p><font color="Blue">我是蓝色</font></p>
-<p><font size="5">我是尺寸</font></p>
-<p><font face="黑体" color="green" size="5">我是黑体，绿色，尺寸为5</font></p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mark</span>&gt;</span>我是黑体字(不，你是高亮)<span class="tag">&lt;/<span class="name">mark</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">font</span> <span class="attr">face</span>=<span class="string">"微软雅黑"</span>&gt;</span>我是微软雅黑<span class="tag">&lt;/<span class="name">font</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">font</span> <span class="attr">face</span>=<span class="string">"STCAIYUN"</span>&gt;</span>我是华文彩云<span class="tag">&lt;/<span class="name">font</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">font</span> <span class="attr">color</span>=<span class="string">red</span>&gt;</span>我是红色<span class="tag">&lt;/<span class="name">font</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">font</span> <span class="attr">color</span>=<span class="string">#008000</span>&gt;</span>我是绿色<span class="tag">&lt;/<span class="name">font</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">font</span> <span class="attr">color</span>=<span class="string">Blue</span>&gt;</span>我是蓝色<span class="tag">&lt;/<span class="name">font</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">font</span> <span class="attr">size</span>=<span class="string">5</span>&gt;</span>我是尺寸<span class="tag">&lt;/<span class="name">font</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">font</span> <span class="attr">face</span>=<span class="string">"黑体"</span> <span class="attr">color</span>=<span class="string">green</span> <span class="attr">size</span>=<span class="string">5</span>&gt;</span>我是黑体，绿色，尺寸为5<span class="tag">&lt;/<span class="name">font</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="博客插件记录"><a href="#博客插件记录" class="headerlink" title="博客插件记录"></a>博客插件记录</h2><p>我用的博客主题是<a href="https://github.com/DIYgod/hexo-theme-sagiri" target="_blank" rel="noopener">sagiri</a>这里感谢原作者的和辛勤努力和慷慨开源，在部署的时候遇到了一些插件缺失的问题，这里稍微提一下，做一下备份</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.FastClick = <span class="built_in">require</span>(<span class="string">'fastclick'</span>);</span><br><span class="line"><span class="built_in">require</span>(<span class="string">'lazyload'</span>);</span><br><span class="line"><span class="built_in">require</span>(<span class="string">'fancybox'</span>)(<span class="built_in">window</span>.$);</span><br><span class="line"><span class="built_in">window</span>.notie = <span class="built_in">require</span>(<span class="string">'corner-notie'</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./utils'</span>);</span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./motion'</span>);</span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./affix'</span>);</span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./pisces'</span>)();</span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./scrollspy'</span>);</span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./post-details'</span>)();</span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./bootstrap'</span>);</span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./evanyou'</span>);</span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./leancloud'</span>)();</span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./share'</span>)();</span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./scroll'</span>);</span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./since'</span>);</span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./title'</span>);</span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./type'</span>);</span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./kanban'</span>);</span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./mix'</span>);</span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./clipboard'</span>);</span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./pjax'</span>);</span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./online'</span>);</span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./search'</span>);</span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./cursor-effects'</span>);</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-      <div class="post-share">分享到：</div>
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/测试/" rel="tag"># 测试</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2019/09/18/mysql-h/" rel="next" title="高性能mysql学习笔记">
-                <i class="fa fa-chevron-left"></i> 高性能mysql学习笔记
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/09/18/jsoup/" rel="prev" title="用java优雅爬虫——Jsoup">
-                用java优雅爬虫——Jsoup <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-
-    <div class="post-spread">
-      
-    </div>
-  </div>
 
 
           </div>
@@ -761,7 +564,7 @@
                 <a href="/archives">
               
                   <span class="site-state-item-name">日志</span>
-				  <span class="site-state-item-count">45</span>
+				  <span class="site-state-item-count">46</span>
                 </a>
               </div>
             

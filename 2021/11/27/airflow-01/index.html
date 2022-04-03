@@ -187,7 +187,7 @@
 
 
 
-  <title>airflow源码解析——调度器篇 | Feel The Wind</title>
+  <title>Feel The Wind</title>
   
 
 
@@ -207,7 +207,8 @@
     
   
 
-  <div class="container sidebar-position-right page-post-detail">
+  <div class="container sidebar-position-right 
+  ">
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><nav class="site-nav">
   
@@ -411,270 +412,15 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-
-  <div id="posts" class="posts-expand">
+  <section id="posts" class="posts-expand">
     
+  </section>
 
   
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-date">
-			<div class="post-month">11月</div>
-			<div class="post-day">27</div>
-	</div>
-  
-  <div class="post-badge">
+  <nav class="pagination">
     
-      <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-        <a href="/categories/技术探索/" itemprop="url" rel="index">
-          <span itemprop="name">技术探索</span>
-        </a>
-      </span>
-    
-  </div>
-  
+  </nav>
 
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://site.zblade.top/2021/11/27/airflow-01/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="陌花采撷">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="http://cdn.zblade.top/qiniu_img/zavatar2.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Feel The Wind">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">airflow源码解析——调度器篇</h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-11-27T15:00:00+08:00">2021-11-27</time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2021/11/27/airflow-01/" class="leancloud_visitors" data-flag-title="airflow源码解析——调度器篇">
-               <span class="post-meta-divider"></span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">被</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-                 <span class="post-meta-item-text">人浏览</span>
-             </span>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <p>因为<code>airflow1.0</code>和<code>2.0</code>变更了许多</p>
-<p>接下来会通过分析<code>airflow1.0</code>和<code>airflow2.0</code>的源码来加深对airflow的理解</p>
-<a id="more"></a>
-
-
-
-<h2 id="airflow简介"><a href="#airflow简介" class="headerlink" title="airflow简介"></a>airflow简介</h2><p><code>airflow</code>是一个工作流模式的分布式任务调度框架，可以实现复杂的工作流调度。因为工作原因需要对<code>airflow</code>进行调研，因此这里记录一下学习<code>airflow</code>过程遇到的问题并吸收一些实现技巧。接下来会根据<code>airflow</code>的各种组件，深入<code>airflow</code>的源码进行讲解。<code>airflow</code>从<code>1.0</code>到<code>2.0</code>，实现的架构进行了一次较大的改变，因此，我在这里同时分析两个大版本的源码，通过分析其中的异同，也可以一窥开发者的设计思路和优化方向。</p>
-<p>首先放一张整体的<code>airflow</code>架构图</p>
-<p><img src="/2021/11/27/airflow-01/d5a83dfb61fdda9670e2237463cdf633.jpg" alt="d5a83dfb61fdda9670e2237463cdf633"></p>
-<p><code>2.0</code>和<code>1.0</code>在整体结构相似，这里大概会将airflow的解析分为调度器篇 <code>worker(executor)</code>篇  <code>dag</code>处理器篇 <code>webserver</code>篇</p>
-<p>接下来的内容默认读者对<code>airflow</code>的基本概念有一定的了解，如果尚未了解相关内容，之后有时间我再考虑写一篇概念相关内容</p>
-<p><code>airflow</code>创建工作流的过程主要如下，注意<code>airflow</code>是一个命令驱动的框架，几乎所有的机制都是从发送命令行开始的</p>
-<ol>
-<li>通过命令行创建<code>dag</code>和<code>operator</code>，</li>
-<li>配置<code>airflow</code>的基本配置，包括数据库连接，<code>webserver</code>端口，连接板并发数，读取的存放dag文件夹的位置等等</li>
-<li>启动调度器，<code>webserver</code>以及<code>executor</code>，这时框架会自动从设置好的的dag文件夹位置读取dag和operator的配置文件并生成<code>dag</code>和<code>task</code>存放进数据库</li>
-<li>接着就可以登陆<code>airflow</code>的<code>webserver</code>查看各个dag的运行情况l</li>
-</ol>
-<h2 id="airflow1-0-调度器部分"><a href="#airflow1-0-调度器部分" class="headerlink" title="airflow1.0 调度器部分"></a>airflow1.0 调度器部分</h2><p>这里我们选择的版本是<code>1.8.2</code></p>
-<p>首先观察一下<code>airflow</code>的主要结构</p>
-<p><img src="/2021/11/27/airflow-01/image-20211128132757164.png" alt="image-20211128132757164"></p>
-<p>大致解释一下各个目录的作用</p>
-<ul>
-<li><code>api</code>: 放置了一些用于代码内接口调用的方法</li>
-<li><code>bin</code>：启动方法</li>
-<li><code>contrib</code>：应该是一些第三方插件的定制方法，包括sensor，executor，hook等</li>
-<li><code>dag</code>：dag的基类</li>
-<li><code>example_dag</code>: 一些dag的样例模板</li>
-<li><code>executor</code>：具体的executor</li>
-<li><code>hooks</code>：用于方法内调用的hook，使得可以降低非核心功、能的耦合程度</li>
-<li><code>macros</code>：只有hive的一些方法，我还不是特别了解</li>
-<li><code>migrations</code>： 略</li>
-<li><code>operators</code>：定制的一些operator，即task的模板</li>
-<li><code>security</code>：有关用户认证和登录的方法</li>
-<li><code>task_runner</code>:  执行airflow命令行工具，有点像bash</li>
-<li><code>ti_dep</code>: taskinstance 的一些依赖状态</li>
-<li><code>utils</code>: 工具类</li>
-<li><code>www</code>: 页面相关</li>
-</ul>
-<p>可以看到目录结构非常之多，因此我们需要抓住一条主线来梳理。本篇选择以调度器作为切入口，我们就从调度器的创建开始吧。</p>
-<p><code>airflow</code>所有机制的运行入口几乎都是从命令行开始的，因此我们直接从命令行的入口方法查看，这里我们查看<code>/bin/cli.py</code></p>
-<p>可以看到再<code>cli.py</code>的<code>CLIFactory</code>类中存在大量的命令定义，这里在之后的学习中还会经常回到这里。我们直接查看<code>scheduler</code>的启动</p>
-<p><img src="/2021/11/27/airflow-01/image-20211128142711668.png" alt="image-20211128142711668"></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">scheduler</span><span class="params">(args)</span>:</span></span><br><span class="line">    print(settings.HEADER)</span><br><span class="line">    <span class="comment"># 调度器的核心</span></span><br><span class="line">    job = jobs.SchedulerJob(</span><br><span class="line">        dag_id=args.dag_id,</span><br><span class="line">        subdir=process_subdir(args.subdir),</span><br><span class="line">        run_duration=args.run_duration,</span><br><span class="line">        num_runs=args.num_runs,</span><br><span class="line">        do_pickle=args.do_pickle)</span><br><span class="line"><span class="comment"># 如果挂后台，就将进程挂到daemonContext上</span></span><br><span class="line">    <span class="keyword">if</span> args.daemon:</span><br><span class="line">        pid, stdout, stderr, log_file = setup_locations(<span class="string">"scheduler"</span>, args.pid, args.stdout, args.stderr, args.log_file)</span><br><span class="line">        handle = setup_logging(log_file)</span><br><span class="line">        stdout = open(stdout, <span class="string">'w+'</span>)</span><br><span class="line">        stderr = open(stderr, <span class="string">'w+'</span>)</span><br><span class="line"></span><br><span class="line">        ctx = daemon.DaemonContext(</span><br><span class="line">            pidfile=TimeoutPIDLockFile(pid, <span class="number">-1</span>),</span><br><span class="line">            files_preserve=[handle],</span><br><span class="line">            stdout=stdout,</span><br><span class="line">            stderr=stderr,</span><br><span class="line">        )</span><br><span class="line">        <span class="keyword">with</span> ctx:</span><br><span class="line">            job.run()</span><br><span class="line"></span><br><span class="line">        stdout.close()</span><br><span class="line">        stderr.close()</span><br><span class="line">       <span class="comment"># 通过信号直接启动进程</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        signal.signal(signal.SIGINT, sigint_handler)</span><br><span class="line">        signal.signal(signal.SIGTERM, sigint_handler)</span><br><span class="line">        signal.signal(signal.SIGQUIT, sigquit_handler)</span><br><span class="line">        job.run()</span><br></pre></td></tr></table></figure>
-
-<p>可以看见，核心在于创建<code>schuedulerJob</code>类，同时传入dag_id, 持续时间，并发数等基本参数</p>
-<p>继续进入，可以发现我们跳转到了<code>job.py</code></p>
-<p>我们先查看一下<code>schedulerJob</code>的父类，<code>baseJob.py</code></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BaseJob</span><span class="params">(Base, LoggingMixin)</span>:</span></span><br><span class="line"></span><br><span class="line">    __tablename__ = <span class="string">"job"</span></span><br><span class="line"></span><br><span class="line">    id = Column(Integer, primary_key=<span class="literal">True</span>)</span><br><span class="line">    dag_id = Column(String(ID_LEN),)</span><br><span class="line">    state = Column(String(<span class="number">20</span>))</span><br><span class="line">    job_type = Column(String(<span class="number">30</span>))</span><br><span class="line">    start_date = Column(DateTime())</span><br><span class="line">    end_date = Column(DateTime())</span><br><span class="line">    latest_heartbeat = Column(DateTime())</span><br><span class="line">    executor_class = Column(String(<span class="number">500</span>))</span><br><span class="line">    hostname = Column(String(<span class="number">500</span>))</span><br><span class="line">    unixname = Column(String(<span class="number">1000</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">	pass</span></span></span><br><span class="line"><span class="function"><span class="params">        )</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">    <span class="title">def</span> <span class="title">kill</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">on_kill</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">heartbeat_callback</span><span class="params">(self, session=None)</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">heartbeat</span><span class="params">(self)</span>:</span></span><br><span class="line"> 	<span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_execute</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="meta">    @provide_session</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">reset_state_for_orphaned_tasks</span><span class="params">(self, dag_run, session=None)</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
-
-<p>可以发现，这里<code>job</code>首先是作为一张表保存了job的状态，执行情况（这里是<code>sqlalchemy</code>的相关知识）</p>
-<p>主要的方法有</p>
-<ul>
-<li><code>is_alive</code>: 通过<code>heartbeat</code>判断是否存活</li>
-<li><code>kill</code>：通过删除数据库记录的方式来结束任务</li>
-<li><code>on_kill</code>：等待子类重写，用于删除任务的时候做一些额外处理</li>
-<li><code>heartbeat_callback</code>：心跳的回调，等待子类重写</li>
-<li><code>heartbeat</code>：发送心跳，下面详细介绍</li>
-<li><code>run</code>：修改表中job的状态，来表示job正在进行，同时执行_exexute</li>
-<li><code>_execute</code>： 等待子类重写，如何执行job</li>
-<li><code>reset_state_for_orphaned_tasks</code>：重置孤儿任务</li>
-</ul>
-<p>下面我们看看heartbeat</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">heartbeat</span><span class="params">(self)</span>:</span></span><br><span class="line">    session = settings.Session()</span><br><span class="line">    job = session.query(BaseJob).filter_by(id=self.id).one()</span><br><span class="line">    make_transient(job)</span><br><span class="line">    session.commit()</span><br><span class="line">    session.close()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> job.state == State.SHUTDOWN:</span><br><span class="line">        self.kill()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Figure out how long to sleep for</span></span><br><span class="line">    sleep_for = <span class="number">0</span></span><br><span class="line">    <span class="keyword">if</span> job.latest_heartbeat:</span><br><span class="line">        sleep_for = max(</span><br><span class="line">            <span class="number">0</span>,</span><br><span class="line">            self.heartrate - (datetime.now() - job.latest_heartbeat).total_seconds())</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Don't keep session open while sleeping as it leaves a connection open</span></span><br><span class="line">    session.close()</span><br><span class="line">    sleep(sleep_for)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Update last heartbeat time</span></span><br><span class="line">    session = settings.Session()</span><br><span class="line">    job = session.query(BaseJob).filter(BaseJob.id == self.id).first()</span><br><span class="line">    job.latest_heartbeat = datetime.now()</span><br><span class="line">    session.merge(job)</span><br><span class="line">    session.commit()</span><br><span class="line"></span><br><span class="line">    self.heartbeat_callback(session=session)</span><br><span class="line">    session.close()</span><br><span class="line">    self.logger.debug(<span class="string">'[heart] Boom.'</span>)</span><br></pre></td></tr></table></figure>
-
-<p>心跳在调度器运行期间定期发送，通过查表判断调度器状态是否正常</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@provide_session</span></span><br><span class="line">   <span class="function"><span class="keyword">def</span> <span class="title">reset_state_for_orphaned_tasks</span><span class="params">(self, dag_run, session=None)</span>:</span></span><br><span class="line"><span class="comment"># 从执行器中获取等待入队的任务</span></span><br><span class="line">       queued_tis = self.executor.queued_tasks</span><br><span class="line"></span><br><span class="line">       <span class="comment"># 同样考虑正在执行器中执行的任务</span></span><br><span class="line">       running = self.executor.running</span><br><span class="line">       tis = list()</span><br><span class="line">       tis.extend(dag_run.get_task_instances(state=State.SCHEDULED, session=session))</span><br><span class="line">       tis.extend(dag_run.get_task_instances(state=State.QUEUED, session=session))</span><br><span class="line"></span><br><span class="line">       <span class="comment"># 等待入队和正在执行器执行的任务属于正常情况不会处理</span></span><br><span class="line">       <span class="keyword">for</span> ti <span class="keyword">in</span> tis:</span><br><span class="line">           <span class="keyword">if</span> ti.key <span class="keyword">not</span> <span class="keyword">in</span> queued_tis <span class="keyword">and</span> ti.key <span class="keyword">not</span> <span class="keyword">in</span> running:</span><br><span class="line">               self.logger.debug(<span class="string">"Rescheduling orphaned task &#123;&#125;"</span>.format(ti))</span><br><span class="line">               ti.state = State.NONE</span><br><span class="line">       session.commit()</span><br></pre></td></tr></table></figure>
-
-<p>重置孤儿任务则是考虑在调度过程可能因为各种异常情况，如调度器进程突然中止或者没有没有执行器执行任务，就会产生无法继续执行的孤儿任务，这种任务将会在下一次调度前进行回收并再次调度</p>
-<p>接下来就进入schedulerJob了，我们直接来看核心方法</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line">   <span class="function"><span class="keyword">def</span> <span class="title">_execute</span><span class="params">(self)</span>:</span></span><br><span class="line">       self.logger.info(<span class="string">"Starting the scheduler"</span>)</span><br><span class="line">       <span class="comment"># 打开锁，对表连接进行独占</span></span><br><span class="line">       pessimistic_connection_handling()</span><br><span class="line"></span><br><span class="line">       logging.basicConfig(level=logging.DEBUG)</span><br><span class="line"></span><br><span class="line">       <span class="comment"># dag可以被一些执行器pickle序列化，以便更容易地远程执行</span></span><br><span class="line">       pickle_dags = <span class="literal">False</span></span><br><span class="line">       <span class="keyword">if</span> self.do_pickle <span class="keyword">and</span> self.executor.__class__ <span class="keyword">not</span> <span class="keyword">in</span> \</span><br><span class="line">               (executors.LocalExecutor, executors.SequentialExecutor):</span><br><span class="line">           pickle_dags = <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">       <span class="comment"># Use multiple processes to parse and generate tasks for the</span></span><br><span class="line">       <span class="comment"># DAGs in parallel. By processing them in separate processes,</span></span><br><span class="line">       <span class="comment"># we can get parallelism and isolation from potentially harmful</span></span><br><span class="line">       <span class="comment"># user code.</span></span><br><span class="line">       </span><br><span class="line"><span class="comment"># some log </span></span><br><span class="line"></span><br><span class="line">       <span class="comment"># Build up a list of Python files that could contain DAGs</span></span><br><span class="line">       self.logger.info(<span class="string">"Searching for files in &#123;&#125;"</span>.format(self.subdir))</span><br><span class="line">       <span class="comment"># 遍历目录并查找python文件</span></span><br><span class="line">       known_file_paths = list_py_file_paths(self.subdir)</span><br><span class="line">       self.logger.info(<span class="string">"There are &#123;&#125; files in &#123;&#125;"</span></span><br><span class="line">                        .format(len(known_file_paths), self.subdir))</span><br><span class="line"></span><br><span class="line">       <span class="function"><span class="keyword">def</span> <span class="title">processor_factory</span><span class="params">(file_path, log_file_path)</span>:</span></span><br><span class="line">           <span class="keyword">return</span> DagFileProcessor(file_path,</span><br><span class="line">                                   pickle_dags,</span><br><span class="line">                                   self.dag_ids,</span><br><span class="line">                                   log_file_path)</span><br><span class="line"><span class="comment"># 核心的方法，处理dag，将文件转换成dag</span></span><br><span class="line">       processor_manager = DagFileProcessorManager(self.subdir,</span><br><span class="line">                                                   known_file_paths,</span><br><span class="line">                                                   self.max_threads,</span><br><span class="line">                                                   self.file_process_interval,</span><br><span class="line">                                                   self.child_process_log_directory,</span><br><span class="line">                                                   self.num_runs,</span><br><span class="line">                                                   processor_factory)</span><br><span class="line"></span><br><span class="line">       <span class="comment"># 执行调度</span></span><br><span class="line">       <span class="keyword">try</span>:</span><br><span class="line">           self._execute_helper(processor_manager)</span><br><span class="line">       <span class="keyword">finally</span>:</span><br><span class="line">           self.logger.info(<span class="string">"Exited execute loop"</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">           <span class="comment"># 到这里调度结束，杀死子进程并退出</span></span><br><span class="line">           pids_to_kill = processor_manager.get_all_pids()</span><br><span class="line">           <span class="keyword">if</span> len(pids_to_kill) &gt; <span class="number">0</span>:</span><br><span class="line">               <span class="comment"># First try SIGTERM</span></span><br><span class="line">               this_process = psutil.Process(os.getpid())</span><br><span class="line">               </span><br><span class="line">               <span class="comment"># 只检查子进程以确保因为子进程死亡但是进程ID被重用导致杀死错误进程的情况</span></span><br><span class="line">               child_processes = [x <span class="keyword">for</span> x <span class="keyword">in</span> this_process.children(recursive=<span class="literal">True</span>)</span><br><span class="line">                                  <span class="keyword">if</span> x.is_running() <span class="keyword">and</span> x.pid <span class="keyword">in</span> pids_to_kill]</span><br><span class="line">               <span class="keyword">for</span> child <span class="keyword">in</span> child_processes:</span><br><span class="line">                   self.logger.info(<span class="string">"Terminating child PID: &#123;&#125;"</span>.format(child.pid))</span><br><span class="line">                   child.terminate()</span><br><span class="line">               timeout = <span class="number">5</span></span><br><span class="line">               self.logger.info(<span class="string">"Waiting up to &#123;&#125;s for processes to exit..."</span></span><br><span class="line">                                .format(timeout))</span><br><span class="line">               <span class="comment"># 等待进程被中止</span></span><br><span class="line">               <span class="keyword">try</span>:</span><br><span class="line">                   psutil.wait_procs(child_processes, timeout)</span><br><span class="line">               <span class="keyword">except</span> psutil.TimeoutExpired:</span><br><span class="line">                   self.logger.debug(<span class="string">"Ran out of time while waiting for "</span></span><br><span class="line">                                     <span class="string">"processes to exit"</span>)</span><br><span class="line"></span><br><span class="line">               <span class="comment"># Then SIGKILL</span></span><br><span class="line">               child_processes = [x <span class="keyword">for</span> x <span class="keyword">in</span> this_process.children(recursive=<span class="literal">True</span>)</span><br><span class="line">                                  <span class="keyword">if</span> x.is_running() <span class="keyword">and</span> x.pid <span class="keyword">in</span> pids_to_kill]</span><br><span class="line">               <span class="keyword">if</span> len(child_processes) &gt; <span class="number">0</span>:</span><br><span class="line">                   <span class="keyword">for</span> child <span class="keyword">in</span> child_processes:</span><br><span class="line">                       self.logger.info(<span class="string">"Killing child PID: &#123;&#125;"</span>.format(child.pid))</span><br><span class="line">                       child.kill()</span><br><span class="line">                       child.wait()</span><br></pre></td></tr></table></figure>
-
-<p>可以看到调度的流程是 加锁-&gt; 获取解析后的dag -&gt; 调度 -&gt;调度结束杀死进程 </p>
-<p>关于解析dag我们单独放一篇出来讲，这里我们直接进入execute_helper一探究竟</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">_execute_helper</span><span class="params">(self, processor_manager)</span>:</span></span><br><span class="line">    </span><br><span class="line">    self.executor.start()</span><br><span class="line"></span><br><span class="line">    session = settings.Session()</span><br><span class="line">    self.logger.info(<span class="string">"Resetting state for orphaned tasks"</span>)</span><br><span class="line">    <span class="comment"># grab orphaned tasks and make sure to reset their state</span></span><br><span class="line">    active_runs = DagRun.find(</span><br><span class="line">        state=State.RUNNING,</span><br><span class="line">        external_trigger=<span class="literal">False</span>,</span><br><span class="line">        session=session,</span><br><span class="line">        no_backfills=<span class="literal">True</span>,</span><br><span class="line">    )</span><br><span class="line">    <span class="keyword">for</span> dr <span class="keyword">in</span> active_runs:</span><br><span class="line">        self.logger.info(<span class="string">"Resetting &#123;&#125; &#123;&#125;"</span>.format(dr.dag_id,</span><br><span class="line">                                                  dr.execution_date))</span><br><span class="line">        self.reset_state_for_orphaned_tasks(dr, session=session)</span><br><span class="line"></span><br><span class="line">    session.close()</span><br><span class="line"></span><br><span class="line">    execute_start_time = datetime.now()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Last time stats were printed</span></span><br><span class="line">    last_stat_print_time = datetime(<span class="number">2000</span>, <span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line">    <span class="comment"># Last time that self.heartbeat() was called.</span></span><br><span class="line">    last_self_heartbeat_time = datetime.now()</span><br><span class="line">    <span class="comment"># Last time that the DAG dir was traversed to look for files</span></span><br><span class="line">    last_dag_dir_refresh_time = datetime.now()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Use this value initially</span></span><br><span class="line">    known_file_paths = processor_manager.file_paths</span><br><span class="line"></span><br><span class="line">    <span class="comment"># For the execute duration, parse and schedule DAGs</span></span><br><span class="line">    <span class="keyword">while</span> (datetime.now() - execute_start_time).total_seconds() &lt; \</span><br><span class="line">            self.run_duration <span class="keyword">or</span> self.run_duration &lt; <span class="number">0</span>:</span><br><span class="line">        self.logger.debug(<span class="string">"Starting Loop..."</span>)</span><br><span class="line">        loop_start_time = time.time()</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Traverse the DAG directory for Python files containing DAGs</span></span><br><span class="line">        <span class="comment"># periodically</span></span><br><span class="line">        elapsed_time_since_refresh = (datetime.now() -</span><br><span class="line">                                      last_dag_dir_refresh_time).total_seconds()</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> elapsed_time_since_refresh &gt; self.dag_dir_list_interval:</span><br><span class="line">            <span class="comment"># Build up a list of Python files that could contain DAGs</span></span><br><span class="line">            self.logger.info(<span class="string">"Searching for files in &#123;&#125;"</span>.format(self.subdir))</span><br><span class="line">            known_file_paths = list_py_file_paths(self.subdir)</span><br><span class="line">            last_dag_dir_refresh_time = datetime.now()</span><br><span class="line">            self.logger.info(<span class="string">"There are &#123;&#125; files in &#123;&#125;"</span></span><br><span class="line">                             .format(len(known_file_paths), self.subdir))</span><br><span class="line">            processor_manager.set_file_paths(known_file_paths)</span><br><span class="line"></span><br><span class="line">            self.logger.debug(<span class="string">"Removing old import errors"</span>)</span><br><span class="line">            self.clear_nonexistent_import_errors(known_file_paths=known_file_paths)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Kick of new processes and collect results from finished ones</span></span><br><span class="line">        self.logger.info(<span class="string">"Heartbeating the process manager"</span>)</span><br><span class="line">        simple_dags = processor_manager.heartbeat()</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> self.using_sqlite:</span><br><span class="line">            <span class="comment"># For the sqlite case w/ 1 thread, wait until the processor</span></span><br><span class="line">            <span class="comment"># is finished to avoid concurrent access to the DB.</span></span><br><span class="line">            self.logger.debug(<span class="string">"Waiting for processors to finish since we're "</span></span><br><span class="line">                              <span class="string">"using sqlite"</span>)</span><br><span class="line">            processor_manager.wait_until_finished()</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Send tasks for execution if available</span></span><br><span class="line">        <span class="keyword">if</span> len(simple_dags) &gt; <span class="number">0</span>:</span><br><span class="line">            simple_dag_bag = SimpleDagBag(simple_dags)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># Handle cases where a DAG run state is set (perhaps manually) to</span></span><br><span class="line">            <span class="comment"># a non-running state. Handle task instances that belong to</span></span><br><span class="line">            <span class="comment"># DAG runs in those states</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># If a task instance is up for retry but the corresponding DAG run</span></span><br><span class="line">            <span class="comment"># isn't running, mark the task instance as FAILED so we don't try</span></span><br><span class="line">            <span class="comment"># to re-run it.</span></span><br><span class="line">            self._change_state_for_tis_without_dagrun(simple_dag_bag,</span><br><span class="line">                                                      [State.UP_FOR_RETRY],</span><br><span class="line">                                                      State.FAILED)</span><br><span class="line">            <span class="comment"># If a task instance is scheduled or queued, but the corresponding</span></span><br><span class="line">            <span class="comment"># DAG run isn't running, set the state to NONE so we don't try to</span></span><br><span class="line">            <span class="comment"># re-run it.</span></span><br><span class="line">            self._change_state_for_tis_without_dagrun(simple_dag_bag,</span><br><span class="line">                                                      [State.QUEUED,</span><br><span class="line">                                                       State.SCHEDULED],</span><br><span class="line">                                                      State.NONE)</span><br><span class="line"></span><br><span class="line">            self._execute_task_instances(simple_dag_bag,</span><br><span class="line">                                         (State.SCHEDULED,))</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Call hearbeats</span></span><br><span class="line">        self.logger.info(<span class="string">"Heartbeating the executor"</span>)</span><br><span class="line">        self.executor.heartbeat()</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Process events from the executor</span></span><br><span class="line">        self._process_executor_events()</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Heartbeat the scheduler periodically</span></span><br><span class="line">        time_since_last_heartbeat = (datetime.now() -</span><br><span class="line">                                     last_self_heartbeat_time).total_seconds()</span><br><span class="line">        <span class="keyword">if</span> time_since_last_heartbeat &gt; self.heartrate:</span><br><span class="line">            self.logger.info(<span class="string">"Heartbeating the scheduler"</span>)</span><br><span class="line">            self.heartbeat()</span><br><span class="line">            last_self_heartbeat_time = datetime.now()</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Occasionally print out stats about how fast the files are getting processed</span></span><br><span class="line">        <span class="keyword">if</span> ((datetime.now() - last_stat_print_time).total_seconds() &gt;</span><br><span class="line">                self.print_stats_interval):</span><br><span class="line">            <span class="keyword">if</span> len(known_file_paths) &gt; <span class="number">0</span>:</span><br><span class="line">                self._log_file_processing_stats(known_file_paths,</span><br><span class="line">                                                processor_manager)</span><br><span class="line">            last_stat_print_time = datetime.now()</span><br><span class="line"></span><br><span class="line">        loop_end_time = time.time()</span><br><span class="line">        self.logger.debug(<span class="string">"Ran scheduling loop in &#123;:.2f&#125;s"</span></span><br><span class="line">                          .format(loop_end_time - loop_start_time))</span><br><span class="line">        self.logger.debug(<span class="string">"Sleeping for &#123;:.2f&#125;s"</span></span><br><span class="line">                          .format(self._processor_poll_interval))</span><br><span class="line">        time.sleep(self._processor_poll_interval)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Exit early for a test mode</span></span><br><span class="line">        <span class="keyword">if</span> processor_manager.max_runs_reached():</span><br><span class="line">            self.logger.info(<span class="string">"Exiting loop as all files have been processed "</span></span><br><span class="line">                             <span class="string">"&#123;&#125; times"</span>.format(self.num_runs))</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># Stop any processors</span></span><br><span class="line">    processor_manager.terminate()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Verify that all files were processed, and if so, deactivate DAGs that</span></span><br><span class="line">    <span class="comment"># haven't been touched by the scheduler as they likely have been</span></span><br><span class="line">    <span class="comment"># deleted.</span></span><br><span class="line">    all_files_processed = <span class="literal">True</span></span><br><span class="line">    <span class="keyword">for</span> file_path <span class="keyword">in</span> known_file_paths:</span><br><span class="line">        <span class="keyword">if</span> processor_manager.get_last_finish_time(file_path) <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            all_files_processed = <span class="literal">False</span></span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">if</span> all_files_processed:</span><br><span class="line">        self.logger.info(<span class="string">"Deactivating DAGs that haven't been touched since &#123;&#125;"</span></span><br><span class="line">                         .format(execute_start_time.isoformat()))</span><br><span class="line">        models.DAG.deactivate_stale_dags(execute_start_time)</span><br><span class="line"></span><br><span class="line">    self.executor.end()</span><br><span class="line"></span><br><span class="line">    settings.Session.remove()</span><br></pre></td></tr></table></figure>
-
-<p>内容有点长，主要可以分成这几部分</p>
-<ul>
-<li>处理前调度的特殊情况</li>
-<li>调度和解析dag</li>
-<li>执行task-instance </li>
-<li>调度结束后处理</li>
-</ul>
-<p>先看调度前</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">self.executor.start()</span><br><span class="line"></span><br><span class="line"> session = settings.Session()</span><br><span class="line"> self.logger.info(<span class="string">"Resetting state for orphaned tasks"</span>)</span><br><span class="line"> <span class="comment"># grab orphaned tasks and make sure to reset their state</span></span><br><span class="line"> active_runs = DagRun.find(</span><br><span class="line">     state=State.RUNNING,</span><br><span class="line">     external_trigger=<span class="literal">False</span>,</span><br><span class="line">     session=session,</span><br><span class="line">     no_backfills=<span class="literal">True</span>,</span><br><span class="line"> )</span><br><span class="line"> <span class="keyword">for</span> dr <span class="keyword">in</span> active_runs:</span><br><span class="line">     self.logger.info(<span class="string">"Resetting &#123;&#125; &#123;&#125;"</span>.format(dr.dag_id,</span><br><span class="line">                                               dr.execution_date))</span><br><span class="line">     self.reset_state_for_orphaned_tasks(dr, session=session)</span><br><span class="line"></span><br><span class="line"> session.close()</span><br><span class="line"></span><br><span class="line"> execute_start_time = datetime.now()</span><br><span class="line"></span><br><span class="line"> <span class="comment"># Last time stats were printed</span></span><br><span class="line"> last_stat_print_time = datetime(<span class="number">2000</span>, <span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line"> <span class="comment"># Last time that self.heartbeat() was called.</span></span><br><span class="line"> last_self_heartbeat_time = datetime.now()</span><br><span class="line"> <span class="comment"># Last time that the DAG dir was traversed to look for files</span></span><br><span class="line"> last_dag_dir_refresh_time = datetime.now()</span><br><span class="line"></span><br><span class="line"> <span class="comment"># Use this value initially</span></span><br><span class="line"> known_file_paths = processor_manager.file_paths</span><br></pre></td></tr></table></figure>
-
-<p>这里会首先寻找dag-run，dag-run是dag每次执行生成的实例，通过dag-run清理之前调度器遗留下来的孤儿任务</p>
-<p>除了孤儿任务，首先看调度前有哪些依然正常运行的任务</p>
-<ol>
-<li>dag-run有效同时task-instance还在调度中（schedue），这些可以直接被本次调度回收</li>
-<li>dag-run有效同时task-instance还在进入队列中（queued），这些会被队列回收</li>
-</ol>
-<p>因为</p>
-<h2 id="airflow2-0调度器部分"><a href="#airflow2-0调度器部分" class="headerlink" title="airflow2.0调度器部分"></a>airflow2.0调度器部分</h2><p>airflow2.0因为使用python3作为开发语言，因此在架构上使用了许多新的特性，同时整体的文件组织结构也发生了较大的变化</p>
-
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-      <div class="post-share">分享到：</div>
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/airflow/" rel="tag"># airflow</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2021/11/21/nvmfirst/" rel="next" title="nvm安装记录">
-                <i class="fa fa-chevron-left"></i> nvm安装记录
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2021/12/31/2021-year-end-summary/" rel="prev" title="2021年终总结">
-                2021年终总结 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-
-    <div class="post-spread">
-      
-    </div>
-  </div>
 
 
           </div>
@@ -822,7 +568,7 @@
                 <a href="/archives">
               
                   <span class="site-state-item-name">日志</span>
-				  <span class="site-state-item-count">45</span>
+				  <span class="site-state-item-count">46</span>
                 </a>
               </div>
             

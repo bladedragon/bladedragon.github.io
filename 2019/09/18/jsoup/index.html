@@ -186,7 +186,7 @@
 
 
 
-  <title>用java优雅爬虫——Jsoup | Feel The Wind</title>
+  <title>Feel The Wind</title>
   
 
 
@@ -206,7 +206,8 @@
     
   
 
-  <div class="container sidebar-position-right page-post-detail">
+  <div class="container sidebar-position-right 
+  ">
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><nav class="site-nav">
   
@@ -410,232 +411,15 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-
-  <div id="posts" class="posts-expand">
+  <section id="posts" class="posts-expand">
     
+  </section>
 
   
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-date">
-			<div class="post-month">09月</div>
-			<div class="post-day">18</div>
-	</div>
-  
-  <div class="post-badge">
+  <nav class="pagination">
     
-      <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-        <a href="/categories/技术探索/" itemprop="url" rel="index">
-          <span itemprop="name">技术探索</span>
-        </a>
-      </span>
-    
-  </div>
-  
+  </nav>
 
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://site.zblade.top/2019/09/18/jsoup/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="陌花采撷">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="http://cdn.zblade.top/qiniu_img/zavatar2.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Feel The Wind">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">用java优雅爬虫——Jsoup</h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-18T19:06:52+08:00">2019-09-18</time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2019/09/18/jsoup/" class="leancloud_visitors" data-flag-title="用java优雅爬虫——Jsoup">
-               <span class="post-meta-divider"></span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">被</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-                 <span class="post-meta-item-text">人浏览</span>
-             </span>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <p>jsoup是一个用于处理真实HTML的Java库。它提供了一个非常方便的API，用于提取和操作数据，使用最好的DOM，CSS和类似jquery的方法。  </p>
-<a id="more"></a>
-
-<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ol>
-<li><strong>jsoup概述</strong></li>
-<li><strong>使用场景</strong></li>
-</ol>
-<ul>
-<li><strong>DOM解析</strong></li>
-<li><strong>CSS选择器</strong></li>
-<li><strong>HTML过滤</strong></li>
-</ul>
-<ol start="3">
-<li><strong>逻辑分析</strong></li>
-<li><strong>总结</strong></li>
-</ol>
-<h2 id="jousp概述"><a href="#jousp概述" class="headerlink" title="jousp概述"></a>jousp概述</h2><p>官方解释：</p>
-<blockquote>
-<p> jsoup是一个用于处理真实HTML的Java库。它提供了一个非常方便的API，用于提取和操作数据，使用最好的DOM，CSS和类似jquery的方法。  </p>
-</blockquote>
-<p>个人接触到Jsoup是在用java写爬虫时，苦恼于大量使用正则匹配不仅降低了代码的可读性，相对也比较费时费力。这时候，一款爬虫框架突然映入眼帘，那就是jsoup。</p>
-<p>作为一款轻量，功能强大的爬虫框架，jsoup让简单抓取网页信息变得优雅，便捷。  虽然是一个java库，但是它的使用逻辑却无比接近于jQuery，以至于只要是熟悉或是了解JQuery的人可以轻而易举地上手这款框架。  </p>
-<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><h3 id="DOM解析"><a href="#DOM解析" class="headerlink" title="DOM解析"></a>DOM解析</h3><p>jsoup的dom解析异常简单吗，只需要new一个ducumnet对象即可实现获取这个网页元素，接下来以解析一个网页为例。可以看到，将网页转化成ducument类，之后的Element类以及其子类都可以看成是一个个节点，通过调用相关方法实现整个文件节点的遍历。同时，Element类的getElementByTag让人很容易联想到js中的相关方法，因此只要有点JS基础和java基础的人看这段代码都不会觉得陌生。  这里以查询学生成绩信息为例：  </p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">jsoupTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getGrade</span><span class="params">(String stu_num, String id_num)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        String testURL = <span class="string">"http://jwc.cqupt.edu.cn/showS tuQmcj.php"</span>;  <span class="comment">//目标网页</span></span><br><span class="line">        Connection con = Jsoup.connect(testURL);                    <span class="comment">//获取连接</span></span><br><span class="line">        con.data(<span class="string">"xh"</span>, stu_num);                                <span class="comment">//填写参数</span></span><br><span class="line">        con.data(<span class="string">"sfzh"</span>, id_num);</span><br><span class="line">        Document document = con.post();                         <span class="comment">//选择发送方式,获取整个网页信息，存在documnet类里</span></span><br><span class="line"></span><br><span class="line">        Element pTable = document.body().getElementsByClass(<span class="string">"pTable"</span>).get(<span class="number">0</span>);   <span class="comment">//通过class属性 ，获取子类元素</span></span><br><span class="line"></span><br><span class="line">        Elements trs = pTable.getElementsByTag(<span class="string">"tbody"</span>).get(<span class="number">0</span>).children();</span><br><span class="line">        trs.forEach(tr -&gt; &#123;                                                               <span class="comment">//遍历&lt;tr&gt;标签</span></span><br><span class="line">            <span class="keyword">if</span> (!tr.children().isEmpty()) &#123;</span><br><span class="line">                Element element = tr.getElementsByTag(<span class="string">"td"</span>).get(<span class="number">0</span>);</span><br><span class="line">                </span><br><span class="line">                <span class="keyword">if</span> (!element.text().equals(<span class="string">"课程类型"</span>)) &#123;</span><br><span class="line">                    GradeInfo gradeInfo = <span class="keyword">new</span> GradeInfo();</span><br><span class="line">                    gradeInfo.setProperty(tr.getElementsByTag(<span class="string">"td"</span>).get(<span class="number">0</span>).text());</span><br><span class="line">                    String term = tr.getElementsByTag(<span class="string">"td"</span>).get(<span class="number">1</span>).text();</span><br><span class="line"></span><br><span class="line">                    System.out.println(term);</span><br><span class="line">                    System.out.println(tr.getElementsByTag(<span class="string">"td"</span>).get(<span class="number">2</span>).text());</span><br><span class="line">                    System.out.println(tr.getElementsByTag(<span class="string">"td"</span>).get(<span class="number">5</span>).text());</span><br><span class="line">                    System.out.println(tr.getElementsByTag(<span class="string">"td"</span>).get(<span class="number">6</span>).text());</span><br><span class="line">                    System.out.println(tr.getElementsByTag(<span class="string">"td"</span>).get(<span class="number">7</span>).text());</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">""</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>结果：</p>
-<p><img src="/2019/09/18/jsoup/love_2.png" alt="love_2"></p>
-<p>只需要几行就可以完成对html的基本解析，而且所有的操作都可以用js的逻辑解释。或多或少比原生正则匹配要实用的多。</p>
-<h3 id="CSS选择器"><a href="#CSS选择器" class="headerlink" title="CSS选择器"></a>CSS选择器</h3><p>jsoup决心是想向前端靠齐了，除了基本的DOM解析操作外，它同时加入了CSS选择器，这个操作乍一看似乎没什么用处，但是当你真正去学习如何使用后你的就会发现这是多少好用。在针对较复杂地语句匹配时，使用选择器可以轻而易举地筛选出你想要的元素，可以帮你节省大量代码。  使用方法：可以用Element.select(String selector)和Element.select(String selector)实现.  </p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getBySelect</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">       String testURL = <span class="string">"&lt;html&gt;"</span> +</span><br><span class="line">               <span class="string">"&lt;head&gt;&lt;/head&gt;"</span>+</span><br><span class="line">               <span class="string">"&lt;body&gt;"</span>+<span class="string">"&lt;span id=\"grade\"&gt;成绩&lt;/span&gt;"</span>+<span class="string">"&lt;span id = \"subject\"&gt;课程&lt;/span&gt;"</span>+<span class="string">"&lt;span id = \"name\"&gt;姓名&lt;/span&gt;"</span>+<span class="string">"&lt;span id = \"stunum\"&gt;学号&lt;/span&gt;"</span>+</span><br><span class="line">               <span class="string">"&lt;span class = \"score\"&gt;85&lt;/span &gt;"</span>+<span class="string">"&lt;span class = \"class\"&gt;语文&lt;/span&gt;"</span>+<span class="string">"&lt;span class = \"stuname\"&gt;小明&lt;/span class = \"number\"&gt;"</span>+<span class="string">"&lt;span&gt;201721001&lt;/span&gt;"</span>+</span><br><span class="line">               <span class="string">"&lt;span id=\"grade\"&gt;80&lt;/span&gt;"</span>+<span class="string">"&lt;span id = \"subject\"&gt;数学&lt;/span&gt;"</span>+<span class="string">"&lt;span id = \"name\"&gt;小明&lt;/span&gt;"</span>+<span class="string">"&lt;span id = \"stunum\"&gt;2017210001&lt;/span&gt;"</span>+</span><br><span class="line">               <span class="string">"&lt;/body&gt;&lt;/html&gt;"</span>;  <span class="comment">//利用字符串拼接出HTML标签</span></span><br><span class="line">                     <span class="comment">//获取连接</span></span><br><span class="line"></span><br><span class="line">       Document document = Jsoup.parse(testURL);                         <span class="comment">//将HTML转化成可遍历地document类</span></span><br><span class="line">       Elements elements = document.select(<span class="string">"span:matchesOwn(^8)"</span>);</span><br><span class="line">       <span class="keyword">for</span> (Element element:</span><br><span class="line">            elements) &#123;</span><br><span class="line">           System.out.println(elements.text());</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-
-<p>结果：</p>
-<p><img src="/2019/09/18/jsoup/love_3.png" alt="love_3"></p>
-<p>CSS选择器类似于JQuery和CSS中使用的选择器，可以通过特定的选择器语法将对指定元素进行筛选  对于选择器的筛选，这里推荐一篇文章：<a href>详解JSOUP的Select选择器语法 </a>(链接已失效）</p>
-<h3 id="HTML过滤"><a href="#HTML过滤" class="headerlink" title="HTML过滤"></a>HTML过滤</h3><p>这个功能也是偶然看见的，不过现在想来也理所当然，过滤网页信息本身就是Jsoup分内的事。当时正在看XSS攻击方面的知识，突然发现jsoup在安全方面已早有考虑，已本身优秀的HTML解析为基础，抵御XSS攻击自然也是十分优秀。  </p>
-<p>XSS注入本质就是在HTML中插入特定的标签改变原来标签的含义，因此防止XSS攻击的本质是能分辨并及时过滤掉多余或是无效的HTML标签。对此，jsoup有一个白名单机制，通过clean方法可以一步通过白名单设置的过滤规则清理所有的标签，同时也会保留适当标签和禁止图片显示的功能。  </p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * xss过滤</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JsoupUtil</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 使用自带的basicWithImages 白名单</span></span><br><span class="line"><span class="comment">     * 允许的便签有a,b,blockquote,br,cite,code,dd,dl,dt,em,i,li,ol,p,pre,q,small,span,</span></span><br><span class="line"><span class="comment">     * strike,strong,sub,sup,u,ul,img</span></span><br><span class="line"><span class="comment">     * 以及a标签的href,img标签的src,align,alt,height,width,title属性</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Whitelist whitelist = Whitelist.basicWithImages();</span><br><span class="line">    <span class="comment">/** 配置过滤化参数,不对代码进行格式化 */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Document.OutputSettings outputSettings = <span class="keyword">new</span> Document.OutputSettings().prettyPrint(<span class="keyword">false</span>);</span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="comment">// 富文本编辑时一些样式是使用style来进行实现的</span></span><br><span class="line">        <span class="comment">// 比如红色字体 style="color:red;"</span></span><br><span class="line">        <span class="comment">// 所以需要给所有标签添加style属性</span></span><br><span class="line">        whitelist.addAttributes(<span class="string">":all"</span>, <span class="string">"style"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">clean</span><span class="params">(String content)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Jsoup.clean(content, <span class="string">""</span>, whitelist, outputSettings);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> FileNotFoundException, IOException </span>&#123;</span><br><span class="line">        String text = <span class="string">"&lt;a href=\"http://www.baidu.com/a\" onclick=\"alert(1);\"&gt;sss&lt;/a&gt;&lt;script&gt;alert(0);&lt;/script&gt;sss"</span>;</span><br><span class="line">        System.out.println(clean(text));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="逻辑分析-jsoup"><a href="#逻辑分析-jsoup" class="headerlink" title="逻辑分析 jsoup"></a>逻辑分析 jsoup</h2><p>作为一款轻便的爬虫框架，全部由Jonathan Hedley独立写出，因此代码相比其他一些笨重的框架要简洁很多，我通过网上一些解析jsoup源码的博客，加深对jsoup的理解。废话不多说，让我们看看jsoup的魅力吧！  </p>
-<p>借用别人博客里整理的图片，可以看到，让java能像js那样使用类似标签的嵌套存储的方法就是在这里就是利用自定义的node抽象类，将属性存储在类似树状的结构中这，这样做不仅有利于之后的DOM树解析，也容易遍历，有利于性能的提高。  我们再看看CSS选择器的实现逻辑。这是selector的源码列表  </p>
-<p>jsoup在关于selector的实现大致是利用Evaluator抽象类，Selector选择的表达式都会通过QueryParser最终编译到对应的Evaluator类上，然后此类又有很多派生子类，从而分别实现不同功能。逻辑思路还算简单，但是具体代码我还不曾仔细研读，因此在此也不再赘述。不过其中进行嵌套实现对象的思路还是值得借鉴的。  </p>
-<p>在HTML过滤方面，jsoup防止XSS攻击的大致策略是  </p>
-<ol>
-<li>将HTMl字符串解析成document对象，这样保证了无法通过注入一段无用的脚本和字符串拼接导致网页的功能发生了改变 </li>
-<li>将一些高频出现的危险系数较高的标签加入白名单进行提前过滤  </li>
-</ol>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>jsoup在操作便捷度上已经展现了它的实力，但是在性能上，考虑到它的底层还是通过正则进行匹配，因此对于一些一些简单的HTML解析或许直接正则的最快的；但是，当HTML页面比较复杂，这便是jsoup大显身手的时候了。  </p>
-<p>但是jsoup还是有很多不足，例如  </p>
-<ol>
-<li>只能处理静态页面，对于动态显示或者后端渲染后后的页面无法正常进行爬取，这时就需要利用其他的工具例如httpunit进行模拟的ajax请求。 </li>
-<li>jsoup总归还只是个人项目，在后期的维护方面还是存在一定的不确定性，如果需要用应用在一些大型的长久性的项目中还需三思。 </li>
-<li>jsoup的底层实现还是正则匹配，尽管jsoup本身够轻量，但它依然需要解析整个HTML，再进行进一步的搜索，因此在一些简单的网页解析中，肯定还是直接上正则来的直接来的方便。但是如果网页的结构足够复杂，使用正则的的代码量巨大，那么jsoup不失为一个不错的选择。 </li>
-</ol>
-<p>总而言之，jsoup作为一款轻量的爬虫框架，在HTML解析方面的表现还是很不错的，如果平时希望偷点懒，节省点时间和代码量，完全推荐大家使用。  </p>
-
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-      <div class="post-share">分享到：</div>
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/java/" rel="tag"># java</a>
-          
-            <a href="/tags/工具/" rel="tag"># 工具</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2019/09/18/test/" rel="next" title="markdown常用格式测试">
-                <i class="fa fa-chevron-left"></i> markdown常用格式测试
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/09/18/hexofirst/" rel="prev" title="Hexo入门搭建">
-                Hexo入门搭建 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-
-    <div class="post-spread">
-      
-    </div>
-  </div>
 
 
           </div>
@@ -783,7 +567,7 @@
                 <a href="/archives">
               
                   <span class="site-state-item-name">日志</span>
-				  <span class="site-state-item-count">45</span>
+				  <span class="site-state-item-count">46</span>
                 </a>
               </div>
             
