@@ -206,7 +206,7 @@
 
 
 
-  <title>Feel The Wind</title>
+  <title>JAVA知识点总结 | Feel The Wind</title>
   
 
 
@@ -226,8 +226,7 @@
     
   
 
-  <div class="container sidebar-position-right 
-  ">
+  <div class="container sidebar-position-right page-post-detail">
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><nav class="site-nav">
   
@@ -431,15 +430,1692 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-  </section>
 
   
-  <nav class="pagination">
-    
-  </nav>
 
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-date">
+			<div class="post-month">10月</div>
+			<div class="post-day">15</div>
+	</div>
+  
+  <div class="post-badge">
+    
+      <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+        <a href="/categories/学习笔记/" itemprop="url" rel="index">
+          <span itemprop="name">学习笔记</span>
+        </a>
+      </span>
+    
+  </div>
+  
+
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://site.zblade.top/2019/10/15/java-note/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="陌花采撷">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="http://cdn.zblade.top/qiniu_img/zavatar2.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Feel The Wind">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">JAVA知识点总结</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-15T16:51:20+08:00">2019-10-15</time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/10/15/java-note/" class="leancloud_visitors" data-flag-title="JAVA知识点总结">
+               <span class="post-meta-divider"></span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">被</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+                 <span class="post-meta-item-text">人浏览</span>
+             </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>感觉学了一段时间java，总是顾着前就忘了后，是时候将常见的知识点做一下整理，也可以加深一下印象。</p>
+<p>就这么愉快的决定了。</p>
+<p><img src="/2019/10/15/java-note/1047-1581757046238.jpg" alt="1047"></p>
+<a id="more"></a>
+
+<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><p>一、一个整数字面值是long类型，否则就是int类型。 建议使用<strong>大写的L</strong></p>
+<p><strong>二、静态变量和实例变量区别？</strong></p>
+<p>静态变量存在方法区，属于类所有，实例变量存储在堆中，引用存在当前线程栈</p>
+<h4 id="三、java-创建对象的几种方式"><a href="#三、java-创建对象的几种方式" class="headerlink" title="三、java 创建对象的几种方式"></a>三、java 创建对象的几种方式</h4><ol>
+<li>采用new</li>
+<li>通过反射</li>
+<li>采用clone(实现clonable接口然后重写clone方法)</li>
+<li>通过序列化机制(实现序列化接口然后流式输出)</li>
+</ol>
+<h4 id="四、字符串常量池"><a href="#四、字符串常量池" class="headerlink" title="四、字符串常量池"></a>四、字符串常量池</h4><p><strong>设计思想</strong></p>
+<ul>
+<li>为字符串开辟一个字符串常量池，类似于缓存区</li>
+<li>创建字符串常量时，首先坚持字符串常量池是否存在该字符串</li>
+<li>存在该字符串，返回引用实例，不存在，实例化该字符串并放入池中</li>
+</ul>
+<p>实现基础</p>
+<ul>
+<li>字符串是不变的，不用担心数据冲突进行共享</li>
+<li>实例创建的全局字符串常量池中有一个表，为池中唯一的字符串对象维护一个引用，因此不会被垃圾回收</li>
+</ul>
+<p><img src="http://cdn.zblade.top/qiniu_img/1353903-20180906112833927-1544152281.png" alt></p>
+<p>常量池存放在方法去，和堆区都属于线程共享的</p>
+<p>创建对象过程：<code>String str4 = new String(“abc”)</code></p>
+<ol>
+<li><p>在常量池中查找是否有“abc”对象</p>
+</li>
+<li><ul>
+<li>有则返回对应的引用实例</li>
+<li>没有则创建对应的实例对象</li>
+</ul>
+</li>
+<li><p>在堆中 new 一个 String(“abc”) 对象</p>
+</li>
+<li><p>将对象地址赋值给str4,创建一个引用</p>
+</li>
+</ol>
+<p>例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">String str1 = <span class="keyword">new</span> String(<span class="string">"A"</span>+<span class="string">"B"</span>) ;<span class="comment">// 会创建多少个对象? </span></span><br><span class="line">String str2 = <span class="keyword">new</span> String(<span class="string">"ABC"</span>) + <span class="string">"ABC"</span> ;<span class="comment">// 会创建多少个对象?</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/** str1：</span></span><br><span class="line"><span class="comment">字符串常量池："A","B","AB" : 3个</span></span><br><span class="line"><span class="comment">堆：new String("AB") ：1个</span></span><br><span class="line"><span class="comment">引用： str1 ：1个</span></span><br><span class="line"><span class="comment">总共 ： 5个</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**str2 ：</span></span><br><span class="line"><span class="comment">字符串常量池："ABC" : 1个</span></span><br><span class="line"><span class="comment">堆：new String("ABC") ：1个</span></span><br><span class="line"><span class="comment">引用： str2 ：1个</span></span><br><span class="line"><span class="comment">总共 ： 3个</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>String.intern()</p>
+</blockquote>
+<p>intern()方法会首先从常量池中查找是否存在该常量值,如果常量池中不存在则现在常量池中创建,如果已经存在则直接返回.</p>
+<p>五、各类型字节数</p>
+<p><img src="http://cdn.zblade.top/qiniu_img/985411-20191027220414112-1940633335.png" alt></p>
+<p>六、String,StringBuffer和StringBuilder区别</p>
+<ul>
+<li>String是字符串常量,final修饰;</li>
+<li>StringBuffer字符串变量(线程安全);</li>
+<li>StringBuilder 字符串变量(线程不安全).</li>
+</ul>
+<p>StringBuffer是对对象本身操作,而不是产生新的对象,因此在有大量拼接的情况下,我们建议使用StringBuffer.</p>
+<p>StringBuffer是线程安全的可变字符串,其内部实现是可变数组.</p>
+<p>StringBuilder是jdk 1.5新增的,其功能和StringBuffer类似,但是非线程安全.因此,在没有多线程问题的前提下,使用StringBuilder会取得更好的性能.</p>
+<h4 id="七、什么是编译器常量-使用它有什么风险"><a href="#七、什么是编译器常量-使用它有什么风险" class="headerlink" title="七、什么是编译器常量?使用它有什么风险?"></a>七、什么是编译器常量?使用它有什么风险?</h4><p>公共静态不可变（public static final ）变量也就是我们所说的编译期常量，这里的 public 可选的。实际上这些变量在编译时会被替换掉，因为编译器知道这些变量的值，并且知道这些变量在运行时不能改变。</p>
+<p>这种方式存在的一个问题是你使用了一个内部的或第三方库中的公有编译时常量，但是这个值后面被其他人改变了，但是你的客户端仍然在使用老的值，甚至你已经部署了一个新的jar。为了避免这种情况，当你在更新依赖 JAR 文件时，确保重新编译你的程序。</p>
+<p>八、byte[] 转String 可以使用String的构造器，但是注意使用正确编码</p>
+<h2 id="基本特性"><a href="#基本特性" class="headerlink" title="基本特性"></a>基本特性</h2><p><strong>面向对象三特性</strong></p>
+<blockquote>
+<p>封装,继承,多态</p>
+</blockquote>
+<p><strong>多态的好处</strong></p>
+<ul>
+<li>可替换性</li>
+<li>可扩充性：增加新的子类不影响已经存在的类结构</li>
+<li>接口性：多态是超累通过方法签名，向子类提供一个公共接口</li>
+<li>灵活性</li>
+<li>简化性</li>
+</ul>
+<p><strong>如何实现多态</strong></p>
+<ol>
+<li>接口实现</li>
+<li>继承父类重写方法</li>
+</ol>
+<p>抽象类意义</p>
+<ul>
+<li>为其他子类提供一个公共的类型</li>
+<li>封装子类中重复定义的内容</li>
+<li>定义抽象方法,子类虽然有不同的实现,但是定义是一致的</li>
+</ul>
+<h4 id="一、抽象类和接口的区别"><a href="#一、抽象类和接口的区别" class="headerlink" title="一、抽象类和接口的区别"></a>一、抽象类和接口的区别</h4><p><a href="https://www.cnblogs.com/cocoxu1992/p/10647676.html" target="_blank" rel="noopener">抽象类和接口区别</a></p>
+<ul>
+<li>一个类只能继承一个类，但是可以实现多个接口</li>
+<li>接口类只能做方法申明，抽象类可以做方法申明也可以做方法实现</li>
+<li>接口类定义的变量是公共的静态常量，抽象类中的变量是普通变量</li>
+<li>抽象类的抽象方法必须全部被子类实现，如果没有实现，子类只能是抽象类；同样实现一个接口时不实现全部方法，该类只能是抽象类</li>
+<li>抽象方法只能申明，不能实现，接口是设计的结果，抽象类是重构的结果</li>
+<li>==抽象类中可以没有抽象方法==，抽象方法要被实现，不能是静态的也不能是私有的</li>
+<li>接口可继承接口，类只能单根继承</li>
+<li>==接口中的变量会被隐式地指定为public static final变量==</li>
+</ul>
+<p>语法层级区别</p>
+<ol>
+<li>抽象类提供给成员方法的实现细节，接口中只存publi abstract方法</li>
+<li>抽象类中的成员变量可以是各种类型的，接口中的成员变量只能是public static final</li>
+<li>接口中不能有静态代码块，抽象类中可以有</li>
+<li>一个类只能继承一个抽象类，但是可以实现多个接口</li>
+</ol>
+<p>设计层次区别</p>
+<ol>
+<li>抽象列是对类整体抽象，接口事对局部的行为进行抽象</li>
+<li>抽象类是模板式设计，接口是行为规范</li>
+</ol>
+<p><strong>二、short类型在进行运算时会自动提升为int类型</strong></p>
+<p>三、final,finalize和finally的不同之处</p>
+<ul>
+<li>final 是一个修饰符，可以修饰变量、方法和类。如果 final 修饰变量，意味着该变量的值在初始化后不能被改变。</li>
+<li>finalize 方法是在对象被回收之前调用的方法，给对象自己最后一个复活的机会，但是什么时候调用 finalize 没有保证。</li>
+<li>finally 是一个关键字，与 try 和 catch 一起用于异常的处理。finally 块一定会被执行，无论在 try 块中是否有发生异常。</li>
+</ul>
+<p><strong>final的用法</strong></p>
+<p>1.被final修饰的类不可以被继承<br>2.被final修饰的方法不可以被重写<br>3.被final修饰的变量不可以被改变.如果修饰引用,那么表示引用不可变,引用指向的内容可变.<br>4.被final修饰的方法,JVM会尝试将其<strong>内联</strong>,以提高运行效率<br>5.被final修饰的常量,在<strong>编译阶段</strong>会存入<strong>常量池</strong>中.</p>
+<p>编译器对final域要遵守的两个重排序规则：</p>
+<p>1.在构造函数内对一个final域的写入,与随后把这个被构造对象的引用赋值给一个引用变量,这两个操作之间不能重排序.<br>2.初次读一个包含final域的对象的引用,与随后初次读这个final域,这两个操作之间不能重排序.</p>
+<p>四、如何正确的退出多层嵌套循环.</p>
+<ol>
+<li>使用标号label和break;</li>
+<li>通过在外层循环中添加标识符</li>
+</ol>
+<p>五、深拷贝和浅拷贝的区别是什么?</p>
+<p>浅拷贝：被复制对象的所有变量都含有与原来的对象相同的值，而所有的对其他对象的引用仍然指向原来的对象。换言之，<strong>浅拷贝仅仅复制所考虑的对象，而不复制它所引用的对象</strong>。</p>
+<p>深拷贝：被复制对象的所有变量都含有与原来的对象相同的值，而那些引用其他对象的变量将指向被复制过的新对象，而不再是原有的那些被引用的对象。换言之，<strong>深拷贝把要复制的对象所引用的对象都复制了一遍</strong>。</p>
+<p>六、static都有哪些用法?</p>
+<p><strong>静态变量和静态方法</strong>：也就是被static所修饰的变量/方法都属于类的静态资源,类实例所共享.</p>
+<p><strong>初始化操作，静态块：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> calss PreCache&#123;</span><br><span class="line"> <span class="keyword">static</span>&#123;</span><br><span class="line"> <span class="comment">//执行相关操作</span></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>static也多用于修饰内部类</strong></p>
+<p><strong>静态导包</strong>：import static是在JDK 1.5之后引入的新特性,可以用来指定导入某个类中的静态资源,并且不需要使用类名.资源名,可以直接使用资源名</p>
+<h4 id="七、进程、线程相关"><a href="#七、进程、线程相关" class="headerlink" title="七、进程、线程相关"></a>七、进程、线程相关</h4><p><strong>进程,线程,协程之间的区别</strong></p>
+<ul>
+<li>进程是==程序运行和资源分配==的基本单位,一个程序至少有一个进程,一个进程至少有一个线程。进程在执行过程中拥有==独立的内存单元==,而多个线程共享内存资源,==减少切换次数,从而效率更高.==</li>
+<li>线程是进程的一个实体,是==cpu调度和分派的基本单位==,是比程序更小的能独立运行的基本单位.同一进程中的多个线程之间可以并发执行.</li>
+<li>协程，是一种比线程更加轻量级的存在，协程不==是被操作系统内核所管理==，而==完全是由程序所控制==（也就是在用户态执行）</li>
+<li><strong>协程在子程序内部是可中断的，然后转而执行别的子程序，在适当的时候再返回来接着执行</strong>。由程序自身控制，没有线程切换，执行效率高。</li>
+<li>因为只有一个线程，也不存在同时写变量冲突，<strong>因此在协程中控制共享资源不加锁</strong></li>
+</ul>
+<p><strong>java为什么坚持用多线程不用协程?</strong></p>
+<ol>
+<li>一个tomcat上的woker线程池的最大线程数一般会配置为50～500之间（目前springboot的默认值给的200）,实际内存增幅对整体性能影响不大</li>
+<li>使用netty，NIO+worker thread可以大致等于一套协程</li>
+<li>通过线程池可以很好创建销毁线程开销</li>
+<li>线程的切换实际上只会发生在那些“活跃”的线程上。java web中大量存在的是IO请求挂起的线程，不会参与OS的线程切换</li>
+</ol>
+<p><strong>守护线程和非守护线程区别</strong></p>
+<ul>
+<li>程序运行完毕,jvm会等待非守护线程完成后关闭,但是jvm不会等待守护线程.守护线程最典型的例子就是GC线程</li>
+</ul>
+<p><strong>多线程上下文切换</strong></p>
+<p>多线程的上下文切换是指CPU控制权由一个已经正在运行的线程切换到另外一个就绪并等待获取CPU执行权的线程的过程。</p>
+<p><strong>java.lang.Runnable比java.lang.Thread优势？</strong></p>
+<ol>
+<li>Java不支持多继承.因此继承Thread类就代表这个子类不能扩展其他类.而实现Runnable接口的类还可能扩展另一个类.</li>
+<li>类可能只要求可执行即可,因此继承整个Thread类的开销过大.</li>
+</ol>
+<p><strong>Thread类中的start()和run()方法有什么区别?</strong></p>
+<p>start()方法被用来启动新创建的线程，而且start()内部调用了run()方法，这和直接调用run()方法的效果不一样。==当你调用run()方法的时候，只会是在原来的线程中调用，没有新的线程启动==，start()方法才会启动新线程。</p>
+<p><strong>怎么检测一个线程是否持有对象监视器</strong></p>
+<p>Thread类提供了一个<code>·holdsLock(Object obj)</code>方法，当且仅当对象obj的监视器被某条线程持有的时候才会返回true，注意这是一个<code>static</code>方法，这意味着”某条线程”指的是当前线程。</p>
+<p><strong>对象监视器</strong></p>
+<p>监视器是==一种同步结构，它基于互斥锁==，允许线程同时互斥（使用锁）和协作，·</p>
+<p>当一个线程需要数据在某一个状态下它才能执行，那么另一个线程负责将数据改变到此状态，</p>
+<p>常见的如生产者/消费者的问题，当读线程需要缓冲区处于“不空”的状态它才可以从缓冲区中读取任何数据，如果它发现缓冲区为空，则进入wait-set等待。待写线程用数据填充缓冲区，再通知读线程进行读取。这种机制被称为“<strong>Wait and Notify</strong>”或“<strong>Signal and Continue</strong>”</p>
+<p><strong>Callable接口中的call()方法是有返回值的，是一个泛型，和Future、FutureTask配合可以用来获取异步执行的结果</strong>。</p>
+<p><strong>什么导致线程阻塞</strong></p>
+<blockquote>
+<p>阻塞指的是暂停一个线程的执行以等待某个条件发生（如某资源就绪）</p>
+</blockquote>
+<p><strong>sleep()</strong>：被用在等待某个资源就绪的情形：测试发现条件不满足后，让线程阻塞一段时间后重新测试，直到条件满足为止</p>
+<p><strong>suspend() 和 resume()</strong>：suspend()使得线程进入阻塞状态，并且不会自动恢复，必须其对应的resume() 被调用，才能使得线程重新进入可执行状态。</p>
+<p><strong>yield()</strong>：使当前线程放弃当前已经分得的CPU 时间，==但不使当前线程阻塞==，即线程仍处于可执行状态，随时可能再次分得 CPU 时间</p>
+<p><strong>wait() 和 notify()</strong>：wait() 使得线程进入阻塞状态，它有两种形式，一种允许指定以==毫秒==为单位的一段时间作为参数，另一种没有参数，前者当对应的 notify() 被调用或者超出指定时间时线程重新进入可执行状态，后者则必须对应的 notify() 被调用.</p>
+<p><strong>wait(),notify()和suspend(),resume()之间的区别</strong></p>
+<ul>
+<li><strong>wait(),notify()</strong>属于<code>Object</code>类，所有对象都拥有这一对方法；（因为锁是任何对象具有的）其他方法属于<code>thread</code>类。其他方法阻塞时都不会释放占用的锁（如果占用了的话），这一对会释放占用锁</li>
+<li><strong>wait(),notify()</strong>必须在 <code>synchronized</code>方法或块中调用，其他所有方法可在任何位置调用。（因为在<code>synchronized</code>方法或块中当前线程才占有锁，才有锁可以释放。同样的道理，调用这一对方法的对象上的锁必须为当前线程所拥有，这样才有锁可以释放）如果没有放在同步方法或同步块中，会报<code>IllegalMonitorStateException</code></li>
+</ul>
+<p><strong>关于 wait() 和 notify() 方法最后再说明两点：</strong><br>第一：调用<code>notify()</code> 方法导致解除阻塞的线程是从因调用该对象的 <code>wait()</code> 方法而阻塞的线程中==随机选取==的，我们无法预料哪一个线程将会被选择，所以编程时要特别小心，避免因这种不确定性而产生问题。</p>
+<p>第二：除了 <code>notify()</code>，还有一个方法 <code>notifyAll()</code>也可起到类似作用，唯一的区别在于，调用 <code>notifyAll()</code>方法将把因调用该对象的 <code>wait()</code>方法而阻塞的所有线程一次性全部解除阻塞。当然，只有获得锁的那一个线程才能进入可执行状态。</p>
+<blockquote>
+<p>特别注意：uspend() 方法和不指定超时期限的 wait() 方法的调用都可能产生死锁</p>
+</blockquote>
+<p><strong>wait()方法和notify()/notifyAll()方法在放弃对象监视器时有什么区别</strong></p>
+<p>wait()方法==立即释放对象监视器==，notify()/notifyAll()方法则会==等待线程剩余代码执行完==毕才会放弃对象监视器。</p>
+<p><strong>标准使用wait示例</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">synchronized</span> (obj) &#123;</span><br><span class="line"><span class="keyword">while</span> (condition does not hold)</span><br><span class="line">     obj.wait(); <span class="comment">// (Releases lock, and reacquires on wakeup)</span></span><br><span class="line">... <span class="comment">// Perform action appropriate to condition</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="八、产生死锁的条件"><a href="#八、产生死锁的条件" class="headerlink" title="八、产生死锁的条件"></a>八、产生死锁的条件</h4><ol>
+<li>==互斥条件==：一个资源每次只能被一个进程使用。</li>
+<li>==请求与保持条件：==一个进程因请求资源而阻塞时，对已获得的资源保持不放。</li>
+<li>==不剥夺条件:进程已获得的资源==，在末使用完之前，不能强行剥夺。</li>
+<li>==循环等待条件==:若干进程之间形成一种头尾相接的循环等待资源关系。</li>
+</ol>
+<p><strong>synchronized和ReentrantLock的区别·</strong></p>
+<p><code>synchronized</code>是和if、else、for、while一样的==关键字==，<code>ReentrantLock</code>是==类==，这是二者的本质区别。既然<code>ReentrantLock</code>是类，那么它就提供了比<code>synchronized</code>更多更灵活的特性，可以被继承、可以有方法、可以有各种各样的类变量，<code>ReentrantLock</code>比<code>synchronized</code>的扩展性体现在几点上：<br>（1）<code>ReentrantLock</code>可以对获取锁的等待时间进行设置，这样就==避免了死锁==<br>（2）<code>ReentrantLock</code>可以获取各种锁的信息<br>（3）<code>ReentrantLock</code>可以灵活地实现==多路通知==<br>另外，二者的锁机制其实也是不一样的:<code>ReentrantLock</code>底层调用的是<code>Unsafe</code>的<code>park</code>方法加锁，<code>synchronized</code>操作的应该是对象头中<code>mark ``word</code>.</p>
+<p><a href="https://blog.csdn.net/scdn_cp/article/details/86491792" target="_blank" rel="noopener">Java对象结构与锁实现原理及MarkWord详解</a></p>
+<p><strong>一个线程如果出现了运行时异常怎么办?</strong></p>
+<p>如果这个异常没有被捕获的话，这个线程就停止执行了。另外重要的一点是：如果这个线程持有某个某个对象的监视器，那么这个对象监视器会被立即释放</p>
+<p><strong>线程共享数据方法</strong></p>
+<p>通过在线程之间共享对象就可以了，然后通过wait/notify/notifyAll、await/signal/signalAll进行唤起和等待，比方说阻塞队列BlockingQueue就是为线程之间共享数据而设计的</p>
+<h4 id="九、java中锁种类"><a href="#九、java中锁种类" class="headerlink" title="九、java中锁种类"></a>九、java中锁种类</h4><p>锁提供了两种主要特性：<strong>互斥（mutual exclusion） 和可见性（visibility）</strong></p>
+<p>锁的状态</p>
+<ul>
+<li><p><strong>自旋锁</strong></p>
+<p>==共享数据的锁定状态==只会持续很短的时间，为了这一小段时间而去挂起和恢复线程有点浪费，所以这里就做了一个处理，让后面请求锁的那个线程在稍等一会，但是不放弃处理器的执行时间，看看持有锁的线程能否快速释放</p>
+<p>==为了让线程等待，所以需要让线程执行一个忙循环也就是自旋操作==</p>
+<p>在jdk6之后，引入了自适应的自旋锁，也就是等待的时间不再固定了，而是由上一次在同一个锁上的自旋时间及锁的拥有者状态来决定</p>
+<p>==好处是减少线程上下文切换的消耗，缺点是循环会消耗CPU。==</p>
+</li>
+<li><p><strong>偏向锁</strong></p>
+<p>目的是消除数据在无竞争情况下的同步原语。进一步提升程序的运行性能。</p>
+<p>==这个锁会偏向第一个获得他的线程，如果接下来的执行过程中，该锁没有被其他线程获取，则持有偏向锁的线程将永远不需要再进行同步。==</p>
+<p>偏向锁可以提高带有同步但无竞争的程序性能，也就是说他并不一定总是对程序运行有利，如果程序中大多数的锁都是被多个不同的线程访问，那偏向模式就是多余的，在具体问题具体分析的前提下，可以考虑是否使用偏向锁。</p>
+</li>
+<li><p><strong>轻量级锁/重量级锁</strong></p>
+<p>为了减少获得锁和释放锁带来的性能消耗</p>
+<p>在Java SE1.6里锁一共有四种状态，<strong>无锁状态</strong>，<strong>偏向锁状态</strong>，<strong>轻量级锁状态</strong>和<strong>重量级锁状态</strong>，它会随着竞争情况逐渐升级。==锁可以升级但不能降级==，意味着偏向锁升级成轻量级锁后不能降级成偏向锁</p>
+<p>四种锁的状态是通过对象监视器在对象头中的字段来表明的。</p>
+<p><strong>偏向锁</strong>是指一段同步代码一直被一个线程所访问，那么该线程会自动获取锁。降低获取锁的代价。</p>
+<p><strong>轻量级锁</strong>是指当锁是偏向锁的时候，被另一个线程所访问，偏向锁就会升级为轻量级锁，其他线程会通过自旋的形式尝试获取锁，不会阻塞，提高性能。</p>
+<p><strong>重量级锁</strong>是指当锁为轻量级锁的时候，另一个线程虽然是自旋，但自旋不会一直持续下去，当自旋一定次数的时候，还没有获取到锁，就会进入阻塞，该锁膨胀为重量级锁。==重量级锁会让他申请的线程进入阻塞，性能降低。==</p>
+</li>
+</ul>
+<p>锁的种类</p>
+<ul>
+<li><p><strong>独享锁/共享锁</strong>：独享锁是指==该锁一次只能被一个线程所持有==；共享锁是指==该锁可被多个线程所持有==。</p>
+<p>对于<code>Java ReentrantLock而言</code>，其是<strong>独享锁</strong>。但是对于<code>Lock</code>的另一个实现类<code>ReadWriteLock</code>，其<strong>读锁是共享锁，其写锁是独享锁</strong>。</p>
+<p>对于<code>Synchronized</code>而言，当然是<strong>独享锁</strong>。</p>
+<p>读锁的共享锁可保证并发读是非常高效的，读写，写读，写写的过程是互斥的。</p>
+<p>独享锁与共享锁也是通过<code>AQS</code>来实现的，通过实现不同的方法，来实现独享或者共享。</p>
+</li>
+<li><p><strong>互斥锁/读写锁</strong>:即独享锁和共享锁的具体实现</p>
+</li>
+<li><p><strong>可重入锁</strong>：又名<strong>递归锁</strong>，是指在同一个线程在外层方法获取锁的时候，在进入内层方法会自动获取锁</p>
+<p>对于<code>Java ReetrantLock</code>而言，从名字就可以看出是一个重入锁，其名字是<code>Re entrant Lock</code> 重新进入锁。</p>
+<p>对于<code>Synchronized</code>而言，也是一个可重入锁。可重入锁的一个好处是==可一定程度避免死锁。==</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">setA</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">　　Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">　　setB();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//如果不是可重入锁的话，setB可能不会被当前线程执行，可能造成死锁。</span></span><br><span class="line"><span class="function"><span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">setB</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">　　Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>公平锁和非公平锁</strong>：</p>
+<p><strong>公平锁</strong>是指多个线程按照==申请锁的顺序==来获取锁。</p>
+<p><strong>非公平锁</strong>是指多个线程获取锁的顺序并不是按照申请锁的顺序，有可能后申请的线程比先申请的线程优先获取锁。有可能，会造成优先级反转或者饥饿现象。</p>
+<p>对于<code>Java ReetrantLock</code>而言，通过构造函数指定该锁是否是公平锁，默认是<strong>非公平锁</strong>。非公平锁的优点在于==吞吐量比公平锁大==。</p>
+<p>对于<code>Synchronized</code>而言，也是一种<strong>非公平锁</strong>。由于其并不像<code>ReentrantLock</code>是通过<code>AQS</code>的来实现线程调度，所以==并没有任何办法使其变成公平锁==。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>锁的设计</p>
+<ul>
+<li><p><strong>乐观锁/悲观锁</strong>：主要是指看待==并发同步==的角度</p>
+<p><em>==悲观锁适合写操作非常多的场景，乐观锁适合读操作非常多的场景，不加锁会带来大量的性能提升。==</em></p>
+<p><strong>乐观锁</strong>：顾名思义，就是很乐观，每次去拿数据的时候都认为别人不会修改，所以不会上锁，==但是在更新的时候会判断一下在此期间别人有没有去更新这个数据==，可以使用版本号等机制。乐观锁适用于多读的应用类型，这样可以提高吞吐量，在Java中<code>java.util.concurrent.atomic</code>包下面的==原子变量类==就是使用了乐观锁的一种实现方式==CAS(Compare and Swap)== 比较并交换)实现的。</p>
+<p>乐观锁在Java中的使用，是==无锁编程==，常常采用的是==CAS算法==，典型的例子就是原子类，通过==CAS自旋==实现原子操作的更新。</p>
+<ul>
+<li><p><em>数据版本机制</em></p>
+<p>实现数据版本一般有两种，第一种是使用版本号，第二种是使用时间戳。以版本号方式为例。</p>
+</li>
+</ul>
+<p>版本号方式：一般是在数据表中加上一个数据版本号version字段，表示数据被修改的次数，当数据被修改时，version值会加一。当线程A要更新数据值时，在读取数据的同时也会读取version值，在提交更新时，若刚才读取到的version值为当前数据库中的version值相等时才更新，否则重试更新操作，直到更新成功。<br>  核心SQL代码：</p>
+  <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">update</span> <span class="keyword">table</span> <span class="keyword">set</span> xxx=<span class="comment">#&#123;xxx&#125;, version=version+1 where id=#&#123;id&#125; and version=#&#123;version&#125;;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><em>CAS操作</em></p>
+<p>CAS（Compare and Swap 比较并交换），当多个线程尝试使用CAS同时更新同一个变量时，只有其中一个线程能更新变量的值，而其它线程都失败，==失败的线程并不会被挂起，而是被告知这次竞争中失败，并可以再次尝试。==</p>
+<p>CAS操作中包含三个操作数——==<strong>需要读写的内存位置(V)</strong>==、==<strong>进行比较的预期原值(A)</strong>==和==<strong>拟写入的新值(B)</strong>==。如果内存位置V的值与预期原值A相匹配，那么处理器会自动将该位置值更新为新值B，否则处理器不做任何操作。</p>
+<p>以<code>java.util.concurrent</code>包中的<code>AtomicInteger</code>为例，看一下在不使用锁的情况下是如何保证线程安全的。主要理解<code>getAndIncrement</code>方法，该方法的作用相当于++i操作</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AtomicInteger</span> <span class="keyword">extends</span> <span class="title">Number</span> <span class="keyword">implements</span> <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span></span>&#123;</span><br><span class="line">　　<span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">int</span> value;   <span class="comment">//CAS中必须使用volatile变量，保证拿到的变量时主内存中最新值</span></span><br><span class="line">　　<span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">get</span><span class="params">()</span></span>&#123;</span><br><span class="line">　　　　<span class="keyword">return</span> value;</span><br><span class="line">　　&#125;</span><br><span class="line"></span><br><span class="line">　 <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">getAndIncrement</span><span class="params">()</span></span>&#123;</span><br><span class="line">　　　　<span class="keyword">for</span> (;;)&#123;</span><br><span class="line">　　　　　　<span class="keyword">int</span> current = get();</span><br><span class="line">　　　　　　<span class="keyword">int</span> next = current + <span class="number">1</span>;</span><br><span class="line">　　　　　　<span class="keyword">if</span> (compareAndSet(current, next)) <span class="comment">//获取值后查看值是否更新</span></span><br><span class="line">　　　　　　<span class="keyword">return</span> current;</span><br><span class="line">　　　　&#125;</span><br><span class="line">　　&#125;</span><br><span class="line"> </span><br><span class="line">　　<span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">compareAndSet</span><span class="params">(<span class="keyword">int</span> expect, <span class="keyword">int</span> update)</span></span>&#123;</span><br><span class="line">　　　　<span class="keyword">return</span> unsafe.compareAndSwapInt(<span class="keyword">this</span>, valueOffset, expect, update);</span><br><span class="line">　　&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+</li>
+</ul>
+<p>  <strong>悲观锁</strong>：总是假设最坏的情况，每次去拿数据的时候都认为别人会修改，所以每次在拿数据的时候都会上锁，这样别人想拿这个数据就会阻塞直到它拿到锁。比如Java里面的同步原语<code>synchronized</code>关键字的实现就是悲观锁。</p>
+<p>  悲观锁在Java中的使用，就是利用各种锁</p>
+<ul>
+<li>在对任意记录进行修改前，先尝试为该记录加上<strong>排他锁（exclusive locking）。</strong></li>
+<li>如果加锁失败，说明该记录正在被修改，那么当前查询可能要==等待==或者==抛出异常==。具体响应方式由开发者根据实际需要决定。</li>
+<li>如果成功加锁，那么就可以对记录做修改，事务完成后就会解锁了。</li>
+<li>期间如果有其他对该记录做修改或加排他锁的操作，都会==等待==我们解锁或直接抛出异常。</li>
+</ul>
+<ul>
+<li><p><strong>分段锁</strong>：对于<code>ConcurrentHashMap</code>而言，其并发的实现就是==通过分段锁的形式==来实现高效的并发操作</p>
+<p>以<code>ConcurrentHashMap</code>来说一下分段锁的含义以及设计思想，<code>ConcurrentHashMap</code>中的分段锁称为<code>Segment</code>，它即类似于<code>HashMap</code>（JDK7和JDK8中<code>HashMap</code>的实现）的结构，即==内部拥有一个<code>Entry</code>数组，数组中的每个元素又是一个链表；同时又是一个<code>ReentrantLock</code>（<code>Segment</code>继承了<code>ReentrantLock</code>）==。</p>
+<p>当需要<code>put</code>元素的时候，并不是对整个<code>hashmap</code>进行加锁，而是先通过<code>hashcode</code>来知道他要放在哪一个分段中，然后对这个分段进行加锁，所以当多线程<code>put</code>的时候，只要不是放在一个分段中，就实现了真正的并行的插入</p>
+<p>但是，在统计<code>size</code>的时候，可就是获取<code>hashmap</code>全局信息的时候，就需要获取所有的分段锁才能统计。</p>
+<p>分段锁的设计目的是==细化锁的粒度==，当操作不需要更新整个数组的时候，就仅仅针对数组中的一项进行加锁操作。</p>
+</li>
+</ul>
+<h5 id="锁的使用"><a href="#锁的使用" class="headerlink" title="锁的使用"></a><strong>锁的使用</strong></h5><p><a href="https://www.cnblogs.com/hustzzl/p/9343797.html" target="_blank" rel="noopener">java锁的使用和种类</a></p>
+<p>预备知识</p>
+<ol>
+<li><p>AQS：<code>AbstractQueuedSynchronized</code> 抽象队列式的同步器，AQS定义了一套==多线程访问共享资源的同步器框架==，许多同步类实现都依赖于它，如常用的<code>ReentrantLock</code>/<code>Semaphore</code>/<code>CountDownLatch</code>…</p>
+<p><img src="http://cdn.zblade.top/qiniu_img/721070-20170504110246211-10684485.png" alt>AQS维护了一个<code>volatile int state</code>(代表==共享资源)==和一个<code>FIFO</code>线程等待队列（==多线程争用资源被阻塞时会进入此队列==）。</p>
+<p>state的访问方式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">getState();</span><br><span class="line">setState();</span><br><span class="line">compareAndSetState();</span><br></pre></td></tr></table></figure>
+
+<p>AQS定义两种资源共享方式：<strong><code>Exclusive</code></strong>（独占，只有一个线程能执行，如<code>ReentrantLock</code>）和<strong><code>Share</code></strong>（共享，多个线程可同时执行，如<code>Semaphore</code>/<code>CountDownLatch</code>）。</p>
+<p>自定义同步器实现时主要实现以下几种方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">isHeldExclusively()<span class="comment">//该线程是否正在独占资源。只有用到condition才需要去实现它。</span></span><br><span class="line">tryAquire(<span class="keyword">int</span>)<span class="comment">//独占方式。尝试获取资源，成功则返回true，失败则返回false。</span></span><br><span class="line">tryRelease(<span class="keyword">int</span>)<span class="comment">//独占方式。尝试释放资源，成功则返回true，失败则返回false。</span></span><br><span class="line">tryAcquireShared(<span class="keyword">int</span>)<span class="comment">//共享方式。尝试获取资源。负数表示失败；0表示成功，但没有剩余可用资源；正数表示成功，且有剩余资源。</span></span><br><span class="line">tryReleaseShared(<span class="keyword">int</span>)<span class="comment">//共享方式。尝试释放资源，如果释放后允许唤醒后续等待结点返回true，否则返回false。</span></span><br></pre></td></tr></table></figure>
+
+<p>以<code>ReentrantLock</code>为例，state初始化为0，表示未锁定状态。A线程lock()时，会调用tryAcquire()独占该锁并将state+1。此后，其他线程再tryAcquire()时就会失败，直到A线程unlock()到state=0（即释放锁）为止，其他线程才有机会获取该锁。当然，释放锁之前，A线程自己是可以重复获取此锁的（state会累加），这就是可重入的概念。但要注意，获取多少次就要释放多少次，这样才能保证state是能回到零态的。</p>
+<p>再以<code>CountDownLatch</code>为例，任务分为N个子线程去执行，state为初始化为N（注意N要与线程个数一致）。这N个子线程是并行执行的，每个子线程执行完后countDown()一次，state会CAS减1。等到所有子线程都执行完后（即state=0），会unpark()主调用线程，然后主调用线程就会await()函数返回，继续后余动作。</p>
+</li>
+</ol>
+<blockquote>
+<p>注 ：AQS也支持自定义同步器同时实现独占和共享两种方式，如<code>ReentrantReadWriteLock</code>。</p>
+</blockquote>
+<h4 id="十、-ThreadLocal"><a href="#十、-ThreadLocal" class="headerlink" title="十、 ThreadLocal"></a>十、 ThreadLocal</h4><p>线程局部变量是局限于线程内部的变量，属于线程自身所有，不在多个线程间共享，Java提供<code>ThreadLocal</code>类来支持线程局部变量，是一种实现线程安全的方式。</p>
+<p>但是在管理环境下（如 web 服务器）使用线程局部变量的时候要特别小心，在这种情况下，工作线程的生命周期比任何应用变量的生命周期都要长。==任何线程局部变量一旦在工作完成后没有释放，Java 应用就存在内存泄露的风险。==</p>
+<p>作用：简单说<code>ThreadLocal</code>就是一种以==空间换时间==的做法在每个Thread里面维护了一个<code>ThreadLocal.ThreadLocalMap</code>把数据进行隔离，数据不共享，自然就没有线程安全方面的问题了.</p>
+<p>十一、生产者消费者模型</p>
+<p><strong>作用：</strong></p>
+<p>（1）通过==<strong>平衡生产者的生产能力和消费者的消费能力来提升整个系统的运行效率</strong>==，这是生产者消费者模型最重要的作用<br>（2）<strong>解耦</strong>，这是生产者消费者模型附带的作用，解耦意味着生产者和消费者之间的联系少，联系越少越可以独自发展而不需要收到相互的制约</p>
+<p>写一个生产者-消费者队列方法</p>
+<p>可以通过阻塞队列实现,也可以通过wait-notify来实现.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//阻塞队列实现生产者消费者模型</span></span><br><span class="line"><span class="comment">//消费者</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Producer</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>&#123;</span><br><span class="line"> <span class="keyword">private</span> <span class="keyword">final</span> BlockingQueue&lt;Integer&gt; queue;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="title">Producer</span><span class="params">(BlockingQueue q)</span></span>&#123;</span><br><span class="line"> <span class="keyword">this</span>.queue=q;</span><br><span class="line"> &#125;</span><br><span class="line">    </span><br><span class="line"> <span class="meta">@Override</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> <span class="keyword">try</span> &#123;</span><br><span class="line"> <span class="keyword">while</span> (<span class="keyword">true</span>)&#123;</span><br><span class="line"></span><br><span class="line">                Thread.sleep(<span class="number">1000</span>);<span class="comment">//模拟耗时</span></span><br><span class="line">                queue.put(produce());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">catch</span> (InterruptedException e)&#123;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line"> <span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">produce</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">int</span> n=<span class="keyword">new</span> Random().nextInt(<span class="number">10000</span>);</span><br><span class="line"> System.out.println(<span class="string">"Thread:"</span> + Thread.currentThread().getId() + <span class="string">" produce:"</span> + n);</span><br><span class="line"> <span class="keyword">return</span> n;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//消费者</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Consumer</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line"> <span class="keyword">private</span> <span class="keyword">final</span> BlockingQueue&lt;Integer&gt; queue;</span><br><span class="line">    </span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="title">Consumer</span><span class="params">(BlockingQueue q)</span></span>&#123;</span><br><span class="line"> <span class="keyword">this</span>.queue=q;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"> <span class="meta">@Override</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> <span class="keyword">while</span> (<span class="keyword">true</span>)&#123;</span><br><span class="line"> <span class="keyword">try</span> &#123;</span><br><span class="line">                Thread.sleep(<span class="number">2000</span>);<span class="comment">//模拟耗时</span></span><br><span class="line">                consume(queue.take());</span><br><span class="line">            &#125;<span class="keyword">catch</span> (InterruptedException e)&#123;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"> <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">consume</span><span class="params">(Integer n)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">"Thread:"</span> + Thread.currentThread().getId() + <span class="string">" consume:"</span> + n);</span><br><span class="line"> </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//测试</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        BlockingQueue&lt;Integer&gt; queue=<span class="keyword">new</span> ArrayBlockingQueue&lt;Integer&gt;(<span class="number">100</span>);</span><br><span class="line">        Producer p=<span class="keyword">new</span> Producer(queue);</span><br><span class="line">        Consumer c1=<span class="keyword">new</span> Consumer(queue);</span><br><span class="line">        Consumer c2=<span class="keyword">new</span> Consumer(queue);</span><br><span class="line"></span><br><span class="line"> <span class="keyword">new</span> Thread(p).start();</span><br><span class="line"> <span class="keyword">new</span> Thread(c1).start();</span><br><span class="line"> <span class="keyword">new</span> Thread(c2).start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>十二、java中的线程调度算法</p>
+<p><strong>抢占式</strong>。一个线程用完CPU之后，操作系统会根据==线程优先级、线程饥饿情况==等数据算出一个==总的优先级==并分配下一个时间片给某个线程执行。</p>
+<p>十三、Thread.sleep(0)的作用是什么</p>
+<p>由于Java采用抢占式的线程调度算法，因此可能会出现某条线程常常获取到CPU控制权的情况，为了让某些优先级比较低的线程也能获取到CPU控制权，可以使用==<code>Thread.sleep(0)</code>手动触发一次操作系统分配时间片的操作==，这也是平衡CPU控制权的一种操作。</p>
+<h4 id="十四、ConcurrentHashMap"><a href="#十四、ConcurrentHashMap" class="headerlink" title="十四、ConcurrentHashMap"></a>十四、ConcurrentHashMap</h4><p><strong>ConcurrentHashMap的并发度是什么?</strong></p>
+<p><code>ConcurrentHashMap</code>的并发度就是<code>segment</code>的大小，默认为==<strong>16</strong>==，这意味着最多同时可以有16条线程操作<code>ConcurrentHashMap</code>，这也是<code>ConcurrentHashMap</code>对<code>Hashtable</code>的最大优势，任何情况下，<code>Hashtable</code>能同时有两条线程获取<code>Hashtable</code>中的数据吗？</p>
+<p><strong>ConcurrentHashMap的工作原理</strong></p>
+<blockquote>
+<p>jdk 1.6:</p>
+</blockquote>
+<p><code>ConcurrentHashMap</code>是==线程安全==的，但是与<code>Hashtablea</code>相比，实现线程安全的方式不同。</p>
+<p><code>Hashtable</code>是通过对<code>hash</code>表结构进行锁定，是==阻塞式==的，当一个线程占有这个锁时，其他线程必须阻塞等待其释放锁。</p>
+<p><code>ConcurrentHashMap</code>是采用==分离锁==的方式，它并没有对整个<code>hash</code>表进行锁定，而是局部锁定，也就是说当一个线程占有这个局部锁时，不影响其他线程对<code>hash</code>表其他地方的访问。</p>
+<blockquote>
+<p>jdk1.7</p>
+</blockquote>
+<p>在JDK1.7版本中，ConcurrentHashMap的数据结构是由一个Segment数组和多个HashEntry组成</p>
+<p><img src="http://cdn.zblade.top/qiniu_img/5220087-8c5b0cc951e61398.webp" alt></p>
+<blockquote>
+<p>jdk 1.8</p>
+</blockquote>
+<p>在jdk 8中，<code>ConcurrentHashMap</code>不再使用<code>Segment</code>分离锁，而是采用一种乐观锁<code>CAS</code>算法来实现同步问题，但其底层还是“==数组+链表-&gt;红黑树==”的实现,桶中的结构可能是链表，也可能是红黑树，红黑树是为了提高查找效率。</p>
+<p><img src="http://cdn.zblade.top/qiniu_img/5220087-63281d7b737f1109.webp" alt></p>
+<p>总结：</p>
+<p>相对而言，<code>ConcurrentHashMap</code>只是增加了同步的操作来控制并发，从JDK1.7版本的==ReentrantLock+Segment+HashEntry==，到JDK1.8版本中==synchronized+CAS+HashEntry+红黑树==,相对而言，总结如下思考:</p>
+<ul>
+<li>JDK1.8的实现<strong>降低锁的粒度</strong>，JDK1.7版本锁的粒度是基于<code>Segment</code>的，包含多个<code>HashEntry</code>，而JDK1.8锁的粒度就是<code>HashEntry</code>（首节点）</li>
+<li>JDK1.8版本的<strong>数据结构变得更加简单</strong>，使得操作也更加清晰流畅，因为已经使用<code>synchronized</code>来进行同步，所以不需要分段锁的概念，也就不需要<code>Segment</code>这种数据结构了，由于粒度的降低，实现的复杂度也增加了</li>
+<li>JDK1.8使用<strong>红黑树来优化链表</strong>，基于长度很长的链表的遍历是一个很漫长的过程，而红黑树的遍历效率是很快的，代替一定阈值的链表，这样形成一个最佳拍档</li>
+<li>JDK1.8为什么使用内置锁<strong>synchronized</strong>来代替重入锁<strong>ReentrantLock</strong>，我觉得有以下几点<ol>
+<li>因为粒度降低了，在相对而言的低粒度加锁方式，<code>synchronized</code>并不比<code>ReentrantLock</code>差，在==粗粒度加锁中<code>ReentrantLock</code>可能通过<code>Condition</code>来控制各个低粒度的边界，更加的灵活，而在低粒度中，<code>Condition</code>的优势就没有了==</li>
+<li>JVM的开发团队从来都没有放弃<code>synchronized</code>，而且==基于JVM的<code>synchronized</code>优化空间更大==，使用内嵌的关键字比使用API更加自然</li>
+<li>在大量的数据操作下，对于JVM的内存压力==，基于API的<code>ReentrantLock</code>会开销更多的内存==，虽然不是瓶颈，但是也是一个选择依据</li>
+</ol>
+</li>
+</ul>
+<p>十五、<code>CyclicBarrier</code>和<code>CountDownLatch</code>区别</p>
+<p>这两个类非常类似，都在<code>java.util.concurrent</code>下，都可以用来表示代码运行到某个点上，二者的区别在于：</p>
+<ul>
+<li><code>CyclicBarrier</code>的某个线程运行到某个点上之后，==该线程即停止运行，直到所有的线程都到达了这个点，所有线程才重新运行==；<code>CountDownLatch</code>则不是，某线程运行到某个点上之后，==只是给某个数值-1而已，该线程继续运行==</li>
+<li><code>CyclicBarrier</code>只能唤起一个任务，<code>CountDownLatch</code>可以唤起多个任务</li>
+<li><code>CyclicBarrier</code>可重用，<code>CountDownLatch</code>不可重用，计数值为0该<code>CountDownLatch</code>就不可再用了</li>
+</ul>
+<p>十六、java中的++操作符线程安全么?</p>
+<p>不是线程安全的操作。它涉及到多个指令，如==读取变量值，增加，然后存储回内存，这个过程可能会出现多个线程交差==</p>
+<p>十七、多线程开发良好习惯</p>
+<ol>
+<li>给线程命名</li>
+<li>最小化同步范围</li>
+<li>优先使用<code>volatile</code></li>
+<li>尽可能使用更高层次的并发工具而非wait和notify()来实现线程通信,如<code>BlockingQueue</code>,<code>Semeaphore</code></li>
+<li>优先使用<strong>并发容器</strong>而非同步容器.</li>
+<li>考虑使用线程池</li>
+</ol>
+<h4 id="十八、volatile关键字"><a href="#十八、volatile关键字" class="headerlink" title="十八、volatile关键字"></a>十八、volatile关键字</h4><p>指令重排序和内存可见性，volatile 类型变量即使在没有同步块的情况下赋值也不会与其他语句重排序。 volatile 提供 happens-before 的保证，确保一个线程的修改能对其他线程是可见的。</p>
+<p>==Volatile 变量具有 synchronized 的可见性特性，但是不具备原子特性==</p>
+<p><strong>可以创建Volatile数组吗?</strong></p>
+<p>Java 中可以创建 volatile类型数组，不过<strong>只是一个指向数组的引用，而不是整个数组</strong>。如果改变引用指向的数组，将会受到volatile 的保护，但是如果多个线程同时改变数组的元素，volatile标示符就不能起到之前的保护作用了</p>
+<p><strong>如何使非原子操作变成原子操作</strong></p>
+<p>典型案例：</p>
+<ol>
+<li><p>double 和 long 都是64位宽，因此对这两种类型的读是分为两部分的，第一次读取第一个 32 位，然后再读剩下的 32 位，这个过程不是原子的。如果知道要被多线程访问，应该加<code>volatile</code>关键字</p>
+</li>
+<li><p>提供内存屏障（memory barrier）</p>
+<p>在写一个 volatile 变量之前，Java 内存模型会插入一个写屏障（write barrier），读一个 volatile 变量之前，会插入一个读屏障（read barrier）即在==你写一个 volatile 域时，能保证任何线程都能看到你写的值==，同时，在==写之前，也能保证任何数值的更新对所有线程是可见的==，因为内存屏障会将其他所有写的值更新到缓存</p>
+</li>
+</ol>
+<p>使用条件</p>
+<ul>
+<li>对变量的写操作不依赖于当前值。</li>
+<li>该变量没有包含在具有其他变量的不变式中。</li>
+</ul>
+<h4 id="十九、异常"><a href="#十九、异常" class="headerlink" title="十九、异常"></a>十九、异常</h4><p><a href="https://link.zhihu.com/?target=http%3A//blog.csdn.net/dd864140130/article/details/42504189" target="_blank" rel="noopener">白话异常机制</a></p>
+<p><strong>throw和throws的区别</strong></p>
+<p>throw用于主动抛出java.lang.Throwable 类的一个实例化对象，意思是说你可以通过关键字 throw 抛出一个 Error 或者 一个Exception，如：</p>
+<p><code>throw new IllegalArgumentException(“size must be multiple of 2″)</code></p>
+<p>而throws 的作用是作为方法声明和签名的一部分，方法被抛出相应的异常以便调用者能处理。<strong>Java 中，任何未处理的受检查异常强制在 throws 子句中声明</strong>。</p>
+<p>二十、Java 中，Serializable 与 Externalizable 的区别</p>
+<p><code>Serializable</code>接口是一个序列化 Java 类的接口，以便于它们可以在网络上传输或者可以将它们的状态保存在磁盘上，是==JVM 内嵌的默认序列化方式==，成本高、脆弱而且不安全。<code>Externalizable</code>允许你控制整个序列化过程，指定特定的二进制格式，增加安全机制。</p>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><p>一、switch 在1.7后支持String类型，支持byte类型但是不支持long类型</p>
+<p><strong>二、a.hashCode()有什么用?与a.equals(b)有什么关系？</strong></p>
+<p>hashCode() 方法是相应对象整型的 hash 值。它常用于基于 hash 的集合类，如 Hashtable、HashMap、LinkedHashMap等等。它与 equals() 方法关系特别紧密。根据 Java 规范，使用 equal() 方法来判断两个相等的对象，必须具有相同的 hashcode。</p>
+<p><strong>三、a==b与a.equals(b)有什么区别</strong></p>
+<p>如果a 和b 都是对象，则 a==b 是比较两个对象的引用，只有当 a 和 b 指向的是堆中的同一个对象才会返回 true，而 a.equals(b) 是进行逻辑比较，所以通常需要重写该方法来提供逻辑一致性的比较。例如，String 类重写 equals() 方法，所以可以用于两个不同对象，但是包含的字母相同的比较。</p>
+<p><strong>四、<code>+=</code>操作符会进行隐式自动类型转换</strong></p>
+<p>五、位运算</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">name!=<span class="keyword">null</span>&amp;userName.equals(<span class="string">""</span>)</span><br><span class="line">    <span class="comment">//要报空指针异常</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="六、日期计算"><a href="#六、日期计算" class="headerlink" title="六、日期计算"></a>六、日期计算</h4><p><strong><code>SimpleDateFormat</code>是线程安全的吗?</strong></p>
+<p><strong><code>DateFormat</code>的所有实现，包括 <code>SimpleDateFormat</code>都不是线程安全的</strong>，因此你不应该在多线程序中使用，除非是在对外线程安全的环境中使用，如将 <code>SimpleDateFormat</code>限制在 <code>ThreadLocal</code>中。如果你不这么做，在解析或者格式化日期的时候，可能会获取到一个不正确的结果。因此，从日期、时间处理的所有实践来说，我强力推荐 joda-time 库。</p>
+<h4 id="七、多态"><a href="#七、多态" class="headerlink" title="七、多态"></a>七、多态</h4><p>多态表示当同一个操作作用在不同对象时，会有不同的语义，从而产生不同的结果。3+4和“3”+“4”</p>
+<p>Java的多态性可以概括成”一个接口,两种方法”分为两种</p>
+<ul>
+<li><p><strong>编译时的多态</strong></p>
+<p>编译时的多态主要是指方法的重载（overload）</p>
+</li>
+<li><p><strong>运行时的多态。</strong></p>
+<p>运行时的多态主要是指方法的覆盖（override），接口也是运行时的多态</p>
+</li>
+</ul>
+<p><strong>运行时的多态</strong>的三种情况：<br>1、父类有方法，子类有覆盖方法：编译通过，执行子类方法。<br>2、父类有方法，子类没覆盖方法：编译通过，执行父类方法（子类继承）。<br>3、父类没方法，子类有方法：编译失败，无法执行。<br>==方法带final、static、private时是编译时多态，因为可以直接确定调用哪个方法。==</p>
+<h2 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h2><p><img src="http://cdn.zblade.top/qiniu_img/v2-a571bdc9758656f2276298ef42a9b065_hd.jpg" alt></p>
+<p>一、ArrayList和LinkedList的区别?</p>
+<p>最明显的区别是 ArrrayList底层的数据结构是数组，支持随机访问，而 LinkedList 的底层数据结构是双向循环链表，不支持随机访问。使用下标访问一个元素，ArrayList 的时间复杂度是 O(1)，而 LinkedList 是 O(n)。</p>
+<p>二、ArrayList和Array有什么区别?</p>
+<ol>
+<li>Array可以容纳基本类型和对象，而ArrayList只能容纳对象。</li>
+<li>Array是指定大小的，而ArrayList大小是固定的</li>
+</ol>
+<p>三、Comparator和Comparable的区别?</p>
+<p>Comparable 接口用于定义对象的·<strong>自然顺序</strong>，而 comparator 通常用于<strong>定义用户定制</strong>的顺序。==Comparable 总是只有一个==，但是可以有多个 comparator 来定义对象的顺序。</p>
+<p>四、如何打印数组内容</p>
+<p>你可以使用<code>Arrays.toString()</code>和<code>Arrays.deepToString()</code> 方法来打印数组。由于数组没有实现 toString() 方法，所以如果将数组传递给<code>System.out.println()</code>方法，将无法打印出数组的内容，但是 <code>Arrays.toString()</code>可以打印每个元素。</p>
+<h2 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h2><p>一、使用Integer和Long进行数据库数据存值，因为这些是对象，如果使用int或者long会获取不到值</p>
+<p>注意不要和mysql的关键字冲突了！！</p>
+<h3 id="二、三范式"><a href="#二、三范式" class="headerlink" title="二、三范式"></a>二、三范式</h3><p><strong>第一范式(1NF):</strong></p>
+<p>指的是数据库表的中的每一列都是不可分割的基本数据项,同一列中不能有多个值。第一范式要求属性值是不可再分割成的更小的部分<strong>。第一范式简而言之就是强调的是列的原子性，即列不能够再分成其他几列</strong>。例如有一个列是电话号码一个人可能有一个办公电话一个移动电话。第一范式就需要拆开成两个属性。</p>
+<p><strong>第二范式（2NF）：</strong></p>
+<p><strong>第二范式首先是第一范式</strong>，同时还需要包含两个方面的内容，<strong>一是表必须要有一个主键；二是没有包含主键中的列必须完全依赖主键，而不能只是依赖于主键的一部分</strong>。<br>例如在一个订单中可以订购多种产品，所以单单一个 OrderID 是不足以成为主键的，主键应该是（OrderID，ProductID）。显而易见 Discount（折扣），Quantity（数量）完全依赖（取决）于主键（OderID，ProductID），而 UnitPrice，ProductName 只依赖于 ProductID。所以 OrderDetail 表不符合 2NF。</p>
+<p>不符合 2NF 的设计容易产生冗余数据。 可以把【OrderDetail】表拆分为【OrderDetail】（OrderID，ProductID，Discount，Quantity）和【Product】（ProductID，UnitPrice，ProductName）来消除原订单表中UnitPrice，ProductName多次重复的情况。</p>
+<p><strong>第三范式（3NF）：</strong></p>
+<p><strong>首先是第二范式，例外非主键列必须依赖于主键，不能存在传递</strong>。也就是说不能存在非主键列A依赖于非主键列B，然后B依赖于主键列<br>考虑一个订单表【Order】（OrderID，OrderDate，CustomerID，CustomerName，CustomerAddr，CustomerCity）主键是（OrderID）。<br>其中 OrderDate，CustomerID，CustomerName，CustomerAddr，CustomerCity 等非主键列都完全依赖于主键（OrderID），所以符合 2NF。不过问题是 CustomerName，CustomerAddr，CustomerCity 直接依赖的是 CustomerID（非主键列），而不是直接依赖于主键，它是通过传递才依赖于主键，所以不符合 3NF。<br>通过拆分【Order】为【Order】（OrderID，OrderDate，CustomerID）和【Customer】（CustomerID，CustomerName，CustomerAddr，CustomerCity）从而达到 3NF。<br>==二范式（2NF）和第三范式（3NF）的概念很容易混淆，区分它们的关键点在于，2NF：非主键列是否完全依赖于主键，还是依赖于主键的一部分；3NF：非主键列是直接依赖于主键，还是直接依赖于非主键列。==</p>
+<p>三、内外连接</p>
+<p>四、事务</p>
+<ol>
+<li><strong>原子性</strong>:即事务是一个不可分割的整体,数据修改时要么都操作一遍要么都不操作</li>
+<li><strong>一致性</strong>:一个事务执行前后数据库的数据必须保持一致性状态</li>
+<li><strong>隔离性</strong>:当两个或者以上的事务并发执行时,为了保证数据的安全性,将一个事务的内部的操作与事务操作隔离起来不被其他事务看到</li>
+<li><strong>持久性</strong>:更改是永远存在的</li>
+</ol>
+<p><strong>隔离级别</strong></p>
+<blockquote>
+<p><strong>读未提交</strong>：事务中的修改，即使没有提交，其他事务也可以看得到，脏读。如果一个事务已经开始写数据，则另外一个事务则不允许同时进行写操作，但允许其他事务读此行数据。该隔离级别可以通过“排他写锁”实现。一个在写事务另一个虽然不能写但是能读到还没有提交的数据</p>
+<p><strong>读已提交</strong>：可以避免脏读但是可能出现不可重复读。允许写事务，读取数据的事务允许其他事务继续访问该行数据，但是未提交的写事务将会禁止其他事务访问该行。事务T1读取数据，T2紧接着更新数据并提交数据，事务T1再次读取数据的时候，和第一次读的不一样。即虚读</p>
+<p><strong>可重复读</strong>：禁止写事务，读事务会禁止所有的写事务，但是允许读事务，避免了不可重复读和脏读，但是会出现幻读，即第二次查询数据时会包含第一次查询中未出现的数据</p>
+<p><strong>序列化</strong>：禁止任何事务，一个一个进行；提供严格的事务隔离。它要求事务序列化执行，事务只能一个接着一个地执行，但不能并发执行。如果仅仅通过“行级锁”是无法实现事务序列化的，必须通过其他机制保证新插入的数据不会被刚执行查询操作的事务访问到。</p>
+</blockquote>
+<h3 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h3><p><a href="https://link.zhihu.com/?target=https%3A//blog.csdn.net/u013967628/article/details/84305511%23B%2BTree" target="_blank" rel="noopener">索引</a></p>
+<p><strong>7.6.1优缺点：</strong></p>
+<blockquote>
+<p>优点： 可以快速检索，减少I/O次数，加快检索速度；根据索引分组和排序，可以加快分组和排序<br>缺点： 索引本省也是表会占用内存，索引表占用的空间是数据表的1.5倍；索引表的创建和维护需要时间成本，这个成本随着数据量的增大而增大。</p>
+</blockquote>
+<p><strong>7.6.2索引的底层实现原理：</strong></p>
+<p>哈希索引：</p>
+<blockquote>
+<p>只有memory（内存）存储引擎支持哈希索引，哈希索引用索引列的值计算该值的hashCode，然后在hashCode相应的位置存执该值所在行数据的物理位置，因为使用散列算法，因此访问速度非常快，但是一个值只能对应一个hashCode，而且是散列的分布方式，因此哈希索引不支持范围查找和排序的功能。</p>
+</blockquote>
+<p>Btree索引：</p>
+<blockquote>
+<p>B树是一个平衡多叉树，设树的度为2d，高度为h，那么B树需要满足每个叶子节点的高度都一样等于h，每个非叶子节点由n-1个key和n个point组成，d&lt; = n&lt;=2d 。所有叶子节点指针均为空，非叶子结点的key都是[key,data]二元组，其中key表示作为索引的键，data为键值所在行的数据。</p>
+</blockquote>
+<p>B+Tree索引</p>
+<blockquote>
+<p>B+Tree是BTree的一个变种，设d为树的度数，h为树的高度，B+Tree和BTree的不同主要在于：<br>B+Tree中的非叶子结点不存储数据，只存储键值；<br>B+Tree的叶子结点没有指针，所有键值都会出现在叶子结点上，且key存储的键值对应data数据的物理地址；B+Tree的每个非叶子节点由n个键值key和n个指针point组成；<br>优点：查询速度更加稳定，磁盘的读写代价更低</p>
+</blockquote>
+<p><strong>聚簇索引与非聚簇索引</strong></p>
+<blockquote>
+<p>聚簇索引的解释是:聚簇索引的顺序就是数据的物理存储顺序<br>非聚簇索引的解释是:索引顺序与数据物理排列顺序无关</p>
+</blockquote>
+<p>MyISAM——非聚簇索引</p>
+<blockquote>
+<p>MyISAM存储引擎采用的是非聚簇索引，非聚簇索引的主索引和辅助索引几乎是一样的，只是主索引不允许重复，不允许空值，他们的叶子结点的key都存储指向键值对应的数据的物理地址。<br>非聚簇索引的数据表和索引表是分开存储的。</p>
+</blockquote>
+<p>innoDB——聚簇索引</p>
+<blockquote>
+<p>聚簇索引的主索引的叶子结点存储的是键值对应的数据本身，辅助索引的叶子结点存储的是键值对应的数据的主键键值。因此主键的值长度越小越好，类型越简单越好。<br>聚簇索引的数据和主键索引存储在一起。</p>
+</blockquote>
+<p><strong>7.6.3 联合索引(顺丰)</strong></p>
+<blockquote>
+<p>利用最左前缀原则</p>
+</blockquote>
+<p><strong>7.7.数据库锁</strong></p>
+<blockquote>
+<p>锁是计算机协调多个进程或者纯线程并发访问某一资源的机制</p>
+</blockquote>
+<p><strong>7.7.1Mysql的锁种类</strong></p>
+<blockquote>
+<p>Mysql的锁机制比较简单，不同的搜索引擎支持不同的锁机制<br>表级锁：开销小，加锁快；不会出现死锁；锁定粒度大，发生锁冲突的概率高，并发度最低<br>行级锁：开销大，加锁慢；会出现死锁；锁定粒度最小，发生锁冲突概率最低，并发度也最高<br>页面锁：开销和加锁速度位于表锁和行锁之间，会出现死锁，锁定粒度也位于表锁和行锁之间，并发度一般</p>
+</blockquote>
+<p><strong>7.7.2Mysql表级锁的锁模式（MyISAM）</strong></p>
+<blockquote>
+<p>Mysql表级锁有两种模式：表共享锁（Table Read Lock）和表独占锁（Table Write Lock）</p>
+</blockquote>
+<h3 id="7-8-having-和group-by"><a href="#7-8-having-和group-by" class="headerlink" title="7.8.having 和group by"></a>7.8.having 和group by</h3><h3 id="四、不可重复读和幻读"><a href="#四、不可重复读和幻读" class="headerlink" title="四、不可重复读和幻读"></a>四、不可重复读和幻读</h3><p>一个事务A开启后，第一次读取到一些数据之后，就对这些数据进行加<strong>行锁</strong>，导致其他事务B无法修改（更新或者删除）数据，于是A事务不管怎么读，返回的都是一样的数据，这就实现了“<strong>可重复读</strong>”这个隔离级别</p>
+<p>“其他事务B无法修改这些数据（更新或删除）”，不代表其他事务B不能insert一些记录并提交。这样一来事务A还是可以读取到一条之前没有出现的数据，这就产生了“<strong>幻读</strong>”。</p>
+<p><strong>行级锁是无法解决幻读问题的。要想解决这个问题必须实现Serializable隔离级别。</strong></p>
+<p>使用间隙锁可以解决插入导致的幻读</p>
+<h3 id="五、分布式ID生成方案总结"><a href="#五、分布式ID生成方案总结" class="headerlink" title="五、分布式ID生成方案总结"></a>五、分布式ID生成方案总结</h3><p><a href="https://mp.weixin.qq.com/s?__biz=Mzg2OTA0Njk0OA==&mid=2247485590&idx=2&sn=9697a9fae7f4d319e2e92103186a2c26&chksm=cea2475df9d5ce4bb69770ce4934537db6bb1346457c861d51b0d18c130b0d66d35c2c17bc20&token=69811960&lang=zh_CN&scene=21#wechat_redirect" target="_blank" rel="noopener">分布式ID生成方案总结</a></p>
+<p>生成全局 id 有下面这几种方式：</p>
+<ul>
+<li><strong>UUID</strong>：不适合作为主键，因为太长了，并且无序不可读，查询效率低。比较适合用于生成唯一的名字的标示比如文件的名字。</li>
+<li><strong>数据库自增 id</strong> : 两台数据库分别设置不同步长，生成不重复ID的策略来实现高可用。这种方式生成的 id 有序，但是需要独立部署数据库实例，成本高，还会有性能瓶颈。</li>
+<li><strong>利用 redis 生成 id :</strong> 性能比较好，灵活方便，不依赖于数据库。但是，引入了新的组件造成系统更加复杂，可用性降低，编码更加复杂，增加了系统成本。</li>
+<li><strong>Twitter的snowflake算法</strong> ：Github 地址：<a href="https://github.com/twitter-archive/snowflake。" target="_blank" rel="noopener">https://github.com/twitter-archive/snowflake。</a></li>
+<li><strong>美团的<a href="https://tech.meituan.com/2017/04/21/mt-leaf.html" target="_blank" rel="noopener">Leaf</a>分布式ID生成系统</strong> ：Leaf 是美团开源的分布式ID生成器，能保证全局唯一性、趋势递增、单调递增、信息安全，里面也提到了几种分布式方案的对比，但也需要依赖关系数据库、Zookeeper等中间件。感觉还不错。 。</li>
+</ul>
+<h3 id="六、常用命令"><a href="#六、常用命令" class="headerlink" title="六、常用命令"></a>六、常用命令</h3><p><a href="https://segmentfault.com/a/1190000010979586" target="_blank" rel="noopener">MySQL常用操作命令</a></p>
+<p><a href="https://blog.csdn.net/qq_41455420/article/details/82802090" target="_blank" rel="noopener">MySQL查看数据库性能常用命令</a></p>
+<h3 id="七、把子查询优化为-join-操作"><a href="#七、把子查询优化为-join-操作" class="headerlink" title="七、把子查询优化为 join 操作"></a>七、把子查询优化为 join 操作</h3><p>通常子查询在 in 子句中，且子查询中为简单 SQL(不包含 union、group by、order by、limit 从句) 时,才可以把子查询转化为关联查询进行优化。</p>
+<p><strong>子查询性能差的原因：</strong></p>
+<p>子查询的结果集无法使用索引，通常子查询的结果集会被存储到临时表中，不论是内存临时表还是磁盘临时表都不会存在索引，所以查询性能会受到一定的影响。特别是对于返回结果集比较大的子查询，其对查询性能的影响也就越大。</p>
+<p>由于子查询会产生大量的临时表也没有索引，所以会消耗过多的 CPU 和 IO 资源，产生大量的慢查询。</p>
+<h3 id="八、临时表"><a href="#八、临时表" class="headerlink" title="八、临时表"></a>八、临时表</h3><p><strong>使用临时表的场景</strong></p>
+<p>1)<code>ORDER BY</code>子句和<code>GROUP BY</code>子句不·同， 例如：ORDERY BY price GROUP BY name；</p>
+<p>2)在<code>JOIN</code>查询中，ORDER BY或者GROUP BY使用了<strong>不是第一个表的列</strong> 例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT * from TableA, TableB ORDER BY TableA.price GROUP by TableB.name</span><br></pre></td></tr></table></figure>
+
+<p>3)<code>ORDER BY</code>中使用了<code>DISTINCT</code>关键字 <code>ORDERY BY DISTINCT(price)</code></p>
+<p>4)<code>SELECT</code>语句中指定了<code>SQL_SMALL_RESULT</code>关键字</p>
+<p>SQL_SMALL_RESULT的意思就是告诉MySQL，结果会很小，请直接使用内存临时表，不需要使用索引排序 <code>SQL_SMALL_RESULT</code>必须和<code>GROUP BY</code>、<code>DISTINCT</code>或<code>DISTINCTROW</code>一起使用 一般情况下，我们没有必要使用这个选项，让MySQL服务器选择即可。</p>
+<p><strong>直接使用磁盘临时表的场景</strong></p>
+<p>1)表包含<code>TEXT</code>或者<code>BLOB</code>列；</p>
+<p>2<code>)GROUP BY</code>或者 <code>DISTINCT</code>子句中包含长度大于<code>512</code>字节的列；</p>
+<p>3)使用<code>UNION</code>或者<code>UNION ALL</code>时，<code>SELECT</code>子句中包含大于<code>512</code>字节的列；</p>
+<h2 id="JVM"><a href="#JVM" class="headerlink" title="JVM"></a>JVM</h2><h4 id="一、四种引用"><a href="#一、四种引用" class="headerlink" title="一、四种引用"></a><strong>一、四种引用</strong></h4><p><a href="https://blog.csdn.net/dd864140130/article/details/49885811" target="_blank" rel="noopener">引用详解</a></p>
+<ul>
+<li>强引用：如果一个对象具有强引用，==它就不会被垃圾回收器回收==。即使当前内存空间不足，JVM也不会回收它，而是==抛出 OutOfMemoryError 错误==，使程序异常终止。如果想中断强引用和某个对象之间的关联，可以==显式地将引用赋值为nul==l，这样一来的话，JVM在合适的时间就会回收该对象</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Person person=<span class="keyword">new</span> Person();</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>软引用：在使用软引用时，如果内存的空间足够，软引用就能继续被使用，而不会被垃圾回收器回收，==只有在内存不足时，软引用才会被垃圾回收器回收==。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Person person=<span class="keyword">new</span> Person(); </span><br><span class="line">SoftReference sr=<span class="keyword">new</span> SoftReference(person);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>弱引用：具有弱引用的对象拥有的生命周期更短暂。因为当 JVM 进行垃圾回收，一旦发现弱引用对象，==无论当前内存空间是否充足，都会将弱引用回收==。不过由于垃圾回收器是一个优先级较低的线程，所以并不一定能迅速发现弱引用对象</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Person person=<span class="keyword">new</span> Person(); </span><br><span class="line">WeakReference wr=<span class="keyword">new</span> WeakReference(person);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>虚引用：顾名思义，就是形同虚设，如果一个对象仅持有虚引用，那么它相当于没有引用，在任何时候都可能被垃圾回收器回收。</p>
+<p>设置虚引用的目的是为了==被虚引用关联的对象在被垃圾回收器回收时，能够收到一个系统通知==</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ReferenceQueue queue=<span class="keyword">new</span> ReferenceQueue();</span><br><span class="line">PhantomReference pr=<span class="keyword">new</span> PhantomReference(object.queue);</span><br><span class="line"></span><br><span class="line"><span class="comment">//GC在回收一个对象时，如果发现该对象具有虚引用，那么在回收之前会首先该对象的虚引用加入到与之关联的引用队列中。程序可以通过判断引用队列中是否已经加入虚引用来了解被引用的对象是否被GC回收。</span></span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<p><img src="http://cdn.zblade.top/qiniu_img/20150620182522495.png" alt></p>
+<p><strong>引用顺序</strong></p>
+<blockquote>
+<p>单条引用链的可达性以最弱的一个引用类型来决定；<br>多条引用链的可达性以最强的一个引用类型来决定；</p>
+</blockquote>
+<p>应用场景</p>
+<ol>
+<li><p><strong>利用软引用和弱引用解决OOM问题：</strong></p>
+<p>例：用一个HashMap来保存图片的路径和相应图片对象关联的软引用之间的映射关系，在内存不足时，JVM会自动回收这些缓存图片对象所占用的空间，从而有效地避免了OOM的问题.</p>
+</li>
+<li><p><strong>通过软引用实现Java对象的高速缓存:</strong></p>
+<p>例：比如我们创建了一Person的类，如果每次需要查询一个人的信息,哪怕是几秒中之前刚刚查询过的，都要重新构建一个实例，这将引起大量Person对象的消耗,并且由于这些对象的生命周期相对较短,会引起多次GC影响性能。此时,通过软引用和 HashMap 的结合可以构建高速缓存,提供性能.</p>
+</li>
+</ol>
+<h4 id="二、ReferenceQueue和Reference"><a href="#二、ReferenceQueue和Reference" class="headerlink" title="二、ReferenceQueue和Reference"></a>二、ReferenceQueue和Reference</h4><p><strong>ReferenceQueue</strong></p>
+<p>其作用在于Reference对象所引用的对象被GC回收时，该Reference对象将会被加入引用队列中（ReferenceQueue）的队列末尾,这相当于是一种通知机制.当关联的引用队列中有数据的时候，意味着引用指向的堆内存中的对象被回收。通过这种方式，JVM允许我们在对象被销毁后，做一些我们自己想做的事情</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ReferenceQueue&lt; Person&gt; rq=<span class="keyword">new</span> ReferenceQueue&lt;Person&gt;();</span><br><span class="line">Person person=<span class="keyword">new</span> Person();</span><br><span class="line">SoftReference sr=<span class="keyword">new</span> SoftReference(person,rq);</span><br></pre></td></tr></table></figure>
+
+<p><strong>Reference</strong></p>
+<p>Reference是SoftReference，WeakReference,PhantomReference类的父类，其内部通过一个next字段来构建了一个Reference类型的单向列表，而queue字段存放了引用对象对应的引用队列，若在Reference的子类构造函数中没有指定，则默认关联一个ReferenceQueue.NULL队列。</p>
+<h4 id="三、垃圾回收算法"><a href="#三、垃圾回收算法" class="headerlink" title="三、垃圾回收算法"></a>三、垃圾回收算法</h4><blockquote>
+<p>GC主要完成三项任务：<strong>分配内存</strong>，<strong>确保被引用的对象的内存不被错误的回收</strong>以及<strong>回收不再被引用的对象的内存空间</strong></p>
+</blockquote>
+<ol>
+<li>标记-清除</li>
+<li>标记-复制</li>
+<li>标记-整理</li>
+<li>分代回收</li>
+<li>增量收集  不用stop the world</li>
+</ol>
+<p>判断对象存活：1.引用计数法;<strong>2:对象可达性分析</strong></p>
+<p><strong>简单的解释一下垃圾回收</strong></p>
+<p>Java 垃圾回收机制最基本的做法是分代回收。</p>
+<p>内存中的区域被划分成不同的世代，对象根据其存活的时间被保存在对应世代的区域中。一般的实现是划分成3个世代：年轻、年老和永久。内存的<strong>分配</strong>是发生在年轻世代中的。当一个对象存活时间足够长的时候，它就会被复制到年老世代中<strong>。对于不同的世代可以使用不同的垃圾回收算法</strong>。</p>
+<p>进行世代划分的出发点是对应用中对象存活时间进行研究之后得出的统计规律。一般来说，一个应用中的大部分对象的存活时间都很短。比如局部变量的存活时间就只在方法的执行过程中。基于这一点，对于年轻世代的垃圾回收算法就可以很有针对性.</p>
+<p>四、System.gc()：通知GC开始工作,但是GC真正开始的时间不确定.</p>
+<p>五、JVM的平台五无关性</p>
+<p>Java语言的一个非常重要的特点就是与平台的无关性。而使用Java虚拟机是实现这一特点的关键。一般的高级语言如果要在不同的平台上运行，至少需要编译成不同的目标代码。而引入Java语言虚拟机后，Java语言在不同平台上运行时不需要重新编译。Java语言使用模式Java虚拟机屏蔽了与具体平台相关的信息，使得Java语言编译程序只需生成在Java虚拟机上运行的目标代码（字节码），就可以在多种平台上不加修改地运行。Java虚拟机在执行字节码时，把字节码解释成具体平台上的机器指令执行。</p>
+<h4 id="六、类加载机制"><a href="#六、类加载机制" class="headerlink" title="六、类加载机制"></a>六、类加载机制</h4><p><img src="/2019/10/15/java-note/20151022160855857-1583834528535.jpg" alt="类加载生命周期图"></p>
+<p><a href="https://link.zhihu.com/?target=http%3A//blog.csdn.net/dd864140130/article/details/49817357" target="_blank" rel="noopener">深入理解JVM加载器</a>。</p>
+<p>初始化阶段  以下情况才会对类立即初始化：</p>
+<ol>
+<li>使用new关键字实例化对象、访问或者设置一个类的静态字段（==被final修饰、编译器优化时已经放入常量池的例外==）、调用类方法，都会初始化该静态字段或者静态方法所在的类。</li>
+<li>初始化类的时候，如果其父类没有被初始化过，则要先触发其父类初始化。</li>
+<li>使用java.lang.reflect包的方法进行反射调用的时候，如果类没有被初始化，则要先初始化。·</li>
+<li>虚拟机启动时，用户会先初始化要执行的主类（含有main）</li>
+<li>jdk 1.7后，如果<code>java.lang.invoke.MethodHandle</code>的实例最后对应的解析结果是 <code>REF_getStatic</code>、<code>REF_putStatic</code>、<code>REF_invokeStatic</code>方法句柄，并且这个方法所在类没有初始化，则先初始化。</li>
+</ol>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p><strong>一、XML解析的几种方式和特点</strong></p>
+<p>DOM,SAX,PULL三种解析方式:</p>
+<ul>
+<li>DOM:消耗内存：先把xml文档都读到内存中，然后再用DOM API来访问树形结构，并获取数据。这个写起来很简单，但是很消耗内存。要是数据过大，手机不够牛逼，可能手机直接死机</li>
+<li>SAX:解析效率高，占用内存少，基于事件驱动的：更加简单地说就是对文档进行顺序扫描，当扫描到文档(document)开始与结束、元素(element)开始与结束、文档(document)结束等地方时通知事件处理函数，由事件处理函数做相应动作，然后继续同样的扫描，直至文档结束。</li>
+<li>PULL:与 SAX 类似，也是基于事件驱动，我们可以调用它的next（）方法，来获取下一个解析事件（就是开始文档，结束文档，开始标签，结束标签），当处于某个元素时可以调用XmlPullParser的getAttributte()方法来获取属性的值，也可调用它的nextText()获取本节点的值。</li>
+</ul>
+<p>二、版本特性</p>
+<blockquote>
+<p>JDK 1.7特性</p>
+</blockquote>
+<p> JDK 1.7 不像 JDK 5 和 8 一样的大版本，但是，还是有很多新的特性，如 </p>
+<ul>
+<li><code>try-with-resource</code>语句，这样你在使用流或者资源的时候，就不需要手动关闭，Java 会自动关闭。</li>
+<li><code>Fork-Join</code> 池某种程度上实现 Java 版的 Map-reduce。</li>
+<li>允许 Switch 中有 String 变量和文本。</li>
+<li>菱形操作符(&lt;&gt;)用于类型推断，不再需要在变量声明的右边申明泛型，因此可以写出可读写更强、更简洁的代码</li>
+</ul>
+<blockquote>
+<p>JDK 1.8特性</p>
+</blockquote>
+<p>java 8 在 Java 历史上是一个开创新的版本，下面 JDK 8 中 5 个主要的特性：</p>
+<ul>
+<li><strong>Lambda 表达式</strong>，允许像对象一样传递匿名函数</li>
+<li><strong>Stream API</strong>，充分利用现代多核 CPU，可以写出很简洁的代码</li>
+<li><strong>Date 与 Time API</strong>，最终，有一个稳定、简单的日期和时间库可供你使用</li>
+<li><strong>扩展方法</strong>，现在，接口中可以有静态、默认方法。</li>
+<li><strong>重复注解</strong>，现在你可以将相同的注解在同一类型上使用多次。</li>
+</ul>
+<h2 id="Spring"><a href="#Spring" class="headerlink" title="Spring"></a>Spring</h2><h3 id="动态代理"><a href="#动态代理" class="headerlink" title="动态代理"></a><strong>动态代理</strong></h3><blockquote>
+<p>代理类在程序运行时创建的代理方式被称为动态代理。代理类并不是在Java代码中定义的，而是在运行时根据我们在Java代码中的“指示”动态生成的。方法实现前后加入对应的公共功能</p>
+</blockquote>
+<p><strong>基于接口</strong>·</p>
+<p><code>jdk</code>的动态代理时基于<code>Java</code>的反射机制来实现的，是<code>Java</code>原生的一种代理方式。他的实现原理就是让<strong>代理类和被代理类实现同一接口，代理类持有目标对象来达到方法拦截的作用</strong>。</p>
+<p>通过接口的方式有两个弊端:</p>
+<ol>
+<li><p>一个就是必须保证被代理类有接口</p>
+</li>
+<li><p>另一个就是如果相对被代理类的方法进行代理拦截，那么就要保证这些方法都要在接口中声明。接口继承的是<code>java.lang.reflect.InvocationHandler</code>;</p>
+</li>
+</ol>
+<p><strong>基于继承</strong></p>
+<p><code>cglib</code>动态代理使用的<code>ASM</code>这个非常强大的<code>Java</code>字节码生成框架来生成<code>class</code>，比<code>jdk</code>动态代理<code>ide</code>效率高。基于继承的实现动态代理，<strong>可以直接通过<code>super</code>关键字来调用被代理类的方法.</strong></p>
+<p><strong>子类可以调用父类的方法</strong></p>
+<h3 id="AOP"><a href="#AOP" class="headerlink" title="AOP"></a><strong>AOP</strong></h3><blockquote>
+<p>面向切面编程。（Aspect-Oriented Programming） 。AOP可以说是对OOP的补充和完善。</p>
+<p>面向对象编程将程序分解成各个层次的对象，面向切面编程将程序运行过程分解成各个切面。</p>
+<p><code>AOP</code>从<strong>程序运行</strong>角度考虑程序的结构，提取业务处理过程的切面，<strong><code>oop</code>是静态的抽象，aop是动态的抽象， 是对应用执行过程中的步骤进行抽象，从而获得步骤之间的逻辑划分。</strong></p>
+</blockquote>
+<p><code>OOP</code>引入<strong>封装</strong>、 <strong>继承</strong>和<strong>多态</strong>性等概念来建立一种对象层次结构，用以模拟公共行为的一个集合。</p>
+<p>实现<code>AOP</code>的技术，主要分为两大类：</p>
+<p> 一是采用<strong>动态代理</strong>技术，利用截取消息的方式，对该消息进行装饰，以取代原有对象行为的执行；</p>
+<p>二是采用<strong>静态织入</strong> 的方式，引入特定的语法创建“方面”，从而使得编译器可以在编译期间织入有关“方面”的代码，属于静态代理。</p>
+<ol>
+<li>面向切面编程提供<strong>声明式事务管理</strong></li>
+<li><code>spring</code><strong>支持用户自定义的切面</strong>， </li>
+</ol>
+<p><strong><code>AOP</code>框架具有的两个特征：</strong></p>
+<ol>
+<li><strong>各个步骤之间的良好隔离性</strong></li>
+<li><strong>源代码无关性</strong></li>
+</ol>
+<p><strong><code>springAOP</code>的具体加载步骤：</strong><br>　　1、当 spring 容器启动的时候，加载了 spring 的配置文件<br>　　2、为配置文件中的所有 <code>bean</code>创建对象<br>　　3、spring 容器会解析 <code>aop:config</code>的配置<br>　　　　解析切入点表达式，用<strong>切入点表达式</strong>和纳入 <code>spring</code>容器中的 <code>bean</code>做匹配<br> 　　　　如果匹配成功，则会为该 <code>bean</code>创建代理对象，<strong>代理对象的方法=目标方法+通知</strong><br> 　　　　如果匹配不成功，不会创建代理对象<br>　　4、在客户端利用<code>context.getBean()</code>获取对象时，如果该对象有代理对象，则返回代理对象；如果没有，则返回目标对象<br><strong>说明：如果目标类没有实现接口，则 spring 容器会采用 cglib 的方式产生代理对象，如果实现了接口，则会采用 jdk 的方式</strong></p>
+<h3 id="IOC"><a href="#IOC" class="headerlink" title="IOC"></a><strong>IOC</strong></h3><p>控制反转也叫依赖注入。<strong>IOC利用java反射机制，AOP利用代理模式</strong>。</p>
+<blockquote>
+<p>当某个角色需要另外一个角色协助的时候，在传统的程序设计过程中，通常由调用者来创建被调用者的实例。但在spring中创建被调用者的工作不再由调用者来完成，因此称为控制反转。创建被调用者的工作由spring来完成，然后注入调用者因此也称为依赖注入。spring以动态灵活的方式来管理对象 ， 注入的两种方式，设置注入和构造注入。</p>
+<p><strong>设置注入的优点：直观，自然</strong><br><strong>构造注入的优点：可以在构造器中决定依赖关系的顺序。</strong></p>
+</blockquote>
+<p><code>IOC</code>概念看似很抽象，但是很容易理解。 说简单点就是将<strong>对象交给容器管理</strong>，你只需要在<code>spring</code>配置文件中配置对应的<code>bean</code>以及设置相关的属性，让<code>spring</code>容器来生成类的实例对象以及管理对象。在<code>spring</code>容器启动的时候，<code>spring</code>会把你在配置文件中配置的<code>bean</code>都初始化好，然后在你需要调用的时候，就把它已经初始化好的那些<code>bean</code>分配给你需要调用这些<code>bean</code>的类</p>
+<blockquote>
+<p>XML–—读取––-&gt; resoure—-解析——-&gt;BeanDefinition––—注入––––-&gt;BeanFactory</p>
+</blockquote>
+<p><a href="https://javadoop.com/post/spring-ioc" target="_blank" rel="noopener">Spring IOC 容器源码分析</a></p>
+<h3 id="Bean的生命周期"><a href="#Bean的生命周期" class="headerlink" title="Bean的生命周期"></a><strong>Bean的生命周期</strong></h3><p>可以简述为以下九步</p>
+<ol>
+<li>实例化<code>bean</code>对象(通过构造方法或者工厂方法)</li>
+<li>设置对象属性(<code>setter</code>等)（依赖注入）</li>
+<li>如果<code>Bean</code>实现了<code>BeanNameAware</code>接口，工厂调用<code>Bean</code>的<code>setBeanName</code>()方法传递<code>Bean</code>的<code>ID</code>。（和下面的一条均属于检查<code>Aware</code>接口）</li>
+<li>如果<code>Bean</code>实现了<code>BeanFactoryAware</code>接口，工厂调用<code>setBeanFactory</code>()方法传入工厂自身</li>
+<li>将<code>Bean</code>实例传递给<code>Bean</code>的前置处理器的<code>postProcessBeforeInitialization(Object bean, String beanname</code>)方法</li>
+<li>调用<code>Bean</code>的初始化方法</li>
+<li>将<code>Bean</code>实例传递给<code>Bean</code>的后置处理器的p<code>ostProcessAfterInitialization(Object bean, String beanname)</code>方法</li>
+<li>使用<code>Bean</code>容器关闭之前，调用Bean的销毁方法</li>
+</ol>
+<h3 id="Bean的单例和多例模式的使用条件"><a href="#Bean的单例和多例模式的使用条件" class="headerlink" title="Bean的单例和多例模式的使用条件"></a><strong>Bean的单例和多例模式的使用条件</strong></h3><p><strong><code>spring</code>生成的对象默认都是单例(<code>singleton</code>)的.可以通过<code>scope</code>改成多例</strong>. 对象在整个系统中只有一份，所有的请求都用一个对象来处理，<em>如service和dao层的对象一般是单例的。</em></p>
+<p>为什么使用单例：因为没有必要每个请求都新建一个对象的时候，因为这样会浪费CPU和内存。</p>
+<p><code>prototype</code>多例模式：对象在整个系统中可以有多个实例，每个请求用一个新的对象来处理，如<code>action</code>。</p>
+<p>为什么使用多例：<strong>防止并发问题</strong>；即一个请求改变了对象的状态，此时对象又处理另一个请求，而之前请求对对象的状态改变导致了对象对另一个请求做了错误的处理；</p>
+<h3 id="Spring-MVC-的处理过程"><a href="#Spring-MVC-的处理过程" class="headerlink" title="Spring MVC 的处理过程"></a><strong>Spring MVC 的处理过程</strong></h3><p>（1）客户端通过<code>url</code>发送请求<br>（2-3）核心控制器<code>Dispatcher Servlet</code>接收到请求，通过系统或自定义的映射器配置找到对应的<code>handler</code>，并将url映射的控制器<code>controller</code>返回给核心控制器。<br>（4）通过核心控制器找到系统或默认的适配器<br>（5-7）由找到的适配器，调用实现对应接口的处理器，并将结果返回给适配器，结果中包含数据模型和视图对象，再由适配器返回给核心控制器<br>（8-9）核心控制器将获取的数据和视图结合的对象传递给视图解析器，获取解析得到的结果，并由视图解析器响应给核心控制器<br>（10）核心控制器将结果返回给客户端</p>
+<p><strong>spring面试真题</strong></p>
+<blockquote>
+<p>5.1SSM各层关系<br>5.2 为什么注入的是接口(接口多继承)<br>5.3 Spring的优点<br>1.降低了组件之间的耦合性 ，实现了软件各层之间的解耦<br>2.可以使用容易提供的众多服务，如事务管理，消息服务等<br>3.容器提供单例模式支持<br>4.容器提供了AOP技术，利用它很容易实现如权限拦截，运行期监控等功能<br>5.容器提供了众多的辅助类，能加快应用的开发<br>6.spring对于主流的应用框架提供了集成支持，如hibernate，JPA，Struts等<br>7.spring属于低侵入式设计，代码的污染极低<br>8.独立于各种应用服务器<br>9.spring的DI机制降低了业务对象替换的复杂性<br>10.Spring的高度开放性，并不强制应用完全依赖于Spring，开发者可以自由选择spring的部分或全部</p>
+</blockquote>
+<h2 id="redis"><a href="#redis" class="headerlink" title="redis"></a>redis</h2><p><a href="[https://github.com/xbox1994/Java-Interview/blob/master/MD/%E6%95%B0%E6%8D%AE%E5%BA%93-Redis.md](https://github.com/xbox1994/Java-Interview/blob/master/MD/数据库-Redis.md)">redi知识集合</a></p>
+<blockquote>
+<p>Redis 中只包含“键”和“值”两部分，只能通过“键”来查询“值”。正是因为这样简单的存储结构，也让 Redis 的读写效率非常高</p>
+<p>数据是存储在内存中的。尽管它经常被用作内存数据库，但是，它也支持将数据存储在硬盘中</p>
+</blockquote>
+<p><strong>解决高并发和高性能的问题</strong></p>
+<p>高性能：直接处理缓存也就是处理内存很快</p>
+<p>高并发：直接操作缓存能够承受的请求是远远大于直接访问数据库的，所以我们可以考虑把数据库中的部分数据转移到缓存中 去，这样用户的一部分请求会直接到缓存这里而不用经过数据库</p>
+<h3 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h3><p>建议看数据结构部分：<a href="https://redisbook.readthedocs.io/en/latest/index.html#id3" target="_blank" rel="noopener">redis设计与实现</a></p>
+<ol>
+<li><p><strong>String</strong><br>常用命令: <code>set</code>,<code>get</code>,<code>decr</code>,<code>incr</code>,<code>mget</code>等。 <code>String</code>数据结构是简单的<code>key-value</code>类型，<code>value</code>其实不仅可以是<code>String</code>，也可以是数字。 常规<code>key-value</code>缓存应用； 常规计数：微博数，粉丝数等。</p>
+</li>
+<li><p><strong>Hash</strong><br>常用命令： <code>hget</code>,<code>hset</code>,<code>hgetall</code>等。<br><code>Hash</code>是一个 <code>string</code>类型的 <code>ﬁeld</code>和 <code>value</code>的映射表，<code>hash</code>特别适合用于<strong>存储对象</strong>，后续操作的时候，你可以直接仅 仅修改这个对象中的某个字段的值。 比如我们可以Hash数据结构来存储用户信息，商品信息等等。比如下面我就用 <code>hash</code>类型存放了我本人的一些信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">key=JavaUser293847 value=&#123; “id”: 1, “name”: “SnailClimb”, “age”: 22, “location”: “Wuhan, Hubei” &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>List</strong><br>常用命令: <code>lpush</code>,<code>rpush</code>,<code>lpop</code>,<code>rpop</code>,<code>lrange</code>等list 就是链表，<code>Redis list</code> 的应用场景非常多，也是<code>Redis</code>重要的数据结构之一，比如微博的关注列表，粉丝列表， 消息列表等功能都可以用<code>Redis</code>的 <code>list</code>结构来实现。<code>Redis list</code>的实现为<strong>一个双向链表</strong>，即可以支持反向查找和遍历，更方便操作，不过带来了部分额外的内存开销。<br>另外可以通过 <code>lrange</code>命令，就是从某个元素开始读取多少个元素，可以基于 <code>list</code>实现分页查询，这个很棒的一个功 能，<strong>基于 redis 实现简单的高性能分页</strong>，可以做类似微博那种下拉不断分页的东西（一页一页的往下走），性能高。</p>
+</li>
+<li><p><strong>Set</strong><br>常用命令： <code>sadd</code>,<code>spop</code>,<code>smembers</code>,<code>sunion</code>等 set 对外提供的功能与list类似是一个列表的功能，特殊之处在于 set 是可以<strong>自动排重</strong>的。<br>当你需要存储一个列表数据，又不希望出现重复数据时，set是一个很好的选择，并且set提供了<strong>判断某个成员是否在 一个set集合内的重要接口</strong>，这个也是list所不能提供的。可以基于 set 轻易实现交集、并集、差集的操作。 比如：在微博应用中，可以将一个用户所有的关注人存在一个集合中，将其所有粉丝存在一个集合。Redis可以非常 方便的实现如共同关注、共同粉丝、共同喜好等功能。这个过程也就是求交集的过程，具体命令如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sinterstore key1 key2 key3 将交集存在key1内</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Sorted Set</strong><br>常用命令： <code>zadd</code>,<code>zrange</code>,<code>zrem</code>,<code>zcard</code>等 和set相比，sorted set增加了一个权重参数score，使得集合中的元素能够按<code>score</code>进行有序排列。<br>举例： 在直播系统中，实时排行信息包含直播间在线用户列表，各种礼物排行榜，弹幕消息（可以理解为按消息维 度的消息排行榜）等信息，适合使用 Redis 中的 SortedSet 结构进行存储。</p>
+</li>
+</ol>
+<h3 id="底层结构"><a href="#底层结构" class="headerlink" title="底层结构"></a><strong>底层结构</strong></h3><h4 id="string"><a href="#string" class="headerlink" title="string"></a>string</h4><p>在Redis内部，String类型通过<code>int</code>、<code>SDS</code>作为结构存储,int用来存放整型数据，<code>sds</code>存放字 节/字符串和浮点型数据。</p>
+<h4 id="list"><a href="#list" class="headerlink" title="list"></a><strong>list</strong></h4><p>压缩列表和双向循环链表</p>
+<blockquote>
+<p>Redis3.2之后，采用的一种叫<code>quicklist</code>的数据结构来存储<code>list</code>，列表的底层都由<code>quicklist</code>实现。</p>
+</blockquote>
+<p>当列表中存储的数据量比较小的时候，列表就可以采用压缩列表的方式实现。具体需要同时满足下面两个条件：</p>
+<ul>
+<li>列表中保存的单个数据（有可能是字符串类型的）小于 64 字节；</li>
+<li>列表中数据个数少于 512 个。</li>
+</ul>
+<p>Redis 实现了自己的双端链表结构。</p>
+<ul>
+<li>双端链表主要有两个作用：<ul>
+<li>作为 Redis 列表类型的底层实现之一；</li>
+<li>作为通用数据结构，被其他功能模块所使用；（事务模块保存命令、服务器模块、订阅发送模块保存客户端、事件模块）</li>
+</ul>
+</li>
+<li>双端链表及其节点的性能特性如下：<ul>
+<li>节点带有前驱和后继指针，访问前驱节点和后继节点的复杂度为 O(1) ，并且对链表的迭代可以在从表头到表尾和从表尾到表头两个方向进行；</li>
+<li>链表带有指向表头和表尾的指针，因此对表头和表尾进行处理的复杂度为 O(1)O(1) ；</li>
+<li>链表带有记录节点数量的属性，所以可以在 O(1)O(1) 复杂度内返回链表的节点数量（长度）；</li>
+</ul>
+</li>
+</ul>
+<p><code>quicklist</code><strong>仍然是一个双向链表，只是列表的每个节点都是一个ziplist，其实就是linkedlist和ziplist的结合，quicklist 中每个节点ziplist都能够存储多个数据元素</strong></p>
+<h4 id="hash"><a href="#hash" class="headerlink" title="hash"></a><strong>hash</strong></h4><p>压缩列表和字典（散列表）（渐进式扩容缩容策略、链地址法）</p>
+<p>同样，只有当存储的数据量比较小的情况下，Redis 才使用压缩列表来实现字典类型。具体需要满足两个条件：</p>
+<ul>
+<li>字典中保存的键和值的大小都要小于 64 字节；</li>
+<li>字典中键值对的个数要小于 512 个。</li>
+</ul>
+<blockquote>
+<p>注意 <code>dict</code> 类型使用了两个指针，分别指向两个哈希表。</p>
+<p>其中， 0 号哈希表（<code>ht[0]</code>）是字典主要使用的哈希表， 而 1 号哈希表（<code>ht[1]</code>）则只有在程序对 0 号哈希表进行 rehash 时才使用。</p>
+</blockquote>
+<p>为了在字典的键值对不断增多的情况下保持良好的性能， 字典需要对所使用的哈希表（<code>ht[0]</code>）进行 rehash 操作： 在不修改任何键值对的情况下，对哈希表进行扩容， 尽量将比率维持在 1:1 左右。</p>
+<p><code>dictAdd</code> 在每次向字典添加新键值对之前， 都会对哈希表 <code>ht[0]</code> 进行检查， 对于 <code>ht[0]</code> 的 <code>size</code> 和 <code>used</code> 属性， 如果它们之间的比率 <code>ratio = used / size</code> 满足以下任何一个条件的话，rehash 过程就会被激活：</p>
+<ol>
+<li>自然 rehash ： <code>ratio &gt;= 1</code> ，且变量 <code>dict_can_resize</code> 为真。（后台持久化时为false）</li>
+<li>强制 rehash ： <code>ratio</code> 大于变量 <code>dict_force_resize_ratio</code> （目前版本中， <code>dict_force_resize_ratio</code> 的值为 <code>5</code> ）。</li>
+</ol>
+<p>rehash执行过程（rehash后的大小至少为原来的两倍）</p>
+<ol>
+<li>创建一个比 <code>ht[0]-&gt;table</code> 更大的 <code>ht[1]-&gt;table</code> ；</li>
+<li>将 <code>ht[0]-&gt;table</code> 中的所有键值对迁移到 <code>ht[1]-&gt;table</code> ；</li>
+<li>将原有 <code>ht[0]</code> 的数据清空，并将 <code>ht[1]</code> 替换为新的 <code>ht[0]</code> ；</li>
+</ol>
+<p>字典的缩容</p>
+<p>在默认情况下， <code>REDIS_HT_MINFILL</code> 的值为 <code>10</code> ， 也即是说， 当字典的填充率低于 10% 时， 程序就可以对这个字典进行收缩操作了。</p>
+<p>字典收缩和字典扩展的一个区别是：</p>
+<ul>
+<li>字典的扩展操作是自动触发的（不管是自动扩展还是强制扩展）；</li>
+<li>而字典的收缩操作则是由程序手动执行。</li>
+</ul>
+<h4 id="set"><a href="#set" class="headerlink" title="set"></a><strong>set</strong></h4><p>一种是基于有序数组(整数集合)和散列表。</p>
+<p>当要存储的数据，同时满足下面这样两个条件的时候，Redis 就采用有序数组，来实现集合这种数据类型。</p>
+<ul>
+<li>存储的数据都是整数；</li>
+<li>存储的数据元素个数不超过 512 个。</li>
+</ul>
+<p>添加新元素时，如果 <code>intsetAdd</code> 发现新元素，不能用现有的编码方式来保存，便会将升级集合和添加新元素的任务转交给 <code>intsetUpgradeAndAdd</code> 来完成：</p>
+<p><code>intsetUpgradeAndAdd</code> 需要完成以下几个任务：</p>
+<ol>
+<li>对新元素进行检测，看保存这个新元素需要什么类型的编码；</li>
+<li>将集合 <code>encoding</code> 属性的值设置为新编码类型，并根据新编码类型，对整个 <code>contents</code> 数组进行内存重分配。</li>
+<li>调整 <code>contents</code> 数组内原有元素在内存中的排列方式，从旧编码调整为新编码。</li>
+<li>将新元素添加到集合中。</li>
+</ol>
+<p><strong>升级</strong></p>
+<blockquote>
+<p>第一，从较短整数到较长整数的转换，并不会更改元素里面的值。</p>
+<p>第二，集合编码元素的方式，由元素中长度最大的那个值来决定</p>
+</blockquote>
+<p>inset(有序数组)，set本身是无序的</p>
+<ul>
+<li>Intset 用于有序、无重复地保存多个整数值，会根据元素的值，自动选择该用什么长度的整数类型来保存元素。</li>
+<li>当一个位长度更长的整数值添加到 intset 时，需要对 intset 进行升级，新 intset 中每个元素的位长度，会等于新添加值的位长度，但原有元素的值不变。</li>
+<li>升级会引起整个 intset 进行内存重分配，并移动集合中的所有元素，这个操作的复杂度为 O(N） 。</li>
+<li><strong>Intset</strong> <strong>只支持升级，不支持降级。</strong></li>
+<li>Intset 是有序的，程序使用<strong>二分查找</strong>算法来实现查找操作，复杂度为 O(lgN)O(lg⁡N) 。</li>
+</ul>
+<h4 id="zset"><a href="#zset" class="headerlink" title="zset"></a><strong>zset</strong></h4><p>跳表和压缩列表</p>
+<p>当数据量比较小的时候，Redis 会用压缩列表来实现有序集合。</p>
+<ul>
+<li>所有数据的大小都要小于 <code>64</code>字节；</li>
+<li>元素个数要小于 <code>128</code>个。</li>
+</ul>
+<ul>
+<li>跳跃表是一种随机化数据结构，查找、添加、删除操作都可以在对数期望时间下完成。</li>
+<li>跳跃表目前在 Redis 的唯一作用，就是作为有序集类型的底层数据结构（之一，另一个构成有序集的结构是字典）。</li>
+<li>为了满足自身的需求，Redis 基于 William Pugh 论文中描述的跳跃表进行了修改，包括：<ol>
+<li><code>score</code> 值可重复。</li>
+<li>对比一个元素需要同时检查它的 <code>score</code> 和 <code>memeber</code> 。在Redis的skiplist实现中，数据本身的内容唯一标识这份数据，而不是由key来唯一标识。另外，当多个元素分数相同的时候，还需要根据数据内容来进字典排序。</li>
+<li>每个节点带有高度为 <code>1</code> 层的后退指针，用于从表尾方向向表头方向迭代。·</li>
+</ol>
+</li>
+</ul>
+<h4 id="压缩列表"><a href="#压缩列表" class="headerlink" title="压缩列表"></a>压缩列表</h4><p><img src="/2019/10/15/java-note/image-20200226010900804.png" alt="image-20200226010900804"></p>
+<table>
+<thead>
+<tr>
+<th align="left">域</th>
+<th align="left">长度/类型</th>
+<th align="left">域的值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>zlbytes</code></td>
+<td align="left"><code>uint32_t</code></td>
+<td align="left">整个 ziplist 占用的内存字节数，对 ziplist 进行内存重分配，或者计算末端时使用。</td>
+</tr>
+<tr>
+<td align="left"><code>zltail</code></td>
+<td align="left"><code>uint32_t</code></td>
+<td align="left">到达 ziplist 表尾节点的偏移量。 通过这个偏移量，可以在不遍历整个 ziplist 的前提下，弹出表尾节点。</td>
+</tr>
+<tr>
+<td align="left"><code>zllen</code></td>
+<td align="left"><code>uint16_t</code></td>
+<td align="left">ziplist 中节点的数量。 当这个值小于 <code>UINT16_MAX</code> （<code>65535</code>）时，这个值就是 ziplist 中节点的数量； 当这个值等于 <code>UINT16_MAX</code> 时，节点的数量需要遍历整个 ziplist 才能计算得出。</td>
+</tr>
+<tr>
+<td align="left"><code>entryX</code></td>
+<td align="left"><code>?</code></td>
+<td align="left">ziplist 所保存的节点，各个节点的长度根据内容而定。</td>
+</tr>
+<tr>
+<td align="left"><code>zlend</code></td>
+<td align="left"><code>uint8_t</code></td>
+<td align="left"><code>255</code> 的二进制值 <code>1111 1111</code> （<code>UINT8_MAX</code>） ，用于标记 ziplist 的末端。</td>
+</tr>
+</tbody></table>
+<p><strong>节点entry结构</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">area        |&lt;------------------- entry --------------------&gt;|</span><br><span class="line"></span><br><span class="line">            +------------------+----------+--------+---------+</span><br><span class="line">component   | pre_entry_length | encoding | length | content |</span><br><span class="line">            +------------------+----------+--------+---------+</span><br></pre></td></tr></table></figure>
+
+<p><strong>pre_entry_length</strong></p>
+<p><code>pre_entry_length</code> 记录了前一个节点的长度，通过这个值，可以进行指针计算，从而跳转到上一个节点。</p>
+<p>根据编码方式的不同， <code>pre_entry_length</code> 域可能占用 <code>1</code> 字节或者 <code>5</code> 字节：</p>
+<ul>
+<li><code>1</code> 字节：如果前一节点的长度小于 <code>254</code> 字节，便使用一个字节保存它的值。</li>
+<li><code>5</code> 字节：如果前一节点的长度大于等于 <code>254</code> 字节，那么将第 <code>1</code> 个字节的值设为 <code>254</code> ，然后用接下来的 <code>4</code> 个字节保存实际长度。</li>
+</ul>
+<p><strong>encoding 和 length</strong></p>
+<p><code>encoding</code> 和 <code>length</code> 两部分一起决定了 <code>content</code> 部分所保存的数据的类型（以及长度）。</p>
+<p>其中， <code>encoding</code> 域的长度为两个 bit ， 它的值可以是 <code>00</code> 、 <code>01</code> 、 <code>10</code> 和 <code>11</code> ：</p>
+<ul>
+<li><code>00</code> 、 <code>01</code> 和 <code>10</code> 表示 <code>content</code> 部分保存着字符数组。</li>
+<li><code>11</code> 表示 <code>content</code> 部分保存着整数。</li>
+</ul>
+<p><strong>content</strong></p>
+<p><code>content</code> 部分保存着节点的内容，类型和长度由 <code>encoding</code> 和 <code>length</code> 决定。</p>
+<blockquote>
+<p><strong>添加和删除 ziplist 节点有可能会引起连锁更新，因此，添加和删除操作的最坏复杂度为 O(N2) ，不过，因为连锁更新的出现概率并不高，所以一般可以将添加和删除操作的复杂度视为 O(N)) 。</strong></p>
+</blockquote>
+<p>操作原理</p>
+<ul>
+<li>在最后添加一个节点</li>
+<li>在节点间添加一个节点 </li>
+</ul>
+<h4 id="特殊数据结构"><a href="#特殊数据结构" class="headerlink" title="特殊数据结构"></a>特殊数据结构</h4><h5 id="HyperLogLog"><a href="#HyperLogLog" class="headerlink" title="HyperLogLog"></a>HyperLogLog</h5><p>用来做基数统计的算法，HyperLogLog 的优点是，在输入元素的数量或者体积非常非常大时，计算基数所需的空间总是固定 的、并且是很小的。</p>
+<h5 id="Geo"><a href="#Geo" class="headerlink" title="Geo"></a>Geo</h5><p>这个功能可以将用户给定的地理位置信息储存起来， 并对这些信息进行操作</p>
+<h5 id="Pub-Sub"><a href="#Pub-Sub" class="headerlink" title="Pub/Sub"></a>Pub/Sub</h5><ol>
+<li>一个Redis client发布消息,其他多个redis client订阅消息,发布的消息“即发即失”,</li>
+<li>redis不会持久保存发布的消息;</li>
+<li>消息订阅者也将只能得到订阅之后的消息,通道中此前的消息将无从获得。</li>
+</ol>
+<p>例如：哨兵机制推送活跃消息</p>
+<p>注意：在消费者下线的情况下，生产的消息会丢失</p>
+<p> <strong>redis过期时间</strong></p>
+<blockquote>
+<p>有些数据是有时间限制的例如一些登陆信息，尤其是短信验证码都是有时间限制的。<br>定期删除+惰性删除<br><strong>定期删除</strong>要点：默认每隔1000ms就==随机抽取==一些设置了过期时间的key。<br><strong>惰性删除</strong>：定期删除会导致很多过期的key到了时间并没有被删除掉。假如过期的key靠定期删除没有删除掉，还停留在内存中，除非你的系统去查一下那个key，才会被redis删除</p>
+</blockquote>
+<h3 id="redis的持久化机制"><a href="#redis的持久化机制" class="headerlink" title="redis的持久化机制"></a>redis的持久化机制</h3><p><strong>1.RDB</strong></p>
+<blockquote>
+<p>BGSAVE、SAVE、 save 60 10000 、SHUTDOWN  、SYNC</p>
+<p>快照时间：1.配置、2.用户调用save/BGSAVE、3.flushALL、4.主从复制初始化时</p>
+<p>BGSAVE原理：fork and cow</p>
+</blockquote>
+<p>也就是<strong>快照持久化</strong>,通过创建快照来获得存储在内存里面的数据在某个时间节点上的副本（生成<code>dump.rdb</code>文件）。redis创建快照后可以对快照进行备份，可以将快照复制到其他服务器从而创建出具有相同数据的服务器副本（<strong>redis主从结构，主要用来提高redis的性能</strong>），还可以将快照留在原地以便重启服务器的时候使用。<em>注意：如果系统发生崩溃，会丢失最近快照之后的所有数据</em></p>
+<p><strong>场景</strong></p>
+<ul>
+<li>日志聚合计算</li>
+<li>大数据</li>
+</ul>
+<p>缺点：<br>1 数据的<strong>完整性和一致性</strong>不高，因为RDB可能在最后一次备份时宕机了。<br>2 备份时占用内存，因为Redis 在备份时会独立创建一个子进程，将数据写入到一个临时文件（此时内存中的数据是原来的两倍哦），最后再将临时文件替换之前的备份文件。</p>
+<p><strong>2.AOF只追加文件</strong></p>
+<blockquote>
+<p>appendonly  yes</p>
+<p>appendfsync everysec  #每秒钟同步一次，显示地将多个写命令同步到硬盘</p>
+<p>appendfsync always    #每次有数据修改发生时都会写入AOF文件,这样会严重降低Redis的速</p>
+<p>appendfsync no           #让操作系统决定何时进行同步</p>
+</blockquote>
+<p>与快照相比AOF的<strong>实时性</strong>更好，开启AOF持久化后每执行一条会更改Redis中的数据的命令，Redis就会将该命令写入硬盘中的AOF文件</p>
+<p>AOF文件的保存位置和RDB文件的位置相同，都是通过<code>dir</code>参数设置的，默认的文件名是<code>appendonly.aof</code>。</p>
+<p><strong>优化</strong></p>
+<p>在执行 <code>BGREWRITEAOF</code>命令时，Redis 服务器会维护一个 <strong>AOF 重写缓冲区</strong>，该缓冲区会在子进程创建新AOF文件期间，<strong>记录服务器执行的所有写命令</strong>。当子进程完成创建新AOF文件的工作之后，服务器会将重写缓冲区中的所有内容追加到新AOF文件的末尾，使得新旧两个AOF文件所保存的数据库状态一致。最后，服务器用新的AOF文件替换旧的AOF文件，以此来完成AOF文件重写操作</p>
+<blockquote>
+<p>设置 auto-aof-rewrite-percentage 和auto-aof-rewrite-min-size</p>
+</blockquote>
+<p>恢复时redis-check-aof –fix appendonly.aof 校验文件完整性,修复破碎文件</p>
+<h3 id="缓存雪崩和缓存穿透"><a href="#缓存雪崩和缓存穿透" class="headerlink" title="缓存雪崩和缓存穿透"></a><strong>缓存雪崩和缓存穿透</strong></h3><p><strong>缓存穿透</strong>：一般是黑客故意去请求缓存中不存在的数据，导致所有的请求都落到数据库上，造成数据库短时间内承受大量请求而崩掉。</p>
+<p><strong>解决办法</strong>： </p>
+<ul>
+<li>有很多种方法可以有效地解决缓存穿透问题，常见的则是采用<strong>布隆过滤器</strong>，将所有可能存在的数据哈希到一个足够大的<code>bitmap</code>中，一个一定不存在的数据会被这个<code>bitmap</code>拦截掉，从而避免了对底层存储系统的查询压力。</li>
+<li>另外也有一个更为简单粗暴的方法（我们采用的就是这种），如果一个查询返回的数据为空（不管是数 据不存 在，还是系统故障），我们仍然把这个<strong>空结果进行缓存</strong>（缓存过程上锁），但它的过期时间会很短，长不超过五分钟。</li>
+</ul>
+<p><strong>缓存雪崩</strong>：缓存同一时间大面积的失效，所以，后面的请求都会落到数据库上，造成数据库短时间内承受大量请求而崩掉。</p>
+<p><strong>有哪些解决办法？</strong></p>
+<ul>
+<li>事前：尽量保证整个 redis 集群的高可用性，发现机器宕机尽快补上。选择合适的内存淘汰策略。</li>
+<li>事中：本地ehcache缓存 + hystrix限流&amp;降级，避免MySQL崩掉</li>
+<li>事后：利用 redis 持久化机制保存的数据尽快恢复缓存</li>
+</ul>
+<p><strong>其他方法</strong></p>
+<p>1，在设置Redis键的过期时间时，加上一个随机数，这样可以避免。<br>2，部署分布式的Redis服务，当一个Redis服务器挂掉了之后，进行故障转移。</p>
+<p><strong>缓存击穿</strong>“:  “就是说某个key非常热点，访问非常频繁，处于集中式高并发访问的情况，当这个 key 在失效的瞬间，大量的请求就击穿了缓存，直接请求数据库</p>
+<p><strong>解决方法</strong></p>
+<ul>
+<li>可以将热点数据设置为永远不过期；</li>
+<li>基于 redis or zookeeper 实现互斥锁，等待第一个请求构建完缓存之后，再释放锁，进而其它请求才能通过该 key 访问数据</li>
+</ul>
+<h3 id="热点key"><a href="#热点key" class="headerlink" title="热点key"></a>热点key</h3><p>缓存中的某些Key(可能对应用与某个促销商品)对应的value存储在集群中一台机器，使得所有流量涌向同一机器，成为系统的瓶颈，该问题的挑战在于它无法通过增加机器容量来解决。</p>
+<ol>
+<li>客户端热点key缓存：将热点key对应value并缓存在客户端本地，并且设置一个失效时间。</li>
+<li>将热点key分散为多个子key，然后存储到缓存集群的不同机器上，这些子key对应的value都和热点key是一样的。</li>
+</ol>
+<h3 id="数据库与缓存数据一致性"><a href="#数据库与缓存数据一致性" class="headerlink" title="数据库与缓存数据一致性"></a>数据库与缓存数据一致性</h3><p><a href="https://blog.kido.site/2018/11/24/db-and-cache-preface/" target="_blank" rel="noopener">数据和缓存一致性问题</a></p>
+<p>写完数据库后是否需要马上更新缓存还是直接删除缓存？</p>
+<p>（1）、如果写数据库的值与更新到缓存值是一样的，不需要经过任何的计算，可以马上更新缓存，但是如果对于那种写数据频繁而读数据少的场景并不合适这种解决方案，因为也许还没有查询就被删除或修改了，这样会浪费时间和资源</p>
+<p>（2）、如果写数据库的值与更新缓存的值不一致，写入缓存中的数据需要经过几个表的关联计算后得到的结果插入缓存中，那就没有必要马上更新缓存，只有删除缓存即可，等到查询的时候在去把计算后得到的结果插入到缓存中即可。</p>
+<p><strong>所以一般的策略是当更新数据时，先删除缓存数据，然后更新数据库，而不是更新缓存，等要查询的时候才把最新的数据更新到缓存</strong><br><img src="http://cdn.zblade.top/qiniu_img/20170903171144693.png" alt></p>
+<h3 id="线程模型"><a href="#线程模型" class="headerlink" title="线程模型"></a>线程模型</h3><p><a href="https://www.cnblogs.com/barrywxx/p/8570821.html" target="_blank" rel="noopener">Redis线程模型</a></p>
+<p><img src="/2019/10/15/java-note/graphviz-f0d024ca2782cbbe20e2cd1e52540d92f64b3a37.png" alt></p>
+<p>redis 内部使用文件事件处理器 <code>file event handler</code>，这个文件事件处理器是单线程的，所以 redis 才叫做单线程的模型。它采用 <strong>IO 多路复用机制</strong>同时监听多个 socket，根据 socket 上的事件来选择对应的事件处理器进行处理。</p>
+<p>文件事件处理器的结构包含 4 个部分：</p>
+<ul>
+<li>多个 socket</li>
+<li>IO 多路复用程序</li>
+<li>文件事件分派器</li>
+<li>事件处理器（连接应答处理器、命令请求处理器、命令回复处理器）</li>
+</ul>
+<p>I/O <strong>多路复用程序</strong></p>
+<p>I/O 多路复用程序可以监听多个套接字的 <code>ae.h/AE_READABLE</code> 事件和 <code>ae.h/AE_WRITABLE</code> 事件， 这两类事件和套接字操作之间的对应关系如下：</p>
+<ul>
+<li>当套接字变得可读时（客户端对套接字执行 <code>write</code> 操作，或者执行 <code>close</code> 操作）， 或者有新的可应答（acceptable）套接字出现时（客户端对服务器的监听套接字执行 <code>connect</code> 操作）， 套接字产生 <code>AE_READABLE</code> 事件。</li>
+<li>当套接字变得可写时（客户端对套接字执行 <code>read</code> 操作）， 套接字产生 <code>AE_WRITABLE</code> 事件。</li>
+</ul>
+<p>I/O 多路复用程序允许服务器同时监听套接字的 <code>AE_READABLE</code> 事件和 <code>AE_WRITABLE</code> 事件， 如果一个套接字同时产生了这两种事件， 那么文件事件分派器会优先处理 <code>AE_READABLE</code> 事件， 等到 <code>AE_READABLE</code> 事件处理完之后， 才处理 <code>AE_WRITABLE</code> 事件。</p>
+<blockquote>
+<p>这也就是说， 如果一个套接字又可读又可写的话， 那么服务器将先读套接字， 后写套接字。</p>
+</blockquote>
+<p><strong>Redis是单线程模型为什么效率还这么高？</strong></p>
+<ul>
+<li>纯内存访问：数据存放在内存中，内存的响应时间大约是100纳秒，这是Redis每秒万亿级别访问的重要基础。</li>
+<li>非阻塞I/O：Redis采用epoll做为I/O多路复用技术的实现，再加上Redis自身的事件处理模型将epoll中的连接，读写，关闭都转换为了时间，不在I/O上浪费过多的时间。</li>
+<li>单线程避免了线程切换和竞态产生的消耗。</li>
+</ul>
+<p>Redis采用单线程模型，每条命令执行如果占用大量时间，会造成其他线程阻塞，对于Redis这种高性能服务是致命的，所以Redis是面向高速执行的数据库</p>
+<h3 id="redis事务"><a href="#redis事务" class="headerlink" title="redis事务"></a>redis事务</h3><p>Redis事务有如下一些特点:</p>
+<ul>
+<li><p>事务中的命令序列执行的时候是原子性的,也就是说,其不会被其他客户端的命令中断. 这和传统的数据库的事务的属性是类似的.</p>
+</li>
+<li><p>尽管Redis事务中的命令序列是原子执行的, 但是事务中的<strong>命令序列执行可以部分成功</strong>,这种情况下,Redis事务不会执行回滚操作. 这和传统关系型数据库的事务是有区别的.</p>
+<p><strong>redis同一个事务中如果有一条命令执行失败，其后的命令仍然会被执行，没有回滚</strong></p>
+</li>
+<li><p>尽管Redis有RDB和AOF两种数据持久化机制, 但是其设计目标是高效率的cache系统. <strong>Redis事务只保证将其命令序列中的操作结果提交到内存中,不保证持久化到磁盘文件</strong>. 更进一步的, Redis事务和RDB持久化机制没有任何关系, 因为RDB机制是对内存数据结构的全量的快照.由于AOF机制是一种增量持久化,所以事务中的命令序列会提交到AOF的缓存中.但是AOF机制将其缓存写入磁盘文件是由其配置的实现策略决定的,和Redis事务没有关系.</p>
+</li>
+</ul>
+<p>Redis事务涉及到<code>MULTI</code>, <code>EXEC</code>, <code>DISCARD</code>, <code>WATCH</code>和<code>UNWATCH</code>这五个命令:·</p>
+<ul>
+<li><p>事务开始的命令是<code>MULTI</code>, 该命令返回OK提示信息. <strong>Redis不支持事务嵌套</strong>,执行多次MULTI命令和执行一次是相同的效果.嵌套执行MULTI命令时,Redis只是返回错误提示信息.</p>
+</li>
+<li><p><code>EXEC</code>是事务的提交命令,事务中的命令序列将被执行(或者不被执行,比如乐观锁失败等).该命令将返回响应数组,其内容对应事务中的命令执行结果.</p>
+</li>
+<li><p><code>WATCH</code>命令是<strong>开始执行乐观锁</strong>,该命令的参数是key(可以有多个), Redis将执行WATCH命令的客户端对象和key进行关联,如果其他客户端修改了这些key,则执行WATCH命令的客户端将被设置乐观锁失败的标志.<strong>该命令必须在事务开始前执行,即在执行MULTI命令前执行WATCH命令,否则执行无效,并返回错误提示信息.</strong></p>
+</li>
+<li><p><code>UNWATCH</code>命令将<strong>取消当前客户端对象的乐观锁key</strong>,该客户端对象的事务提交将变成无条件执行.</p>
+</li>
+<li><p><code>DISCARD</code>命令将结束事务,并且会丢弃全部的命令序列.</p>
+<blockquote>
+<p>需要注意的是,<code>EXEC</code>命令和<code>DISCARD</code>命令结束事务时,会调用<code>UNWATCH</code>命令,取消该客户端对象上所有的乐观锁key.</p>
+</blockquote>
+</li>
+</ul>
+<p><strong>事务的错误处理</strong></p>
+<p>事务提交命令EXEC有可能会失败, 有三种类型的失败场景:</p>
+<ul>
+<li>在事务提交之前,<strong>客户端执行的命令缓存失败</strong>.比如命令的语法错误(命令参数个数错误, 不支持的命令等等).如果发生这种类型的错误,Redis将向客户端返回包含错误提示信息的响应.</li>
+<li>事务提交时,<strong>之前缓存的命令有可能执行失败</strong>.（==但Redis不会对事务做任何回滚补救操作==）</li>
+<li>由于<strong>乐观锁失败</strong>,事务提交时,将丢弃之前缓存的所有命令序列.</li>
+</ul>
+<blockquote>
+<p>实际上，这就意味着只有程序错误才会导致Redis命令执行失败，这种错误很有可能在程序开发期间发现，一般很少在生产环境发现。<br>Redis已经在系统内部进行功能简化，这样可以确保更快的运行速度，因为Redis不需要事务回滚的能力。</p>
+</blockquote>
+<p><strong>乐观锁机制</strong>·</p>
+<p>关于乐观锁,需要注意的是:</p>
+<ul>
+<li><code>WATCH</code>命令必须在<code>MULTI</code>命令之前执行. <code>WATCH</code>命令可以执行多次.</li>
+<li><code>WATCH</code>命令可以指定乐观锁的多个<code>key</code>,如果在事务过程中,任何一个<code>key</code>被其他客户端改变,则当前客户端的乐观锁失败,事务提交时,将丢弃所有命令序列.</li>
+<li>多个客户端的<code>WATCH</code>命令可以指定相同的<code>key</code>.</li>
+<li><code>WATCH</code>命令指定乐观锁后,可以接着执行<code>MULTI</code>命令进入事务上下文,也可以在<code>WATCH</code>命令和<code>MULTI</code>命令之间执行其他命令. 具体使用方式取决于场景需求,不在事务中的命令将立即被执行.</li>
+<li>如果<code>WATCH</code>命令指定的乐观锁的<code>key</code>,被当前客户端改变,在事务提交时,乐观锁不会失败.</li>
+<li>如果<code>WATCH</code>命令指定的乐观锁的<code>key</code>具有超时属性,并且该<code>key</code>在<code>WATCH</code>命令执行后, 在事务提交命令<code>EXEC</code>执行前超时, 则乐观锁不会失败.如果该<code>key</code>被其他客户端对象修改,则乐观锁失败.</li>
+</ul>
+<blockquote>
+<p><strong>Redis事务其本质就是,以不可中断的方式依次执行缓存的命令序列,将结果保存到内存cache中</strong></p>
+</blockquote>
+<p><a href="https://redisbook.readthedocs.io/en/latest/feature/transaction.html" target="_blank" rel="noopener">redis事务</a></p>
+<h3 id="无锁化编程"><a href="#无锁化编程" class="headerlink" title="无锁化编程"></a>无锁化编程</h3><p><strong>一种实现思想</strong></p>
+<p>假如有一个上述的post请求的URI部分是个覆盖写操作，reqid=abc123789def，服务部署在多台机器，在大前端将流量转发到Nginx之后根据reqid进行哈希,</p>
+<p>经过 <strong>Nginx负载均衡</strong> 相同reqid的请求将被转发到一台机器上，当然你可能会说如果集群的机器动态调整呢？我只能说不要考虑那么多那么充分， <strong>工程化去设计</strong> 即可。</p>
+<p>然而转发到一台机器仍然无法保证串行处理，因为单机仍然是多线程的，我们仍然需要将所有的reqid数据放到同一个线程处理，最终保证线程内串行，这个就需要借助于线程池的管理者Disper按照 <strong>reqid哈希取模</strong> 来进行多线程的负载均衡。</p>
+<p>经过Nginx和线程内负载均衡，最终相同的reqid都将在线程内串行处理，有效避免了锁的使用，当然这种设计可能在reqid不均衡时造成 <strong>线程饥饿</strong> ，不过高并发大量请求的情况下还是可以的。</p>
+<h3 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h3><blockquote>
+<p>在 <strong>分布式部署高并发场景</strong> 下，经常会遇到资源的互斥访问的问题，最有效最普遍的方法是给共享资源或者对共享资源的操作加一把锁</p>
+<p>分布式锁是 <strong>控制分布式系统之间同步访问共享资源的一种方式</strong> ，用于在分布式系统中协调他们之间的动作。</p>
+</blockquote>
+<p>分布式锁一般有三种实现方式：</p>
+<ul>
+<li><p>基于<code>数据库</code>在数据库中创建一张表，表里包含方法名等字段，并且在方法名字段上面创建唯一索引，执行某个方法需要使用此方法名向表中插入数据，成功插入则获取锁，执行结束则删除对应的行数据释放锁</p>
+</li>
+<li><p>基于缓存数据库<code>Redis Redis</code>性能好并且实现方便，但是单节点的分布式锁在故障迁移时产生安全问题</p>
+<p><em>(在redis主从架构部署时，在<code>redis-master</code>实例宕机的时候，可能导致多个客户端同时完成加锁。极端情况下不能得到保证。作者都是这吗说的)</em></p>
+<p>Redlock是Redis的作者 Antirez 提出的集群模式分布式锁，基于N个完全独立的Redis节点实现分布式锁的高可用</p>
+</li>
+<li><p>基于<code>ZooKeeper ZooKeeper</code>是以 Paxos 算法为基础的分布式应用程序协调服务，为分布式应用提供一致性服务的开源组件</p>
+</li>
+</ul>
+<p><a href="https://zhuanlan.zhihu.com/p/101599712" target="_blank" rel="noopener">基于Redis的分布式锁和Redlock算法·</a></p>
+<p><a href="https://www.cnblogs.com/williamjie/p/9395659.html" target="_blank" rel="noopener">分布式锁正确实现</a></p>
+<p><a href="http://blog.itpub.net/31545684/viewspace-2221023/" target="_blank" rel="noopener">redisession实现</a></p>
+<p>简单应用</p>
+<p>先拿<code>setnx</code>来争抢锁，抢到之后，再用<code>expire</code>给锁加一个过期时间防止锁忘记了释放</p>
+<h3 id="主从-哨兵"><a href="#主从-哨兵" class="headerlink" title="主从+哨兵"></a>主从+哨兵</h3><blockquote>
+<p>主从模式很好的解决了数据备份问题，并且由于主从服务数据几乎是一致的，因而可以将写入数据的命令发送给主机执行，而读取数据的命令发送给不同的从机执行，从而达到读写分离的目的</p>
+<p><strong>Redis可以使用主从同步，从从同步。第一次同步时，主节点做一次bgsave，并同时将后续修改操作记录到内存buffer，待完成后将rdb文件全量同步到复制节点，复制节点接受完成后将rdb镜像加载到内存。加载完成后，再通知主节点将期间修改的操作记录同步到复制节点进行重放就完成了同步过程。</strong></p>
+</blockquote>
+<p><strong>问题</strong></p>
+<ul>
+<li><p>同步故障</p>
+<ul>
+<li>复制数据延迟(不一致)   <em>—-info  replication 查看延迟偏移量—zookeeper监听回调机制实现客户端通知</em></li>
+<li>读取过期数据(Slave 不能删除数据)    <em>—–惰性删除和定期删除—Redis3.2版本中已经解决了这个问题，在此版本中slave节点读取数据之前会检查键过期时间来决定是否返回数据的。</em></li>
+<li>从节点故障    –<em>哨兵机制</em></li>
+<li>主节点故障</li>
+</ul>
+</li>
+<li><p>配置不一致</p>
+<ul>
+<li><code>maxmemory</code>不一致:丢失数据</li>
+<li>优化参数不一致:内存不一致.</li>
+</ul>
+</li>
+<li><p>避免全量复制</p>
+<ul>
+<li>选择小主节点(分片)、低峰期间操作.（防止第一次全量复制压力过大）</li>
+<li>如果节点运行 id 不匹配(如主节点重启、运行 id 发送变化)，此时要执行全量复制，应该配合哨兵和集群解决.</li>
+<li>主从复制挤压缓冲区不足产生的问题(网络中断，部分复制无法满足)，可增大复制缓冲区( <code>rel_backlog_size</code>参数).·</li>
+</ul>
+</li>
+<li><p>复制风暴</p>
+<blockquote>
+<p>复制风暴是指大量从节点对同一主节点或者同一台机器的多个主节点，在短时间内发起全量复制的过程。此时将导致被发起的主节点或机器产生大量开销，如 ：CPU、内存、硬盘、带宽等</p>
+<ul>
+<li>单节点复制风暴   —<strong>首先减少主节点挂在从节点的数量，或者采用树桩复制结构。</strong></li>
+<li>单机复制风暴  —集群和多节点部署—注意故障恢复机制，防止恢复时出现密集全量复制</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+<p><strong>主从故障如何故障转移</strong>·</p>
+<p>a)主节点(master)故障，从节点slave-1端执行<code>slaveof no one</code>后变成新主节点；<br>b)其它的节点成为新主节点的从节点，并从新节点复制数据；<br><strong>c)需要人工干预，无法实现高可用。</strong></p>
+<p><strong>配置</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">配置主从节点</span></span><br><span class="line">127.0.0.1:6380&gt; slaveof 127.0.0.1 6379</span><br><span class="line"><span class="meta">#</span><span class="bash">配置哨兵（配置sentinel.conf）</span></span><br><span class="line"><span class="meta">#</span><span class="bash">①每个sentinel的myid参数也要进行修改，因为sentinel之间是通过该属性来唯一区分其他sentinel节点的；</span></span><br><span class="line"><span class="meta">#</span><span class="bash">②参数中sentinel monitor mymaster 127.0.0.1 6379 2这里的端口号6379是不用更改的，因为sentinel是通过检测主节点的状态来得知当前主节点的从节点有哪些的，因而设置为主节点的端口号即可</span></span><br><span class="line">./src/redis-sentinel sentinel-26379.conf</span><br><span class="line"><span class="meta">#</span><span class="bash">查看状态</span></span><br><span class="line">info replication</span><br></pre></td></tr></table></figure>
+
+<p><strong>哨兵监控机制</strong></p>
+<p>任务1：每个哨兵节点每<code>10</code>秒会向主节点和从节点发送<code>info</code>命令获取拓扑结构图</p>
+<p>任务2：每个哨兵节点每隔<code>2</code>秒会向<code>redis</code>数据节点的<strong>指定频道</strong>上发送该哨兵节点对于主节点的判断以及当前哨兵节点的信息，同时每个哨兵节点也会订阅该频道，来了解其它哨兵节点的信息及对主节点的判断，其实就是通过消息<code>publish</code>和<code>subscribe</code>来完成的·</p>
+<p>任务3：每隔<code>1</code>秒每个哨兵会向主节点、从节点及其余哨兵节点发送一次<code>ping</code>命令做一次心跳检测，这个也是哨兵用来判断节点是否正常的重要依据</p>
+<p><strong>领导者哨兵选举流程</strong></p>
+<p>a)每个在线的哨兵节点都可以成为领导者，当它确认（比如哨兵3）主节点下线时<strong>（主观下线）</strong>，会向其它哨兵发<code>is-master-down-by-addr</code>命令，征求判断并要求将自己·设置为领导者，由领导者处理故障转移；<br>b)当其它哨兵收到此命令时，可以同意或者拒绝它成为领导者；<br>c)如果哨兵3发现自己在选举的票数大于等于<code>num(sentinels)/2+1</code>时，将成为领导者，如果没有超过，继续选举…………<strong>(客观下线)</strong>\</p>
+<p><strong>故障转移</strong>·</p>
+<ol>
+<li>选择 <code>slave-priority</code> 最高的节点。</li>
+<li>选择复制偏移量最大的节点(<code>同步数据最多</code>)。</li>
+<li>选择 <code>runId</code>最小的节点。</li>
+</ol>
+<p><strong>部署建议</strong></p>
+<p>a，sentinel节点应部署在多台物理机（线上环境）</p>
+<p>b，至少三个且奇数个sentinel节点</p>
+<p>c，通过以上我们知道，3个sentinel可同时监控一个主节点或多个主节点</p>
+<p>  监听N个主节点较多时，如果sentinel出现异常，会对多个主节点有影响，同时还会造成sentinel节点产生过多的网络连接，</p>
+<p>  <strong>一般线上建议还是， 3个sentinel监听一个主节点</strong></p>
+<p> <strong>数据同步</strong></p>
+<p>redis 2.8版本以上使用·命令完成同步，过程分“全量”与“部分”复制</p>
+<ul>
+<li>全量复制：一般用于初次复制场景（第一次建立SLAVE后全量）</li>
+<li>部分复制：网络出现问题，从节点再次连接主节点时，主节点补发缺少的数据，每次数据增量同步</li>
+<li>心跳：主从有长连接心跳，主节点默认每<code>10S</code>向从节点发ping命令，<code>repl-ping-slave-period</code>控制发送频率·</li>
+</ul>
+<h3 id="集群"><a href="#集群" class="headerlink" title="集群"></a>集群</h3><blockquote>
+<p>当遇到单机内存，并发和流量瓶颈等问题时，可采用Cluster方案达到负载均衡的目的。并且从另一方面讲，redis中sentinel有效的解决了故障转移的问题，也解决了主节点下线客户端无法识别新的可用节点的问题，但是如果是从节点下线了，sentinel是不会对其进行故障转移的，并且连接从节点的客户端也无法获取到新的可用从节点</p>
+</blockquote>
+<p> redis集群中数据是和槽（slot）挂钩的，其总共定义了<code>16384</code>个槽，所有的数据根据一致哈希算法会被映射到这<code>16384</code>个槽中的某个槽中。</p>
+<blockquote>
+<p>slot=CRC16（key）/16384</p>
+</blockquote>
+<p>数据的存储只和槽有关，并且槽的数量是一定的，由于一致hash算法·是一定的，因而将这<code>16384</code>个槽分配给无论多少个redis实例，对于确认的数据其都将被分配到确定的槽位上。redis集群通过这种方式来达到redis的高效和高可用性目的。</p>
+<h4 id="一致性哈希和哈希槽的区别·"><a href="#一致性哈希和哈希槽的区别·" class="headerlink" title="一致性哈希和哈希槽的区别·"></a><strong>一致性哈希和哈希槽的区别</strong>·</h4><p>一致性哈希是创建虚拟节点来实现节点宕机后的数据转移并保证数据的安全性和集群的可用性的。</p>
+<p>redis cluster<mark>是采用master节点有多个slave节点机制来保证数据的完整性的,master节点写入数据</mark>，slave节点同步数据。当master节点挂机后，slave节点会通过选举机制选举出一个节点变成master节点，实现高可用。<strong>但是这里有一点需要考虑，如果master节点存在热点缓存，某一个时刻某个key的访问急剧增高，这时该mater节点可能操劳过度而死，随后从节点选举为主节点后，同样宕机，一次类推，造成缓存雪崩</strong></p>
+<p><strong>配置</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">redis.conf配置文件设置</span></span><br><span class="line">port 6379</span><br><span class="line">cluster-enabled yes</span><br><span class="line">cluster-node-timeout 15000</span><br><span class="line">cluster-config-file "nodes-6379.conf"</span><br><span class="line">pidfile /var/run/redis_6379.pid</span><br><span class="line">logfile "cluster-6379.log"</span><br><span class="line">dbfilename dump-cluster-6379.rdb</span><br><span class="line">appendfilename "appendonly-cluster-6379.aof"</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">启动配置文件</span></span><br><span class="line">./src/redis-server cluster-6379.conf</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">设置槽位</span></span><br><span class="line"><span class="meta">#</span><span class="bash">先连接</span></span><br><span class="line">./src/redis-cli -p 6379</span><br><span class="line"><span class="meta">#</span><span class="bash">设置多个槽位</span></span><br><span class="line">127.0.0.1:6379&gt;cluster meet 127.0.0.1 6380</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">查看状态</span></span><br><span class="line">127.0.0.1:6379&gt; cluster nodes</span><br><span class="line">4fa7eac4080f0b667ffeab9b87841da49b84a6e4 127.0.0.1:6384 master - 0 1468073975551 5 connected</span><br><span class="line">cfb28ef1deee4e0fa78da86abe5d24566744411e 127.0.0.1:6379 myself,master - 0 0 0 connected</span><br><span class="line">be9485a6a729fc98c5151374bc30277e89a461d8 127.0.0.1:6383 master - 0 1468073978579 4 connected</span><br><span class="line">40622f9e7adc8ebd77fca0de9edfe691cb8a74fb 127.0.0.1:6382 master - 0 1468073980598 3 connected</span><br><span class="line">8e41673d59c9568aa9d29fb174ce733345b3e8f1 127.0.0.1:6380 master - 0 1468073974541 1 connected</span><br><span class="line">40b8d09d44294d2e23c7c768efc8fcd153446746 127.0.0.1:6381 master - 0 1468073979589 2 connected</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">添加虚拟槽(类似于一致性<span class="built_in">hash</span>提供给虚拟节点)</span></span><br><span class="line">127.0.0.1:6379&gt;cluster addslots &#123;0...5461&#125;</span><br><span class="line"><span class="meta">#</span><span class="bash">...之后我们还可以分配主从节点，进一步提高可靠性</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>其他集群案例</strong></p>
+<p><strong>Redis Sharding集群</strong></p>
+<ol>
+<li>采用<code>一致性哈希算法(consistent hashing)</code>，将key和节点name同时hashing，然后进行映射匹配，采用的算法是<code>MURMUR_HASH</code>。采用一致性哈希而不是采用简单类似哈希求模映射的主要原因是当增加或减少节点时，不会产生由于重新匹配造成的rehashing。一致性哈希只影响相邻节点key分配，影响量小。</li>
+<li>为了避免一致性哈希只影响相邻节点造成节点分配压力，ShardedJedis会对每个Redis节点根据名字(没有，Jedis会赋予缺省名字)会<strong>虚拟化出160个虚拟节点进行散列</strong>。根据权重<code>weight</code>，也可虚拟化出160倍数的虚拟节点。用虚拟节点做映射匹配，可以在增加或减少Redis节点时，key在各Redis节点移动再分配更均匀，而不是只有相邻节点受影响。</li>
+<li><code>ShardedJedis</code>支持<code>keyTagPattern</code>模式，即抽取key的一部分<code>keyTag</code>做<code>sharding</code>，这样通过合理命名key，可以将一组相关联的key放入同一个Redis节点，这在避免跨节点访问相关数据时很重要。</li>
+</ol>
+<p>特点：<code>resharding</code>·，即预先根据系统规模尽量部署好多个<code>Redis</code>实例，这些实例占用系统资源很小，一台物理机可部署多个，让他们都参与<code>sharding</code>，当需要扩容时，选中一个实例作为主节点，新加入的<code>Redis</code>节点作为从节点进行数据复制。</p>
+<p>presharding是预先分配好足够的分片，扩容时只是将属于某一分片的原Redis实例替换成新的容量更大的Redis实例。参与sharding的分片没有改变，所以也就不存在key值从一个区转移到另一个分片区的现象，只是将属于同分片区的键值从原Redis实例同步到新Redis实例。</p>
+<h3 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a><strong>使用场景</strong></h3><ul>
+<li><strong>热点数据缓存</strong></li>
+<li><strong>会话维持session</strong></li>
+<li><strong>分布式锁SETNX</strong></li>
+<li><strong>表缓存</strong></li>
+<li><strong>消息队列 list</strong>()提供阻塞方法</li>
+<li><strong>计数器 string</strong></li>
+</ul>
+<h3 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a><strong>注意点</strong></h3><p><a href="https://mp.weixin.qq.com/s/SGOyGGfA6GOzxwD5S91hLw" target="_blank" rel="noopener">关注最后的开发建议：不要用keys</a></p>
+<p>大家知道 Redis 是单线程程序，是按照顺序执行指令的，如果说我们现在正在执行 keys 命令，那么其它指令必须等到当前的 keys 指令执行完了才可以继续，再加上 keys 操作是遍历算法，复杂度是 O (n)，乍一想就知道问题所在了，当实例中数据量过大的时候，Redis 服务可能会卡顿，其余指令可能会延时甚至超时报错….</p>
+<p>使用：<code>scan - cursor [MATCH pattern] [COUNT count]·</code></p>
+<blockquote>
+<p>复杂度虽然也是 O (n)，但是它是通过游标分步进行的，不会阻塞线程；</p>
+<p>scan指令可以无阻塞的提取出指定模式的<code>key</code>列表，但是会有一定的重复概率，在客户端做一次去重就可以了，但是整体所花费的时间会比直接用keys指令长。</p>
+</blockquote>
+<p><a href="https://learnku.com/articles/25892" target="_blank" rel="noopener">scan用法</a></p>
+<h2 id="IO"><a href="#IO" class="headerlink" title="IO"></a><strong>IO</strong></h2><p><a href="https://zhuanlan.zhihu.com/p/23488863" target="_blank" rel="noopener">NIO浅析</a></p>
+<h3 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h3><p><strong>java提供的API IO模型:<code>IO NIO AIO</code></strong></p>
+<p><strong>Java中提供的IO有关的API，在文件处理的时候，其实依赖操作系统层面的IO操作实现的。</strong>比如在Linux 2.6以后，Java中NIO和AIO都是通过<code>epoll</code>来实现的，而在Windows上，AIO是通过<code>IOCP</code>来实现的。</p>
+<p>可以把Java中的BIO、NIO和AIO理解为是Java语言对操作系统的各种IO模型的封装。程序员在使用这些API的时候，不需要关心操作系统层面的知识，也不需要根据不同操作系统编写不同的代码。只需要使用Java的API就可以了。</p>
+<p><strong>操作系统层面的IO模型</strong>:</p>
+<p><mark><strong>阻塞IO模型</strong>、<strong>非阻塞IO模型</strong>、<strong>IO复用模型</strong>、<strong>信号驱动IO模型</strong>以及<strong>异步IO模型</strong>。</mark></p>
+<p><strong>阻塞式IO</strong></p>
+<p><img src="/2019/10/15/java-note/image-20200220131637020.png" alt="image-20200220131637020"></p>
+<p>应用进程通过系统调用 <code>recvfrom</code> 接收数据，但由于内核还未准备好数据报，应用进程就会阻塞住，直到内核准备好数据报，<code>recvfrom</code> 完成数据报复制工作，应用进程才能结束阻塞状态。</p>
+<p><strong>非阻塞式IO</strong></p>
+<p><img src="/2019/10/15/java-note/image-20200220131703025.png" alt="image-20200220131703025"></p>
+<p>应用进程通过 <code>recvfrom</code> 调用不停的去和内核交互，直到内核准备好数据。如果没有准备好，内核会返回<code>error</code>，应用进程在得到<code>error</code>后，过一段时间再发送<code>recvfrom</code>请求。在两次发送请求的时间段，进程可以先做别的事情。</p>
+<p><strong>信号驱动IO模型</strong></p>
+<p><img src="/2019/10/15/java-note/image-20200220131836101.png" alt="image-20200220131836101"></p>
+<p>应用进程预先向内核注册一个<strong>信号处理函数</strong>，然后用户进程返回，并且<strong>不阻塞</strong>，当内核数据准备就绪时会发送一个信号给进程，用户进程便在信号处理函数中开始把数据拷贝的用户空间中。</p>
+<p><strong>IO复用模型</strong></p>
+<p><img src="/2019/10/15/java-note/image-20200220131932861.png" alt="image-20200220131932861"></p>
+<p>IO多路转接是多了一个<code>select</code>函数，多个进程的IO可以注册到同一个<code>select</code>上，当用户进程调用该<code>select</code>，<code>select</code>会监听所有注册好的IO，如果所有被监听的IO需要的数据都没有准备好时，<code>select</code>调用进程会阻塞。当任意一个IO所需的数据准备好之后，<code>select</code>调用就会返回，然后进程在通过<code>recvfrom</code>来进行数据拷贝。</p>
+<p><strong>这里的IO复用模型，并没有向内核注册信号处理函数，所以，他并不是非阻塞的。</strong>进程在发出<code>select</code>后，要等到<code>select</code>监听的所有IO操作中至少有一个需要的数据准备好，才会有返回，并且也需要再次发送请求去进行文件的拷贝。</p>
+<p><strong>异步IO模型</strong></p>
+<p><strong>上述IO模型的数据拷贝过程，都是同步进行的</strong>。(信号驱动IO模型数据准备阶段式异步的但是拷贝依然是同步的)</p>
+<p><img src="/2019/10/15/java-note/image-20200220140943855.png" alt="image-20200220140943855"></p>
+<p>用户进程发起<code>aio_read</code>操作之后，给内核传递<strong>描述符</strong>、<strong>缓冲区指针</strong>、<strong>缓冲区大小</strong>等，告诉内核当整个操作完成时，如何通知进程，然后就立刻去做其他事情了。当内核收到<code>aio_read</code>后，会立刻返回，然后内核开始等待数据准备，数据准备好以后，直接把数据拷贝到用户控件，然后再通知进程本次IO已经完成。</p>
+<p><img src="/2019/10/15/java-note/image-20200220141040606.png" alt="image-20200220141040606"></p>
+<h3 id="IO、NIO、AIO区别"><a href="#IO、NIO、AIO区别" class="headerlink" title="IO、NIO、AIO区别"></a>IO、NIO、AIO区别</h3><p><strong>BIO</strong>: </p>
+<p>用 <strong>BIO 通信模型</strong> 的服务端，通常由一个独立的 Acceptor 线程负责监听客户端的连接。我们一般通过在<code>while(true)</code> 循环中服务端会调用 <code>accept()</code> 方法等待接收客户端的连接的方式监听请求，请求一旦接收到一个连接请求，就可以建立通信套接字在这个通信套接字上进行读写操作，此时不能再接收其他客户端连接请求，只能等待同当前连接的客户端的操作执行完成， 不过可以通过多线程来支持多个客户端的连接</p>
+<h4 id="BIO缺点"><a href="#BIO缺点" class="headerlink" title="BIO缺点"></a>BIO缺点</h4><ol>
+<li>线程的创建和销毁成本很高，在Linux这样的操作系统中，线程本质上就是一个进程。创建和销毁都是重量级的系统函数。</li>
+<li>线程本身占用较大内存，像Java的线程栈，一般至少分配512K～1M的空间，如果系统中的线程数过千，恐怕整个JVM的内存都会被吃掉一半。</li>
+<li>线程的切换成本是很高的。操作系统发生线程切换的时候，需要保留线程的上下文，然后执行系统调用。如果线程数过高，可能执行线程切换的时间甚至会大于线程执行的时间，这时候带来的表现往往是系统load偏高、CPU sy使用率特别高（超过20%以上)，导致系统几乎陷入不可用的状态。</li>
+<li>容易造成锯齿状的系统负载。因为系统负载是用活动线程数或CPU核心数，一旦线程数量高但外部网络环境不是很稳定，就很容易造成大量请求的结果同时返回，激活大量阻塞线程从而使系统负载压力过大。</li>
+</ol>
+<p><strong>NIO</strong> :</p>
+<p>NIO是一种同步非阻塞的I/O模型，在Java 1.4 中引入了 NIO 框架，对应 java.nio 包，提供了 Channel , Selector，Buffer等抽象。</p>
+<p>NIO中的N可以理解为Non-blocking，不单纯是New。它支持面向缓冲的，基于通道的I/O操作方法。 NIO提供了与传统BIO模型中的 <code>Socket</code> 和 <code>ServerSocket</code> 相对应的 <code>SocketChannel</code> 和 <code>ServerSocketChannel</code> 两种不同的套接字通道实现,两种通道都支持阻塞和非阻塞两种模式。阻塞模式使用就像传统中的支持一样，比较简单，但是性能和可靠性都不好；非阻塞模式正好与之相反。对于低负载、低并发的应用程序，可以使用同步阻塞I/O来提升开发速率和更好的维护性；对于高负载、高并发的（网络）应用，应使用 NIO 的非阻塞模式来开发。</p>
+<h4 id="NIO特点"><a href="#NIO特点" class="headerlink" title="NIO特点"></a>NIO特点</h4><ul>
+<li>事件驱动模型</li>
+<li>避免多线程</li>
+<li>单线程处理多任务</li>
+<li><strong>非阻塞I/O，I/O读写不再阻塞，而是返回0</strong>（指channel操作的时候可以选择注册成非阻塞）</li>
+<li>基于block的传输，通常比基于流的传输更高效</li>
+<li>更高级的IO函数，zero-copy</li>
+<li>IO多路复用大大提高了Java网络应用的可伸缩性和实用性</li>
+</ul>
+<p>NIO由<strong>原来的阻塞读写（占用线程）变成了单线程轮询事件</strong>，找到可以进行读写的网络描述符进行读写。除了事件的轮询是阻塞的（没有可干的事情必须要阻塞），剩余的I/O操作都是纯CPU操作，没有必要开启多线程。</p>
+<p><strong>AIO</strong>: </p>
+<p>也就是 NIO 2。在 Java 7 中引入了 NIO 的改进版 NIO 2,它是<strong>异步非阻塞</strong>的IO模型。异步 IO 是基于事件和回调机制实现的，也就是应用操作之后会直接返回，不会堵塞在那里，当后台处理完成，操作系统会通知相应的线程进行后续的操作。</p>
+<p>AIO 是异步IO的缩写，虽然 NIO 在网络操作中，提供了非阻塞的方法，但是 NIO 的 IO 行为还是<strong>同步</strong>的。</p>
+<p><strong>在 Windows 中 JDK 直接采用了 IOCP 的支持</strong></p>
+<p><strong>linux中使用的epoll</strong></p>
+<h3 id="NIO的三个主要组成部分"><a href="#NIO的三个主要组成部分" class="headerlink" title="NIO的三个主要组成部分"></a>NIO的三个主要组成部分</h3><blockquote>
+<p><strong>Channel（通道）、Buffer（缓冲区）、Selector（选择器）</strong></p>
+</blockquote>
+<h4 id="Channel"><a href="#Channel" class="headerlink" title="Channel"></a><strong>Channel</strong></h4><p>Channel（通道）：Channel是一个对象，可以通过它读取和写入数据。可以把它看做是IO中的流，不同的是：</p>
+<ul>
+<li>Channel是<code>双向</code>的，既可以读又可以写，而流是单向的</li>
+<li>Channel可以进行<code>异步</code>的读写</li>
+<li>对Channel的读写必须通过<code>buffer对象</code></li>
+</ul>
+<p>在Java NIO中的Channel主要有如下几种类型：</p>
+<ul>
+<li><code>FileChannel</code>：从文件读取数据的（没有异步模式）</li>
+<li><code>DatagramChannel</code>：读写UDP网络协议数据</li>
+<li><code>SocketChannel</code>：读写TCP网络协议数据</li>
+<li><code>ServerSocketChannel</code>：可以监听TCP连接</li>
+</ul>
+<h5 id="FileChannel"><a href="#FileChannel" class="headerlink" title="FileChannel"></a>FileChannel</h5><p><strong>读取文件内容：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ByteBuffer buffer = ByteBuffer.allocate(<span class="number">1024</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> num = fileChannel.read(buffer);</span><br></pre></td></tr></table></figure>
+
+<p>前面我们也说了，所有的 Channel 都是和 Buffer 打交道的。</p>
+<p><strong>写入文件内容：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ByteBuffer buffer = ByteBuffer.allocate(<span class="number">1024</span>);</span><br><span class="line">buffer.put(<span class="string">"随机写入一些内容到 Buffer 中"</span>.getBytes());</span><br><span class="line"><span class="comment">// Buffer 切换为读模式</span></span><br><span class="line">buffer.flip();</span><br><span class="line"><span class="keyword">while</span>(buffer.hasRemaining()) &#123;</span><br><span class="line">    <span class="comment">// 将 Buffer 中的内容写入文件</span></span><br><span class="line">    fileChannel.write(buffer);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="SocketChannel"><a href="#SocketChannel" class="headerlink" title="SocketChannel"></a>SocketChannel</h5><p>打开一个 TCP 连接：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SocketChannel socketChannel = SocketChannel.open(<span class="keyword">new</span> InetSocketAddress(<span class="string">"https://www.javadoop.com"</span>, <span class="number">80</span>));</span><br></pre></td></tr></table></figure>
+
+<p>当然了，上面的这行代码等价于下面的两行：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 打开一个通道</span></span><br><span class="line">SocketChannel socketChannel = SocketChannel.open();</span><br><span class="line"><span class="comment">// 发起连接</span></span><br><span class="line">socketChannel.connect(<span class="keyword">new</span> InetSocketAddress(<span class="string">"https://www.javadoop.com"</span>, <span class="number">80</span>));</span><br></pre></td></tr></table></figure>
+
+<p>SocketChannel 的读写和 FileChannel 没什么区别，就是操作缓冲区。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 读取数据</span></span><br><span class="line">socketChannel.read(buffer);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 写入数据到网络连接中</span></span><br><span class="line"><span class="keyword">while</span>(buffer.hasRemaining()) &#123;</span><br><span class="line">    socketChannel.write(buffer);   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="ServerSocketChannel"><a href="#ServerSocketChannel" class="headerlink" title="ServerSocketChannel"></a>ServerSocketChannel</h5><p>之前说 SocketChannel 是 TCP 客户端，这里说的 ServerSocketChannel 就是对应的服务端。</p>
+<p>ServerSocketChannel 用于监听机器端口，管理从这个端口进来的 TCP 连接。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 实例化</span></span><br><span class="line">ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();</span><br><span class="line"><span class="comment">// 监听 8080 端口</span></span><br><span class="line">serverSocketChannel.socket().bind(<span class="keyword">new</span> InetSocketAddress(<span class="number">8080</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">    <span class="comment">// 一旦有一个 TCP 连接进来，就对应创建一个 SocketChannel 进行处理</span></span><br><span class="line">    SocketChannel socketChannel = serverSocketChannel.accept();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>ServerSocketChannel 不和 Buffer 打交道了，因为它并不实际处理数据，它一旦接收到请求后，实例化 SocketChannel，之后在这个连接通道上的数据传递它就不管了，因为它需要继续监听端口，等待下一个连接。</p>
+<h5 id="DatagramChannel"><a href="#DatagramChannel" class="headerlink" title="DatagramChannel"></a>DatagramChannel</h5><p>UDP 和 TCP 不一样，DatagramChannel 一个类处理了服务端和客户端。</p>
+<p><strong>监听端口：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">DatagramChannel channel = DatagramChannel.open();</span><br><span class="line">channel.socket().bind(<span class="keyword">new</span> InetSocketAddress(<span class="number">9090</span>));</span><br><span class="line">ByteBuffer buf = ByteBuffer.allocate(<span class="number">48</span>);</span><br><span class="line"></span><br><span class="line">channel.receive(buf);</span><br></pre></td></tr></table></figure>
+
+<p><strong>发送数据：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">String newData = <span class="string">"New String to write to file..."</span></span><br><span class="line">                    + System.currentTimeMillis();</span><br><span class="line"></span><br><span class="line">ByteBuffer buf = ByteBuffer.allocate(<span class="number">48</span>);</span><br><span class="line">buf.put(newData.getBytes());</span><br><span class="line">buf.flip();</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> bytesSent = channel.send(buf, <span class="keyword">new</span> InetSocketAddress(<span class="string">"jenkov.com"</span>, <span class="number">80</span>));</span><br></pre></td></tr></table></figure>
+
+<h4 id="Buffer"><a href="#Buffer" class="headerlink" title="Buffer"></a><strong>Buffer</strong></h4><p>Buffer是一个对象，它包含一些要写入或者读到Stream对象的。应用程序不能直接对 Channel 进行读写操作，而必须通过 Buffer 来进行，即 Channel 是通过 Buffer 来读写数据的。</p>
+<p>在NIO中，所有的数据都是用Buffer处理的，它是NIO读写数据的中转池。<mark>Buffer实质上是一个数组，通常是一个字节数据，但也可以是其他类型的数组。但一个缓冲区不仅仅是一个数组，重要的是它提供了对<strong>数据的结构化访问，而且还可以跟踪系统的读写进程</strong>。</mark></p>
+<p>使用 <code>Buffer</code>读写数据一zes般遵循以下四个步骤：</p>
+<p>1.写入数据到 <code>Buffer</code>；</p>
+<p>2.调用 <code>flip()</code>方法；</p>
+<p>3.从 <code>Buffer</code>中读取数据；</p>
+<p>4.调用 <code>clear()</code>方法或者<code>compact()</code> 方法。</p>
+<p>当向 Buffer 写入数据时，Buffer 会记录下写了多少数据。一旦要读取数据，需要通过 <code>flip()</code>方法将 Buffer 从<strong>写模式切换到读模式</strong>。在读模式下，可以读取之前写入到 Buffer 的所有数据。</p>
+<p>一旦读完了所有的数据，就需要清空缓冲区，让它可以再次被写入。有两种方式能清空缓冲区：<strong>调用 clear()</strong> 或 <strong>compact() 方法</strong>。</p>
+<ul>
+<li>clear() 方法会清空整个缓冲区。</li>
+<li>compact() 方法只会清除已经读过的数据。任何未读的数据都被移到缓冲区的起始处，新写入的数据将放到缓冲区未读数据的后面。</li>
+</ul>
+<p><strong>Buffer主要有如下几种</strong></p>
+<ul>
+<li><strong>ByteBuffer</strong></li>
+<li><strong>CharBuffer</strong></li>
+<li><strong>DoubleBuffer</strong></li>
+<li><strong>FloatBuffer</strong></li>
+<li><strong>IntBuffer</strong></li>
+<li><strong>LongBuffer</strong></li>
+<li><strong>ShortBuffer</strong></li>
+</ul>
+<h5 id="重要属性"><a href="#重要属性" class="headerlink" title="重要属性"></a>重要属性</h5><p> <strong>capacity</strong>，它代表这个缓冲区的容量，一旦设定就不可以更改。</p>
+<p><strong>position</strong> 的初始值是 0，每往 Buffer 中写入一个值，position 就自动加 1，代表下一次的写入位置。读操作的时候也是类似的，每读一个值，position 就自动加 1。</p>
+<p>从写操作模式到读操作模式切换的时候（<strong>flip</strong>），position 都会归零，这样就可以从头开始读写了。</p>
+<p><strong>Limit</strong>：写操作模式下，limit 代表的是最大能写入的数据，这个时候 limit 等于 capacity。写结束后，切换到读模式，此时的 limit 等于 Buffer 中实际的数据大小，因为 Buffer 不一定被写满了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> Buffer <span class="title">flip</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    limit = position; <span class="comment">// 将 limit 设置为实际写入的数据数量</span></span><br><span class="line">    position = <span class="number">0</span>; <span class="comment">// 重置 position 为 0</span></span><br><span class="line">    mark = -<span class="number">1</span>; <span class="comment">// mark 之后再说</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>mark() &amp; reset()</strong></p>
+<p>除了 position、limit、capacity 这三个基本的属性外，还有一个常用的属性就是 mark。</p>
+<p>mark 用于临时保存 position 的值，每次调用 mark() 方法都会将 mark 设值为当前的 position，便于后续需要的时候使用。reset用于返回保存值</p>
+<p><strong>rewind() &amp; clear() &amp; compact()</strong></p>
+<p><strong>rewind()</strong>：会重置 position 为 0，通常用于重新从头读写 Buffer。</p>
+<p><strong>clear()</strong>：有点重置 Buffer 的意思，相当于重新实例化了一样</p>
+<p><strong>compact()</strong>：和 clear() 一样的是，它们都是在准备往 Buffer 填充新的数据之前调用。但是不同在于，调用这个方法以后，会先处理还没有读取的数据，也就是 position 到 limit 之间的数据（还没有读过的数据），先将这些数据移到左边，然后在这个基础上再开始写入。很明显，此时 limit 还是等于 capacity，position 指向原来数据的右边。</p>
+<h4 id="Selector（选择器对象）"><a href="#Selector（选择器对象）" class="headerlink" title="Selector（选择器对象）"></a>Selector（选择器对象）</h4><p>首先需要了解一件事情就是线程上下文切换开销会在高并发时变得很明显，这是同步阻塞方式的低扩展性劣势·</p>
+<blockquote>
+<p><code>Selector</code>是一个对象，它可以注册到很多个<code>Channel</code>上，监听各个<code>Channel</code>上发生的事件，并且能够根据事件情况决定Channel读写。这样，通过一个线程管理多个<code>Channel</code>，就可以处理大量网络连接了。</p>
+<p>有了<code>Selector</code>，我们就可以利用一个线程来处理所有的channels。线程之间的切换对操作系统来说代价是很高的，并且每个线程也会占用一定的系统资源。所以，对系统来说使用的线程越少越好。</p>
+</blockquote>
+<p><strong>1.如何创建一个Selector</strong></p>
+<p>Selector 就是您注册对各种 I/O 事件兴趣的地方，而且当那些事件发生时，就是这个对象告诉您所发生的事件。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Selector selector = Selector.open();</span><br></pre></td></tr></table></figure>
+
+<p><strong>2.注册Channel到Selector</strong></p>
+<p>为了能让<code>Channel</code>和<code>Selector</code>配合使用，我们需要把<code>Channel</code>注册到<code>Selector</code>上。通过调用 <code>channel.register（）</code>方法来实现注册：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">channel.configureBlocking(<span class="keyword">false</span>);</span><br><span class="line">SelectionKey key =channel.register(selector,SelectionKey.OP_READ);</span><br></pre></td></tr></table></figure>
+
+<p>注意，注册的Channel 必须设置成<strong>非阻塞模式</strong> 才可以,否则异步IO就无法工作，这就意味着我们不能把一个<code>FileChannel</code>注册到<code>Selector</code>，因为<code>FileChannel</code>没有非阻塞模式，但是网络编程中的SocketChannel是可以的。</p>
+<p><strong>3.调用 <code>select()</code>方法获取通道信息。用于判断是否有我们感兴趣的事件已经发生了。</strong></p>
+<p>事件</p>
+<ul>
+<li><p>SelectionKey.OP_READ</p>
+<blockquote>
+<p>对应 00000001，通道中有数据可以进行读取</p>
+</blockquote>
+</li>
+<li><p>SelectionKey.OP_WRITE</p>
+<blockquote>
+<p>对应 00000100，可以往通道中写入数据</p>
+</blockquote>
+</li>
+<li><p>SelectionKey.OP_CONNECT</p>
+<blockquote>
+<p>对应 00001000，成功建立 TCP 连接</p>
+</blockquote>
+</li>
+<li><p>SelectionKey.OP_ACCEPT</p>
+<blockquote>
+<p>对应 00010000，接受 TCP 连接</p>
+</blockquote>
+</li>
+</ul>
+<p>我们可以同时监听一个 Channel 中的发生的多个事件，比如我们要监听 ACCEPT 和 READ 事件，那么指定参数为二进制的 000<strong>1</strong>000<strong>1</strong> 即十进制数值 17 即可。</p>
+<p>注册方法返回值是 <strong>SelectionKey</strong> 实例，它包含了 Channel 和 Selector 信息，也包括了一个叫做 Interest Set 的信息，即我们设置的我们感兴趣的正在监听的事件集合。</p>
+<p><strong>SelectionKey</strong></p>
+<p>请注意对<code>register()</code>的调用的返回值是一个<code>SelectionKey</code>。 <code>SelectionKey</code>代表这个通道在此 <code>Selector</code>上注册。当某个 <code>Selector</code>通知您某个传入事件时，它是通过提供对应于该事件的 <code>SelectionKey</code>来进行的。<code>SelectionKey</code>还可以用于<strong>取消通道的注册</strong>。</p>
+<p><code>SelectionKey</code>中包含如下属性：</p>
+<ul>
+<li>The interest set</li>
+<li>The ready set</li>
+<li>The Channel</li>
+<li>The Selector</li>
+<li>An attached object (optional)</li>
+</ul>
+<h4 id="新技术"><a href="#新技术" class="headerlink" title="新技术"></a>新技术</h4><p>NIO的特性</p>
+<ol>
+<li>IO是面向流的，NIO是面向缓冲的；</li>
+<li>IO是阻塞的，NIO是非阻塞的；</li>
+<li>IO是单线程的，NIO 是通过选择器来模拟多线程的；</li>
+</ol>
+<h5 id="内存映射"><a href="#内存映射" class="headerlink" title="内存映射"></a>内存映射</h5><p>内存映射文件(memory-mappedfile)能让你创建和修改那些大到无法读入内存的文件。有了内存映射文件，你就可以认为文件已经全部读进了内存，然后把它当成一个非常大的数组来访问了。将文件的一段区域映射到内存中，比传统的文件处理速度要快很多。内存映射文件它虽然最终也是要从磁盘读取数据，但是它并不需要将数据读取到OS内核缓冲区，而是直接将进程的用户私有地址空间中的一部分区域与文件对象建立起映射关系，就好像直接从内存中读、写文件一样，速度当然快了。</p>
+<p>NIO中内存映射主要用到以下两个类：</p>
+<ol>
+<li>java.nio.MappedByteBuffer</li>
+<li>java.nio.channels.FileChannel</li>
+</ol>
+<p>支持三种模式:<strong>只读,只写,私有</strong></p>
+<p>内存映射文件的优点：</p>
+<ul>
+<li>用户进程将文件数据视为内存，因此不需要发出read()或write()系统调用。</li>
+<li>当用户进程触摸映射的内存空间时，将自动生成页面错误，以从磁盘引入文件数据。 如果用修改映射的内存空间，受影响的页面将自动标记为脏，并随后刷新到磁盘以更新文件。</li>
+<li>操作系统的虚拟内存子系统将执行页面的智能缓存，根据系统负载自动管理内存。</li>
+<li>数据始终是页面对齐的，不需要缓冲区复制。</li>
+<li>可以映射非常大的文件，而不消耗大量内存来复制数据。</li>
+</ul>
+<h5 id="字符和编码"><a href="#字符和编码" class="headerlink" title="字符和编码"></a>字符和编码</h5><p><strong>大部分的操作系统在I/O与文件存储方面仍是以字节为导向的，所以无论使用何种编码，Unicode或其他编码，在字节序列和字符集编码之间仍需要进行转化。</strong></p>
+<p>在NIO中提供了两个类CharsetEncoder和CharsetDecoder来实现编码转换方案</p>
+<p>CharsetEncoder类是一个状态编码引擎。实际上，编码器有状态意味着它们<strong>不是线程安全</strong>的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//nio字符集编码</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">testCharacter</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] a)</span></span>&#123;</span><br><span class="line">       <span class="comment">//设置编码器</span></span><br><span class="line">        Charset charset = Charset.forName(<span class="string">"GBK"</span>);</span><br><span class="line">        <span class="comment">//获取缓冲器</span></span><br><span class="line">        CharBuffer charBuffer = CharBuffer.allocate(<span class="number">1024</span>);</span><br><span class="line">        charBuffer.put(<span class="string">"skdfns史可法你00"</span>);</span><br><span class="line">        <span class="comment">//编码</span></span><br><span class="line">        charBuffer.flip();</span><br><span class="line">        ByteBuffer byteBuffer = charset.encode(charBuffer);</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; byteBuffer.limit();i ++)&#123;</span><br><span class="line">            System.out.println(byteBuffer.get());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//解码</span></span><br><span class="line">        byteBuffer.flip();</span><br><span class="line">        CharBuffer charBuffer1 = charset.decode(byteBuffer);</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; charBuffer1.limit();i ++)&#123;</span><br><span class="line">            System.out.println(charBuffer1.get());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="非阻塞IO"><a href="#非阻塞IO" class="headerlink" title="非阻塞IO"></a>非阻塞IO</h5><p>NIO 的非阻塞 I/O 机制是围绕 <strong>选择器</strong>和 <strong>通道</strong>构建的。 Channel 类表示服务器和客户机之间的一种通信机制。Selector 类是 Channel 的多路复用器。 Selector 类将传入客户机请求多路分用并将它们分派到各自的请求处理程序。NIO 设计背后的基石是<strong>反应器(Reactor)设计模式。</strong></p>
+<p>Reactor负责IO事件的响应，一旦有事件发生，便广播发送给相应的handler去处理</p>
+<p>在Reactor模式中，包含如下角色：</p>
+<ul>
+<li>Reactor 将I/O事件发派给对应的Handler</li>
+<li>Acceptor 处理客户端连接请求</li>
+<li>Handlers 执行非阻塞读/写</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NIOServer</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger LOGGER = LoggerFactory.getLogger(NIOServer.class);</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        Selector selector = Selector.open();</span><br><span class="line">        ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();</span><br><span class="line">        serverSocketChannel.configureBlocking(<span class="keyword">false</span>);</span><br><span class="line">        serverSocketChannel.bind(<span class="keyword">new</span> InetSocketAddress(<span class="number">1234</span>));</span><br><span class="line">        serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span>(selector.selectNow() &lt; <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//获取注册的channel</span></span><br><span class="line">            Set&lt;SelectionKey&gt; keys = selector.selectedKeys();</span><br><span class="line">            <span class="comment">//遍历所有的key</span></span><br><span class="line">            Iterator&lt;SelectionKey&gt; iterator = keys.iterator();</span><br><span class="line">            <span class="keyword">while</span>(iterator.hasNext()) &#123;</span><br><span class="line">                SelectionKey key = iterator.next();</span><br><span class="line">                iterator.remove();</span><br><span class="line">                <span class="comment">//如果通道上有事件发生</span></span><br><span class="line">                <span class="keyword">if</span> (key.isAcceptable()) &#123;</span><br><span class="line">                    <span class="comment">//获取该通道</span></span><br><span class="line">                    ServerSocketChannel acceptServerSocketChannel = (ServerSocketChannel) key.channel();</span><br><span class="line">                    SocketChannel socketChannel = acceptServerSocketChannel.accept();</span><br><span class="line">                    socketChannel.configureBlocking(<span class="keyword">false</span>);</span><br><span class="line">                    LOGGER.info(<span class="string">"Accept request from &#123;&#125;"</span>, socketChannel.getRemoteAddress());</span><br><span class="line">                    <span class="comment">//同时将SelectionKey标记为可读，以便读取。</span></span><br><span class="line">                    SelectionKey readKey = socketChannel.register(selector, SelectionKey.OP_READ);</span><br><span class="line">                    <span class="comment">//利用SelectionKey的attache功能绑定Acceptor 如果有事情，触发Acceptor</span></span><br><span class="line">                    <span class="comment">//Processor对象为自定义处理请求的类</span></span><br><span class="line">                    readKey.attach(<span class="keyword">new</span> Processor());</span><br><span class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span> (key.isReadable()) &#123;</span><br><span class="line">                    Processor processor = (Processor) key.attachment();</span><br><span class="line">                    processor.process(key);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Processor类中设置一个线程池来处理请求，</span></span><br><span class="line"><span class="comment"> * 这样就可以充分利用多线程的优势</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Processor</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger LOGGER = LoggerFactory.getLogger(Processor.class);</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> ExecutorService service = Executors.newFixedThreadPool(<span class="number">16</span>);</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">process</span><span class="params">(<span class="keyword">final</span> SelectionKey selectionKey)</span> </span>&#123;</span><br><span class="line">        service.submit(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                ByteBuffer buffer = <span class="keyword">null</span>;</span><br><span class="line">                SocketChannel socketChannel = <span class="keyword">null</span>;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    buffer = ByteBuffer.allocate(<span class="number">1024</span>);</span><br><span class="line">                    socketChannel = (SocketChannel) selectionKey.channel();</span><br><span class="line">                    <span class="keyword">int</span> count = socketChannel.read(buffer);</span><br><span class="line">                    <span class="keyword">if</span> (count &lt; <span class="number">0</span>) &#123;</span><br><span class="line">                        socketChannel.close();</span><br><span class="line">                        selectionKey.cancel();</span><br><span class="line">                        LOGGER.info(<span class="string">"&#123;&#125;\t Read ended"</span>, socketChannel);</span><br><span class="line">                    &#125; <span class="keyword">else</span> <span class="keyword">if</span>(count == <span class="number">0</span>) &#123;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">                LOGGER.info(<span class="string">"&#123;&#125;\t Read message &#123;&#125;"</span>, socketChannel, <span class="keyword">new</span> String(buffer.array()));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>多路复用IO为何比非阻塞IO模型的效率高是因为在非阻塞IO中，不断地询问socket状态时通过用户线程去进行的，而在多路复用IO中，轮询每个socket状态是内核在进行的，这个效率要比用户线程要高的多。</p>
+<h5 id="文件锁定"><a href="#文件锁定" class="headerlink" title="文件锁定"></a>文件锁定</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 如果请求的锁定范围是有效的，阻塞直至获取锁</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> FileLock <span class="title">lock</span><span class="params">()</span>  </span></span><br><span class="line"><span class="function"><span class="comment">// 尝试获取锁非阻塞，立刻返回结果  </span></span></span><br><span class="line"><span class="function"> <span class="keyword">public</span> <span class="keyword">final</span> FileLock <span class="title">tryLock</span><span class="params">()</span>  </span></span><br><span class="line"><span class="function">   </span></span><br><span class="line"><span class="function"><span class="comment">// 第一个参数：要锁定区域的起始位置  </span></span></span><br><span class="line"><span class="function"><span class="comment">// 第二个参数：要锁定区域的尺寸,  </span></span></span><br><span class="line"><span class="function"><span class="comment">// 第三个参数：true为共享锁，false为独占锁  </span></span></span><br><span class="line"><span class="function"> <span class="keyword">public</span> <span class="keyword">abstract</span> FileLock <span class="title">lock</span> <span class="params">(<span class="keyword">long</span> position, <span class="keyword">long</span> size, <span class="keyword">boolean</span> shared)</span>  </span></span><br><span class="line"><span class="function"> <span class="keyword">public</span> <span class="keyword">abstract</span> FileLock <span class="title">tryLock</span> <span class="params">(<span class="keyword">long</span> position, <span class="keyword">long</span> size, <span class="keyword">boolean</span> shared)</span></span></span><br></pre></td></tr></table></figure>
+
+<h4 id="NIO-AsynchronousFileChannel异步文件通道"><a href="#NIO-AsynchronousFileChannel异步文件通道" class="headerlink" title="NIO AsynchronousFileChannel异步文件通道"></a>NIO AsynchronousFileChannel异步文件通道</h4><h3 id="AIO"><a href="#AIO" class="headerlink" title="AIO"></a>AIO</h3><p>Java 异步 IO 提供了两种使用方式，分别是<strong>返回 Future 实例</strong>和<strong>使用回调函数</strong>。</p>
+<p><strong>返回Future实例</strong></p>
+<ul>
+<li><p><code>future.isDone();</code></p>
+<p>判断操作是否已经完成，包括了<strong>正常完成、异常抛出、取消</strong></p>
+</li>
+<li><p><code>future.cancel(true);</code></p>
+<p>取消操作，方式是中断。参数 true 说的是，即使这个任务正在执行，也会进行中断。</p>
+</li>
+<li><p><code>future.isCancelled();</code></p>
+<p>是否被取消，只有在任务正常结束之前被取消，这个方法才会返回 true</p>
+</li>
+<li><p><code>future.get();</code></p>
+<p>这是我们的老朋友，获取执行结果，阻塞。</p>
+</li>
+<li><p><code>future.get(10, TimeUnit.SECONDS);</code></p>
+<p>如果上面的 get() 方法的阻塞你不满意，那就设置个超时时间。</p>
+</li>
+</ul>
+<p><strong>提供 CompletionHandler 回调函数</strong></p>
+<p>用法</p>
+<blockquote>
+<p>注意，参数上有个 attachment，虽然不常用，我们可以在各个支持的方法中传递这个参数值</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">AsynchronousServerSocketChannel listener = AsynchronousServerSocketChannel.open().bind(<span class="keyword">null</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// accept 方法的第一个参数可以传递 attachment</span></span><br><span class="line">listener.accept(attachment, <span class="keyword">new</span> CompletionHandler&lt;AsynchronousSocketChannel, Object&gt;() &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">completed</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">      AsynchronousSocketChannel client, Object attachment)</span> </span>&#123;</span><br><span class="line">          <span class="comment">// </span></span><br><span class="line">      &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">failed</span><span class="params">(Throwable exc, Object attachment)</span> </span>&#123;</span><br><span class="line">          <span class="comment">// </span></span><br><span class="line">      &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="Channel-1"><a href="#Channel-1" class="headerlink" title="Channel"></a>Channel</h4><h5 id="AsynchronousFileChannel"><a href="#AsynchronousFileChannel" class="headerlink" title="AsynchronousFileChannel"></a><strong>AsynchronousFileChannel</strong></h5><p>AIO 的读写主要也还是与 Buffer 打交道，这个与 NIO 是一脉相承的。</p>
+<p>另外，还提供了用于将内存中的数据刷入到磁盘的方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">force</span><span class="params">(<span class="keyword">boolean</span> metaData)</span> <span class="keyword">throws</span> IOException</span>;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>因为我们对文件的写操作，操作系统并不会直接针对文件操作，系统会缓存，然后周期性地刷入到磁盘。如果希望将数据及时写入到磁盘中，以免断电引发部分数据丢失，可以调用此方法。参数如果设置为 true，意味着同时也将文件属性信息更新到磁盘。</p>
+</blockquote>
+<p>还有，还提供了对文件的锁定功能，我们可以锁定文件的部分数据，这样可以进行排他性的操作。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> Future&lt;FileLock&gt; <span class="title">lock</span><span class="params">(<span class="keyword">long</span> position, <span class="keyword">long</span> size, <span class="keyword">boolean</span> shared)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>position 是要锁定内容的开始位置，size 指示了要锁定的区域大小，shared 指示需要的是共享锁还是排他锁</p>
+</blockquote>
+<p><strong>注意: AsynchronousFileChannels 不属于 group</strong>。但是它们也是关联到一个线程池的，如果不指定，会使用系统默认的线程池，如果想要使用指定的线程池，可以在实例化的时候使用以下方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> AsynchronousFileChannel <span class="title">open</span><span class="params">(Path file,</span></span></span><br><span class="line"><span class="function"><span class="params">                                           Set&lt;? extends OpenOption&gt; options,</span></span></span><br><span class="line"><span class="function"><span class="params">                                           ExecutorService executor,</span></span></span><br><span class="line"><span class="function"><span class="params">                                           FileAttribute&lt;?&gt;... attrs)</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="AsynchronousServerSocketChannel"><a href="#AsynchronousServerSocketChannel" class="headerlink" title="AsynchronousServerSocketChannel"></a>AsynchronousServerSocketChannel</h5><h5 id="AsynchronousSocketChannel"><a href="#AsynchronousSocketChannel" class="headerlink" title="AsynchronousSocketChannel"></a>AsynchronousSocketChannel</h5><h5 id="Asynchronous-Channel-Groups"><a href="#Asynchronous-Channel-Groups" class="headerlink" title="Asynchronous Channel Groups"></a>Asynchronous Channel Groups</h5><blockquote>
+<p>异步 IO 一定存在一个线程池，这个线程池负责接收任务、处理 IO 事件、回调等。这个线程池就在 group 内部，group 一旦关闭，那么相应的线程池就会关闭。</p>
+<p>AsynchronousServerSocketChannels 和     AsynchronousSocketChannels 是属于 group 的，当我们调用 AsynchronousServerSocketChannel 或 AsynchronousSocketChannel 的 open() 方法的时候，相应的 channel 就属于默认的 group，这个 group 由 JVM 自动构造并管理。</p>
+</blockquote>
+<p>想要使用自己定义的 group，这样可以对其中的线程进行更多的控制，使用以下几个方法即可：</p>
+<ul>
+<li><code>AsynchronousChannelGroup.withCachedThreadPool(ExecutorService executor, int initialSize)</code></li>
+<li><code>AsynchronousChannelGroup.withFixedJava 非阻塞 IO 和异步 IOThreadPool(int nThreads, ThreadFactory threadFactory)</code></li>
+<li><code>AsynchronousChannelGroup.withThreadPool(ExecutorService executor)</code></li>
+</ul>
+<p><a href="https://javadoop.com/post/nio-and-aio" target="_blank" rel="noopener">Java 非阻塞 IO 和异步 IO</a></p>
+<h3 id="事件驱动模型和消息驱动模型"><a href="#事件驱动模型和消息驱动模型" class="headerlink" title="事件驱动模型和消息驱动模型"></a>事件驱动模型和消息驱动模型</h3><p>事件驱驱动架构由三个基本组件构成，事件、事件处理器、事件循环。事件产生后发送给事件循环，事件循环将每个事件分派给个各个事件处理器。事件A由处理器A处理，事件B将被处理器B处理。</p>
+<p>select</p>
+<p>poll</p>
+<p>epoll</p>
+<h2 id="Servlet"><a href="#Servlet" class="headerlink" title="Servlet"></a>Servlet</h2><h3 id="Web容器"><a href="#Web容器" class="headerlink" title="Web容器"></a>Web容器</h3><p><a href="https://blog.csdn.net/guzhangyu12345/article/details/91047750#servlet容器的启动过程" target="_blank" rel="noopener">servlet工作原理之tomcat篇</a></p>
+<blockquote>
+<p>Web容器是一种服务程序，给处于其中的应用程序组件提供环境，使其直接跟容器中的环境变量交互，不必关注其它系统问题。主要由应用服务器来实现，如Tomcat、JBoss、Weblogic、WebSphere等。</p>
+</blockquote>
+<p><strong>Servlet容器的主要任务是管理Servlet的生命周期，而Web容器主要任务是管理Web应用程序。</strong></p>
+<p>一个web应用对应一个context容器，添加一个应用时将会创建一个StandardContext容器，并且给这个context容器设置必要的参数，url和path分别代表这个应用在tomcat中的访问路径和这个应用实际的物理路径。其中最重要的一个配置是ContextConfig，这个类将会负责整个web应用配置的解析工作，最后将这个context容器加到父容器host中。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190606175306985.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2d1emhhbmd5dTEyMzQ1,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p><strong>servlet</strong></p>
+<p><img src="/2019/10/15/java-note/image010.jpg" alt="å¾ 5.Servlet é¡¶å±ç±»å³èå¾"></p>
+<ol>
+<li><p>抽象类<code>HttpServlet</code>继承抽象类<code>GenericServlet</code>，其有两个比较关键的方法，<code>doGet()</code>和<code>doPost()</code></p>
+</li>
+<li><p><code>GenericServlet</code>实现接口<code>Servlet</code>,<code>ServletConfig</code>,<code>Serializable</code></p>
+</li>
+<li><p><code>MyServlet</code>(用户自定义<code>Servlet</code>类)继承<code>HttpServlet</code>，重写抽象类<code>HttpServlet</code>的<code>doGet()</code>和<code>doPost()</code>方法</p>
+</li>
+</ol>
+<p>注：任何一个用户自定义<code>Servlet</code>，只需重写抽象类<code>HttpServlet</code>的<code>doPost()</code>和<code>doGet()</code>即可</p>
+<h3 id="容器中的执行过程"><a href="#容器中的执行过程" class="headerlink" title="容器中的执行过程"></a>容器中的执行过程</h3><p> Servlet只有放在容器中，方可执行，且Servlet容器种类较多，如Tomcat,WebLogic等。下图为简单的 请求响应 模型。</p>
+<p><img src="https://img2018.cnblogs.com/blog/1066923/201902/1066923-20190210235114200-2361046.png" alt="img"></p>
+<p>分析：</p>
+<p>1.浏览器向服务器发出GET请求(请求服务器ServletA)</p>
+<p>2.服务器上的容器逻辑接收到该url,根据该url判断为Servlet请求，此时容器逻辑将产生两个对象：请求对象(<code>HttpServletRequest</code>)和响应对象(<code>HttpServletResponce</code>)</p>
+<p>3.容器逻辑根据url找到目标Servlet(本示例目标Servlet为ServletA),且创建一个线程A</p>
+<p>4.容器逻辑将刚才创建的请求对象和响应对象传递给线程A</p>
+<p>5.容器逻辑调用Servlet的<code>service()</code>方法</p>
+<p>6.service()方法根据请求类型(本示例为GET请求)调用doGet()(本示例调用doGet())或doPost()方法</p>
+<p>7.doGet()执行完后，将结果返回给容器逻辑</p>
+<p>8.线程A被销毁或被放在线程池中</p>
+<p><strong>注意：</strong></p>
+<p><strong>1.在容器中的每个Servlet原则上只有一个实例</strong></p>
+<p><strong>2.每个请求对应一个线程</strong></p>
+<p><strong>3.多个线程可作用于同一个Servlet(这是造成Servlet线程不安全的根本原因)</strong></p>
+<p><strong>4.每个线程一旦执行完任务，就被销毁或放在线程池中等待回收</strong></p>
+<h3 id="在JavaWeb中扮演的角色"><a href="#在JavaWeb中扮演的角色" class="headerlink" title="在JavaWeb中扮演的角色"></a>在JavaWeb中扮演的角色</h3><blockquote>
+<p>Servlet在JavaWeb中，扮演两个角色：<strong>页面角色</strong>和<strong>控制器角色</strong>(更多)。</p>
+</blockquote>
+<h3 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h3><p><img src="/2019/10/15/java-note/image-20200219115839114.png" alt="image-20200219115839114"></p>
+<p>第一步：容器先加载<code>Servlet</code>类</p>
+<p>第二步：容器实例化<code>Servlet</code>(<code>Servlet</code>无参构造函数执行)</p>
+<p>第三步：执行<code>init()</code>方法（在Servlet生命周期中，只执行一次，且在<code>service()</code>方法执行前执行）</p>
+<p>第四步：执行<code>service()</code>方法，处理客户请求，<code>doPost()或doGet()</code></p>
+<p>第五步：执行<code>destroy()</code>，销毁线程</p>
+<h2 id="BigDecimal"><a href="#BigDecimal" class="headerlink" title="BigDecimal"></a>BigDecimal</h2><p> 保留两位小数的方法</p>
+<ul>
+<li>BigDecimal的setScal()方法</li>
+<li>System.out.println(“%2f”,a);</li>
+<li>NumberFormat</li>
+<li>DecimalFormat的format方法</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Format</span></span>&#123;</span><br><span class="line">    <span class="keyword">double</span> f = <span class="number">111231.5585</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">m1</span><span class="params">()</span></span>&#123;</span><br><span class="line">        BigDecimal bg  = <span class="keyword">new</span> BigDecimal(f);</span><br><span class="line">        <span class="keyword">double</span> f1 = bg.setScale(<span class="number">2</span>,BigDecimal.ROUND_HALF_UP).doubleValue();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">m2</span><span class="params">()</span></span>&#123;</span><br><span class="line">        DecimalFormat df = <span class="keyword">new</span> DecimalFormat(<span class="string">"#.00"</span>);</span><br><span class="line">        Sytem.out.println(df.format(f));</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">m3</span><span class="params">()</span></span>&#123;</span><br><span class="line">    	System.out.printlin(String.format()<span class="string">".%2f"</span>,f);</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">m4</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            NumberFormat nf = NumberFormat.getNumberInstance();</span><br><span class="line">            nf.setMaximumFractionDigits(<span class="number">2</span>);</span><br><span class="line">            System.out.println(nf.format(f));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>当<code>double</code>必须用作<code>BigDecimal</code>的源时，</strong>请使用<code>Double.toString(double)</code>转成String，然后`使用String构造方法，或使用BigDecimal的静态方法valueOf，如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        BigDecimal bDouble1 = BigDecimal.valueOf(<span class="number">2.3</span>);</span><br><span class="line">        BigDecimal bDouble2 = <span class="keyword">new</span> BigDecimal(Double.toString(<span class="number">2.3</span>));</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">"bDouble1="</span> + bDouble1);</span><br><span class="line">        System.out.println(<span class="string">"bDouble2="</span> + bDouble2);</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="四则运算"><a href="#四则运算" class="headerlink" title="四则运算"></a>四则运算</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> BigDecimal <span class="title">divide</span><span class="params">(BigDecimal divisor, <span class="keyword">int</span> scale, <span class="keyword">int</span> roundingMode)</span></span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">ROUND_CEILING    <span class="comment">//向正无穷方向舍入</span></span><br><span class="line"></span><br><span class="line">ROUND_DOWN    <span class="comment">//向零方向舍入</span></span><br><span class="line"></span><br><span class="line">ROUND_FLOOR    <span class="comment">//向负无穷方向舍入</span></span><br><span class="line"></span><br><span class="line">ROUND_HALF_DOWN    <span class="comment">//向（距离）最近的一边舍入，除非两边（的距离）是相等,如果是这样，向下舍入, 例如1.55 保留一位小数结果为1.5</span></span><br><span class="line"></span><br><span class="line">ROUND_HALF_EVEN    <span class="comment">//向（距离）最近的一边舍入，除非两边（的距离）是相等,如果是这样，如果保留位数是奇数，使用ROUND_HALF_UP，如果是偶数，使用ROUND_HALF_DOWN</span></span><br><span class="line"></span><br><span class="line">ROUND_HALF_UP    <span class="comment">//向（距离）最近的一边舍入，除非两边（的距离）是相等,如果是这样，向上舍入, 1.55保留一位小数结果为1.6</span></span><br><span class="line"></span><br><span class="line">ROUND_UNNECESSARY    <span class="comment">//计算结果是精确的，不需要舍入模式</span></span><br><span class="line"></span><br><span class="line">ROUND_UP    <span class="comment">//向远离0的方向舍入</span></span><br></pre></td></tr></table></figure>
+
+<p>(1)商业计算使用BigDecimal。</p>
+<p> (2)尽量使用参数类型为String的构造函数。</p>
+<p> (3) BigDecimal都是不可变的（immutable）的，在进行每一步运算时，都会产生一个新的对象，所以在做加减乘除运算时千万要保存操作后的值。</p>
+<h2 id="枚举"><a href="#枚举" class="headerlink" title="枚举"></a>枚举</h2><h3 id="EnumSet和EnumMap"><a href="#EnumSet和EnumMap" class="headerlink" title="EnumSet和EnumMap"></a>EnumSet和EnumMap</h3><p>EnumMap是专门为枚举类型量身定做的Map实现。虽然使用其它的Map实现（如HashMap）也能完成枚举类型实例到值得映射，但是使用EnumMap会更加高效：它只能接收同一枚举类型的实例作为键值，并且由于枚举类型实例的数量相对固定并且有限，所以EnumMap使用数组来存放与枚举类型对应的值。这使得EnumMap的效率非常高。EnumMap在内部使用枚举类型的ordinal()得到当前实例的声明次序，并使用这个次序维护枚举类型实例对应值在数组的位置。</p>
+<blockquote>
+<p>1、父类为AbstractMap，未实现Map接口，只实现了Cloneable和Serializable接口。<br> 2、非线程安全，所有方法和操作都未加锁。<br> 3、采用key数组和vals数组共同实现key和value的关联。<br> 4、不允许null key，但允许null value。<br> 5、null值会被转换为Object的NULL实例占位替换。<br> 6、元素的存储顺序按照枚举值的声明次序存储。</p>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div class="post-share">分享到：</div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/15/nat-topo/" rel="next" title="搭建一个防火墙nat拓扑">
+                <i class="fa fa-chevron-left"></i> 搭建一个防火墙nat拓扑
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/10/27/center-of-job/" rel="prev" title="就业中心凉面复盘">
+                就业中心凉面复盘 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -587,7 +2263,7 @@
                 <a href="/archives">
               
                   <span class="site-state-item-name">日志</span>
-				  <span class="site-state-item-count">46</span>
+				  <span class="site-state-item-count">47</span>
                 </a>
               </div>
             

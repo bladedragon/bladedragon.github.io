@@ -201,7 +201,7 @@
 
 
 
-  <title>Feel The Wind</title>
+  <title>高性能mysql学习笔记 | Feel The Wind</title>
   
 
 
@@ -221,8 +221,7 @@
     
   
 
-  <div class="container sidebar-position-right 
-  ">
+  <div class="container sidebar-position-right page-post-detail">
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><nav class="site-nav">
   
@@ -426,15 +425,576 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-  </section>
 
   
-  <nav class="pagination">
-    
-  </nav>
 
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-date">
+			<div class="post-month">09月</div>
+			<div class="post-day">18</div>
+	</div>
+  
+  <div class="post-badge">
+    
+      <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+        <a href="/categories/学习笔记/" itemprop="url" rel="index">
+          <span itemprop="name">学习笔记</span>
+        </a>
+      </span>
+    
+  </div>
+  
+
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://site.zblade.top/2019/09/18/mysql-h/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="陌花采撷">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="http://cdn.zblade.top/qiniu_img/zavatar2.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Feel The Wind">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">高性能mysql学习笔记</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-18T01:02:09+08:00">2019-09-18</time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/09/18/mysql-h/" class="leancloud_visitors" data-flag-title="高性能mysql学习笔记">
+               <span class="post-meta-divider"></span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">被</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+                 <span class="post-meta-item-text">人浏览</span>
+             </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="http://cdn.zblade.top/qiniu_img/wallhaven-g8dm6e.jpg" alt></p>
+<p>最近在看《高性能MySql》，感觉有些地方确实需要反复咀嚼才能真正领会，现在将内容总结了一下，方便以后二次阅读</p>
+<a id="more"></a>
+
+<p><a href="https://blog.csdn.net/suifeng3051/article/details/52669644" target="_blank" rel="noopener">数据库索引原理及优化</a></p>
+<h2 id="Mysql架构"><a href="#Mysql架构" class="headerlink" title="Mysql架构"></a>Mysql架构</h2><h3 id="MVCC"><a href="#MVCC" class="headerlink" title="MVCC"></a>MVCC</h3><p>为MVCC是行级锁的一个变种，但是它在很多情况下避免了加锁操作，因此开 销更低。虽然实现机制有所不同，但大都实现了非阻塞的读操作，写操作也只锁定必要的行。</p>
+<p>MVCC的实现,是通过保存数据在某个时间点的快照来实现的。也就是说，不管需要执行多长时间，每个事务看到的数据都是一致的。根据事务开始的时间不同，每个事务对同一张表，同一时刻看到的数据可能是不一样的</p>
+<h2 id="创建高性能索引"><a href="#创建高性能索引" class="headerlink" title="创建高性能索引"></a>创建高性能索引</h2><p>基础</p>
+<p>Mysql只能高效地使用最左前缀列</p>
+<h3 id="索引类型"><a href="#索引类型" class="headerlink" title="索引类型"></a>索引类型</h3><p>索引是在存储层实现的，不是在服务器层</p>
+<h4 id="B-Tree索引"><a href="#B-Tree索引" class="headerlink" title="B-Tree索引"></a>B-Tree索引</h4><p>默认索引，除了Archive不支持之外</p>
+<p>不同引擎使用的存储结构不同，NDB集群存储引擎使用T-Tree结构，innoDB使用B+Tree结构</p>
+<p>不同引擎使用性能也不同，MyISAM使用前缀压缩技术使索引更小，通过数据的物理位置引用被索引的列；InonDB按照原数据格式压缩存储，根据主键引用被索引的列</p>
+<blockquote>
+<p>B-Tree表示值都是按顺序存储，每一个叶子到根的距离相同</p>
+</blockquote>
+<p><img src="http://cdn.zblade.top/qiniu_img/1570244126303.png" alt></p>
+<p>查询从索引的根节点开始，根节点中存放的是指向叶子节点的指针</p>
+<p>叶子节点的指针指向被索引数据</p>
+<p>B-Tree索引适用于全键型、键值范围和键前缀查找中的最左前缀查找</p>
+<ul>
+<li><p>全值匹配</p>
+<p>与所有列进行匹配</p>
+</li>
+<li><p>最左前缀匹配</p>
+<p>只使用索引的第一列</p>
+</li>
+<li><p>列前缀匹配</p>
+<p>某列的开头部分</p>
+</li>
+<li><p>范围值匹配</p>
+</li>
+<li><p>精确匹配某一列并范围匹配另外一列</p>
+</li>
+<li><p>只访问索引的查询</p>
+<p>即覆盖查询</p>
+</li>
+<li><p>顺序查询，比如Order By</p>
+</li>
+</ul>
+<p>使用限制</p>
+<ul>
+<li>非最左匹配查询</li>
+<li>不能跳过索引的列</li>
+<li>如果存在某列的范围查询，右边所有列都无法使用索引优化查询</li>
+</ul>
+<h4 id="哈希索引"><a href="#哈希索引" class="headerlink" title="哈希索引"></a>哈希索引</h4><p>基于hash表实现，必须精确匹配才有效</p>
+<p>只有memory引擎显式支持且默认支持</p>
+<p><img src="http://cdn.zblade.top/qiniu_img/1570244148591.png" alt></p>
+<p>分为Slot槽和Value值</p>
+<p>查找方法：计算hash值-&gt;找到指向指针-&gt;查找数据行</p>
+<p>限制</p>
+<ul>
+<li>只包含hash值和指针，不存储字段值，所以必须读取数据行。不过内存访问行速度较快，可以不考虑</li>
+<li>索引数据不是按照索引值顺序存储，无法应用于排序</li>
+<li>不支持部分匹配索引</li>
+<li>只支持等值查询</li>
+<li>存在哈希冲突，即不同索引列值具有相同的哈希值，当存在哈希冲突的时候必须遍历链表中的所有行指针，逐行比较</li>
+<li>索引维护代价随着哈希冲突的增加越来越大</li>
+</ul>
+<p>InnDB存在自适应哈希索引，当判断出查找频繁的索引值时，在B-Tree的基础上再创建一个Hash索引</p>
+<blockquote>
+<p>可以创建自定义hash索引，进行伪hash索引，针对索引值较大时，但是必须保证索引值的唯一性</p>
+</blockquote>
+<h4 id="R-Tree空间索引"><a href="#R-Tree空间索引" class="headerlink" title="R-Tree空间索引"></a>R-Tree空间索引</h4><p>MyISAM引擎支持空间索引，用作地理位置存储</p>
+<h4 id="全文索引"><a href="#全文索引" class="headerlink" title="全文索引"></a>全文索引</h4><p>查找文本中的关键字</p>
+<p>…</p>
+<h3 id="索引的优点"><a href="#索引的优点" class="headerlink" title="索引的优点"></a>索引的优点</h3><ul>
+<li>减少服务器扫描数据量</li>
+<li>帮助服务器避免排序和临时表</li>
+<li>将随机IO变成3顺序IO</li>
+</ul>
+<p>三星原则</p>
+<ul>
+<li>索引是否将相关记录放在一起</li>
+<li>索引中的数据顺序和排序顺序一致</li>
+<li>包含查询中需要的全部列</li>
+</ul>
+<h3 id="高性能索引策略"><a href="#高性能索引策略" class="headerlink" title="高性能索引策略"></a>高性能索引策略</h3><h4 id="使用独立的列"><a href="#使用独立的列" class="headerlink" title="使用独立的列"></a>使用独立的列</h4><p>将索引列单独放在比较符号的一侧</p>
+<h4 id="前缀索引"><a href="#前缀索引" class="headerlink" title="前缀索引"></a>前缀索引</h4><p>使用前缀索引索引很长的字符串，能让索引更小更快但是Mysql无法使用前缀索引做ORDER BY和GROUP BY，也无法使用前缀索引做覆盖扫描</p>
+<p><strong>索引的选择性</strong>：不重复的索引值和数据表的记录总数的比值；唯一索引的选择性是1</p>
+<p>尽可能要让前缀索引的选择性和全值素银的选择性相匹配</p>
+<h4 id="多列索引"><a href="#多列索引" class="headerlink" title="多列索引"></a>多列索引</h4><p>出现合并索引（Using Union）意味着索引建立糟糕</p>
+<ul>
+<li>多个AND条件可以使用一个包含所有列的多列索引代替</li>
+<li>多个OR条件会消耗大量CPU和内存资源</li>
+</ul>
+<h4 id="选择合适顺序"><a href="#选择合适顺序" class="headerlink" title="选择合适顺序"></a>选择合适顺序</h4><p>一般思路：</p>
+<ol>
+<li><p>将选择性最高的列放在索引最前列（不需要考虑排序或分组时）</p>
+</li>
+<li><p><img src="http://cdn.zblade.top/qiniu_img/1570257036180.png" alt></p>
+<p>计算选择性，选择性低的放在最前面</p>
+</li>
+<li><p>注意具体情况，留心WHERE字句中的排序、分组和范围条件等因素对查询的影响</p>
+</li>
+</ol>
+<h4 id="聚簇索引"><a href="#聚簇索引" class="headerlink" title="聚簇索引"></a>聚簇索引</h4><p>聚簇索引是一种数据存储方式，不是索引类型</p>
+<p>InnoDB中竖数据行存放在索引的叶子页中，聚簇即数据行和相邻键值紧凑存储在一起</p>
+<p><img src="http://cdn.zblade.top/qiniu_img/1570257308095.png" alt></p>
+<p>优点</p>
+<ul>
+<li>数据访问更快</li>
+<li>使用覆盖索引扫扫描查询时可以直接使用主键值</li>
+<li>数据相关保存</li>
+</ul>
+<p>缺点</p>
+<ul>
+<li>数据放在内存就没有优势了</li>
+<li>插入速度依赖于插入顺序，按照主键插入最快</li>
+<li>更新聚簇索引列代价较高</li>
+<li>更新时存在列分裂的问题，即当页面插满的时候会将该页分裂容下该行，从而占用更多磁盘空间</li>
+<li>聚簇索引可能导致全表扫描变慢，尤其是行比较稀疏，或者由于页分裂导致数据存储不连续的时候</li>
+<li>二级索引（非聚簇索引）很大</li>
+<li>二级索引访问需要两次索引查找，因为二级索引节点保存的是行主键值而不是物理位置指向的指针</li>
+</ul>
+<h4 id="InnoDB和MyISAM的数据分布"><a href="#InnoDB和MyISAM的数据分布" class="headerlink" title="InnoDB和MyISAM的数据分布"></a>InnoDB和MyISAM的数据分布</h4><ul>
+<li>MyISAM更加简单，二级索引存放的是指针；InnoDB存放的索引的主键值</li>
+</ul>
+<h4 id="覆盖索引"><a href="#覆盖索引" class="headerlink" title="覆盖索引"></a>覆盖索引</h4><ul>
+<li>只读取索引即可以获取数据行，减少数据访问量；也更容易放入内存中</li>
+<li>索引是顺序存储的，适合IO密集型</li>
+<li>聚簇索引+覆盖索引比较高效</li>
+</ul>
+<p>无法执行覆盖索引的原因</p>
+<ul>
+<li>索引必须存索引列的值，mysql中一般只用B-Tree</li>
+<li>没有任何索引能覆盖这个查询</li>
+<li>不能使用LIKE操作</li>
+</ul>
+<p>改良方法</p>
+<ul>
+<li><p>使用延迟关联</p>
+<p><img src="http://cdn.zblade.top/qiniu_img/1570260614053.png" alt></p>
+</li>
+</ul>
+<h4 id="索引扫描作为排序"><a href="#索引扫描作为排序" class="headerlink" title="索引扫描作为排序"></a>索引扫描作为排序</h4><p>explain中type值为”index”说明使用索引扫描</p>
+<p>当索引的列顺序和ORDERBY子句顺序一致并且所以列的排序方向一样时，mysql才能使用索引做结果排序</p>
+<h4 id="压缩（前缀压缩）索引"><a href="#压缩（前缀压缩）索引" class="headerlink" title="压缩（前缀压缩）索引"></a>压缩（前缀压缩）索引</h4><p>MyISAM可以压缩索引大小</p>
+<p>方法</p>
+<ul>
+<li>先保存索引块的第一个值</li>
+<li>其他值和第一个值比较得到相同前缀的字节数和剩余的不通过后缀部分</li>
+</ul>
+<p>优势</p>
+<ul>
+<li>占用更小的空间</li>
+</ul>
+<p>缺点</p>
+<ul>
+<li>无法使用二分查找等，有些操作如倒序操作速度不行</li>
+<li>不适合CPU密集型应用</li>
+</ul>
+<h4 id="冗余和重复索引"><a href="#冗余和重复索引" class="headerlink" title="冗余和重复索引"></a>冗余和重复索引</h4><p>杜绝重复索引</p>
+<p>冗余索引出现情况</p>
+<ul>
+<li>需要扩展索引又要保证原索引性能不被影响</li>
+<li>注意索引越多维护成本越高</li>
+</ul>
+<h4 id="索引和锁"><a href="#索引和锁" class="headerlink" title="索引和锁"></a>索引和锁</h4><p>索引可以让査询锁定更少的行。</p>
+<p>InnoDB在二级索引上使用共享(读）锁，但访问主键索引需要排他（写）锁。这消除了使用覆盖索引的可能性，并且使得SELECT FOR UPDATE比LOCK IN SHARE MODE或非锁定査询要慢很多。</p>
+<h3 id="索引案例"><a href="#索引案例" class="headerlink" title="索引案例"></a>索引案例</h3><h4 id="支持多种过滤条件"><a href="#支持多种过滤条件" class="headerlink" title="支持多种过滤条件"></a>支持多种过滤条件</h4><ul>
+<li>字段选择少的放在前面</li>
+<li>范围查找的字段放在后面</li>
+</ul>
+<h4 id="避免多个范围查询"><a href="#避免多个范围查询" class="headerlink" title="避免多个范围查询"></a>避免多个范围查询</h4><p>范围列后面无法索引</p>
+<p>可以尝试将一个范围列变成等值列进行比较</p>
+<h4 id="优化排序"><a href="#优化排序" class="headerlink" title="优化排序"></a>优化排序</h4><ul>
+<li>使用延迟关联，通使用覆盖索引查询返回需要的主键，再根据这些主键关联原表获得需要的行</li>
+</ul>
+<p><img src="http://cdn.zblade.top/qiniu_img/1570265050077.png" alt></p>
+<h3 id="维护索引和表"><a href="#维护索引和表" class="headerlink" title="维护索引和表"></a>维护索引和表</h3><p>维护目的</p>
+<ul>
+<li>找到并修复损坏的表</li>
+<li>维护准确而的索引统计信息</li>
+<li>较少碎片</li>
+</ul>
+<h4 id="更新索引统计信息"><a href="#更新索引统计信息" class="headerlink" title="更新索引统计信息"></a>更新索引统计信息</h4><p>MySQL的查询优化器有两个API</p>
+<ul>
+<li>records_in_range()  InnoDB传入两个边界值得到估算值</li>
+<li>info() 返回个各种类型数据</li>
+</ul>
+<blockquote>
+<p>MySQL优化器使用的是基于成本的模型，而衡量成本的主要指标就是一个查询需要扫描多少行</p>
+</blockquote>
+<p><strong>ANALYZE TABLE：</strong>重新生成统计信息</p>
+<h4 id="减少索引和数据碎片"><a href="#减少索引和数据碎片" class="headerlink" title="减少索引和数据碎片"></a>减少索引和数据碎片</h4><p><strong>行碎片</strong></p>
+<p>这种碎片指的是数据行被存储为多个地方的多个片段中。即使査询只从索引中访问一行记录，行碎片也会导致性能下降。</p>
+<p><strong>行间碎片</strong></p>
+<p>行间碎片是指逻辑上顺序的页，或者行在磁盘上不是顺序存储的。行间碎片对诸如全表扫描和聚簇索引扫描之类的操作有很大的影响，因为这些操作原本能够从磁盘上顺序存储的数据中获益。</p>
+<p><strong>剩余空间碎片</strong></p>
+<p>剩余空间碎片是指数据页中有大量的空余空间。这会导致服务器读取大量不需要的数据，从而造成浪费。</p>
+<p><code>MylSAM</code>表，这三类碎片化都可能发生。但``InnoDB<code>不会出现短小的行碎片；</code>InnoDB`会移动短小的行并重写到一个片段中。</p>
+<p>解决方法</p>
+<ul>
+<li>OPTIMIZE TABLE或者导出再导入的方式来重新整理数据</li>
+<li>MylSAM引擎以通过排序算法重建索引的方式来消<br>除碎片</li>
+<li>InnoDB可以先删除，然后再重新创建索引的方式来消除索引的碎片化。</li>
+<li><code>mysql&gt; ALTER TABLE &lt;table&gt; ENGINE=&lt;efigiwe&gt;;</code></li>
+</ul>
+<p>总结</p>
+<h2 id="查询性能优化"><a href="#查询性能优化" class="headerlink" title="查询性能优化"></a>查询性能优化</h2><h3 id="为什么查询速度会变慢"><a href="#为什么查询速度会变慢" class="headerlink" title="为什么查询速度会变慢"></a>为什么查询速度会变慢</h3><p>查询的生命周期</p>
+<p>查询的时间花费</p>
+<h3 id="优化数据访问"><a href="#优化数据访问" class="headerlink" title="优化数据访问"></a>优化数据访问</h3><p>査询性能低下最基本的原因是访问的数据太多</p>
+<ol>
+<li>确认应用程序是否在检索大量超过需要的数据。这通常意味着访问了太多的行，但有时候也可能是访问了太多的列。</li>
+<li>确认MySQL服务器层是否在分析大量超过需要的数据行。</li>
+</ol>
+<p>举例</p>
+<ul>
+<li><p>查询不需要记录</p>
+<p>使用LIMIT限制查询数量</p>
+</li>
+<li><p>多表关联时返回全部列</p>
+</li>
+</ul>
+<ul>
+<li><p>总是取出全部列</p>
+</li>
+<li><p>重复查询相同的数据</p>
+</li>
+</ul>
+<h4 id="查看是否扫描额外的记录"><a href="#查看是否扫描额外的记录" class="headerlink" title="查看是否扫描额外的记录"></a>查看是否扫描额外的记录</h4><p>影响开销的三指标</p>
+<ul>
+<li>响应时间</li>
+<li>扫描行数</li>
+<li>返回行数</li>
+</ul>
+<p><strong>响应时间</strong></p>
+<p>由服务时间和排队时间组成</p>
+<p><strong>扫描行数</strong></p>
+<p>理想情况应该和返回行数相同</p>
+<p>访问类型</p>
+<ul>
+<li>全表扫描(最慢)</li>
+<li>索引扫描</li>
+<li>范围扫描</li>
+<li>唯一索引查询</li>
+<li>常数引用（最快）</li>
+</ul>
+<p>mysql使用where的方式</p>
+<ul>
+<li>在索引中使用where条件来过滤不匹配的记录。</li>
+<li>使用索引覆盖扫描返回记录</li>
+<li>从数据表中返回数据，然后过滤不满足条件的记录</li>
+</ul>
+<p>解决方案</p>
+<ul>
+<li>使用索引覆盖扫描</li>
+<li>改变库表结构</li>
+<li>重写查询</li>
+</ul>
+<h3 id="重构查询方式"><a href="#重构查询方式" class="headerlink" title="重构查询方式"></a>重构查询方式</h3><h4 id="切分查询"><a href="#切分查询" class="headerlink" title="切分查询"></a>切分查询</h4><p>按时清理数据</p>
+<p><img src="http://cdn.zblade.top/qiniu_img/1570278297049.png" alt></p>
+<h4 id="分解关联查询"><a href="#分解关联查询" class="headerlink" title="分解关联查询"></a>分解关联查询</h4><p><img src="http://cdn.zblade.top/qiniu_img/1570278403072.png" alt></p>
+<ul>
+<li>缓存效率更高</li>
+<li>执行单个查询时减少锁的竞争</li>
+<li>数据库的高性能和可扩展</li>
+</ul>
+<h3 id="查询执行"><a href="#查询执行" class="headerlink" title="查询执行"></a>查询执行</h3><h4 id="查询执行的过程"><a href="#查询执行的过程" class="headerlink" title="查询执行的过程"></a>查询执行的过程</h4><p><img src="http://cdn.zblade.top/qiniu_img/1570278487204.png" alt></p>
+<ol>
+<li>客户端发送一条査询给服务器。</li>
+<li>服务器先检査査询缓存，如果命中了缓存，则立刻返回存储在缓存中的结果。否则进入下一阶段。</li>
+<li>服务器端进行SQL解析、预处理，再由优化器生成对应的执行计划。</li>
+<li>MySQL根据优化器生成的执行计划，调用存储引擎的API来执行査询。</li>
+<li>将结果返回给客户端。</li>
+</ol>
+<h4 id="MySQL客户端-服务器通信协议"><a href="#MySQL客户端-服务器通信协议" class="headerlink" title="MySQL客户端/服务器通信协议"></a>MySQL客户端/服务器通信协议</h4><p>半双工，优点简单快速，缺点数据包越长性能越低</p>
+<p><strong>查询状态</strong></p>
+<p><strong>Sleep</strong><br>线程正在等待客户端发送新的请求。<br><strong>Query</strong><br>线程正在执行查询或者正在将结果发送给客户端。<br><strong>Locked</strong><br>在MySQL服务器层，该线程正在等待表锁。在存储引擎级别实现的锁，例如InnoDB的行锁，并不会体现在线程状态中。对于MylSAM来说这是一个比较典型的状态，但在其他没有行锁的引擎中也经常会出现。<br><strong>Analyzing and statistics</strong><br>线程正在收集存储引擎的统计信息，并生成査询的执行计划。<br><strong>Copying to tmp table [on disk]</strong><br>线程正在执行査询，并且将其结果集都复制到一个临时表中，这种状态一般要么是在做GROUP BY操作，要么是文件排序操作，或者是UNION操作。如果这个状态后面还有 “on disk”标记，那表示MySQL正在将一个内存临时表放到磁盘上。<br><strong>Sorting result</strong><br>线程正在对结果集进行排序。</p>
+<p><strong>Sending data</strong><br>这表示多种情况：线程可能在多个状态之间传送数据，或者在生成结果集，或者在向客户端返回数据。</p>
+<h4 id="查询优化处理"><a href="#查询优化处理" class="headerlink" title="查询优化处理"></a>查询优化处理</h4><p>解析SQL、预处理、优化SQL执行计划</p>
+<p><strong>语法解析器和预处理</strong></p>
+<p>通过关键字解析SQL生成一棵解析树，使用mysql的语法规则验证和解析查询</p>
+<p>预处理器根据MySQL规则进一步检查解析树是否合法，下一步还会验证权限</p>
+<p><strong>查询优化器</strong></p>
+<p>优化器将语法树转化成执行计划，其作用就是找到最合适的执行计划</p>
+<p>MySQL使用基于成本的优化，使用了复杂的优化策略</p>
+<p>优化策略</p>
+<ul>
+<li>静态优化：直接对解析树分析，完成优化</li>
+<li>动态优化：将WHERE转化 ，运行时优化，和查询的上下文有关</li>
+</ul>
+<p>MySQL对查询的静态优化只做一次，但是对动态优化则每次执行时都需要重新评估</p>
+<p><strong>能处理的优化类型</strong></p>
+<p>重新定义关联表的顺序</p>
+<p>外连接转化成内连接</p>
+<p>使用等价变换原则</p>
+<p>优化COUNT()、MIN()、MAX()</p>
+<p>预估并转化成常数表达式</p>
+<p>覆盖索引扫描</p>
+<p>子查询优化</p>
+<p>提前终止查询</p>
+<p>等值传播</p>
+<p>列表IN()的比较</p>
+<p>….</p>
+<p><strong>数据和索引的统计信息</strong></p>
+<p>统计信息由存储引擎实现，MySQL査询优化器在生成査询的执行计划时，需要向存储引擎获取相应的统计信息</p>
+<p><strong>执行计划</strong></p>
+<p>mysql是一棵左侧深度优先的树而不是平衡树</p>
+<p><img src="http://cdn.zblade.top/qiniu_img/1570292149269.png" alt></p>
+<p><strong>关联查询优化器</strong></p>
+<p>MySQL会选择合适的关联顺序让查询成本京可能降低</p>
+<p>但是等关联表的个数增加的时候，执行计划的搜索空间(需要检查的阶乘种关联顺序)增长迅速，此时优化器就会使用贪婪模式寻找最优关联顺序</p>
+<p><strong>排序优化</strong></p>
+<p>索引排序不起作用的时候MySQL需要自己进行排序，如果数据量小则在内存中进行，如果数据量大则需要使用磁盘，这个过程统一称为文件排序(<strong>filesort</strong>)</p>
+<p>排序算法</p>
+<ul>
+<li><p>两次传输排序</p>
+<p>读取行指针和需要排序的字段，对其进行排序，然后再根据排序结果读取所需要的数据行。</p>
+</li>
+<li><p>单次传输排序</p>
+<p>先读取査询所需要的所有列，然后再根据给定列进行排序，最后直接返回排序结果</p>
+</li>
+</ul>
+<h4 id="查询执行引擎"><a href="#查询执行引擎" class="headerlink" title="查询执行引擎"></a>查询执行引擎</h4><p>查询优化阶段每一个表创建了一个handler实例，优化器调用实例接口（``handler API`）获取表相关信息</p>
+<h4 id="返回结果"><a href="#返回结果" class="headerlink" title="返回结果"></a>返回结果</h4><ul>
+<li><p>即使不需要返回结果集，mysql任然会返沪查询的一些信息</p>
+</li>
+<li><p>查询如果可以别缓存，mysql也会在这个阶段将结果存放到查询缓存中</p>
+</li>
+<li><p>返回是一个增量、逐步返回的过程，好处是服务器无需存储大量洁后果，也不会因为要返回太多接轨而消耗大量内存；而且，客户端也呢个第一时间获得返回的结果</p>
+</li>
+<li></li>
+</ul>
+<h3 id="查询优化器的局限性"><a href="#查询优化器的局限性" class="headerlink" title="查询优化器的局限性"></a>查询优化器的局限性</h3><p><strong>关联子查询</strong></p>
+<p>MySQL会将相关的外层表压到子査询中，它认为这样可以更高效率地查找到数据行</p>
+<p><img src="http://cdn.zblade.top/qiniu_img/1570328865332.png" alt></p>
+<p>优化</p>
+<ul>
+<li><img src="http://cdn.zblade.top/qiniu_img/1570328883309.png" alt></li>
+<li>使用函数GR0UP_C0NCAT()在IN()中构造一个由逗号分隔的列表(性能不佳)</li>
+</ul>
+<ul>
+<li><p>等效改写</p>
+<p><img src="http://cdn.zblade.top/qiniu_img/1570328958854.png" alt></p>
+</li>
+</ul>
+<p>一般使用左外连接比子查询稍快</p>
+<p>去重时会产生临时中间表，此时子查询比关联更快</p>
+<p>具体问题具体分析</p>
+<h4 id="UNION限制"><a href="#UNION限制" class="headerlink" title="UNION限制"></a>UNION限制</h4><p>有时，MySQL无法将限制条件从外层“下推”到内层，这使得原本能够限制部分返回结果的条件无法应用到内层査询的优化上。</p>
+<h4 id="索引合并优化"><a href="#索引合并优化" class="headerlink" title="索引合并优化"></a>索引合并优化</h4><p>当WHERE子句中包含多个复杂条件的 时候，MySQL能够访问单个表的多个索引以合并和交叉过滤的方式来定位需要査找的行</p>
+<h4 id="等值传递"><a href="#等值传递" class="headerlink" title="等值传递"></a>等值传递</h4><p>例如，有一个非常大的IN()列表，而MySQL优化器发现存在WHERE、ON或者USING的子句，将这个列表的值和另一个表的某个列相关联。那么优化器会将IN()列表都复制应用到关联的各个表中。</p>
+<h4 id="并行执行"><a href="#并行执行" class="headerlink" title="并行执行"></a>并行执行</h4><p>MySQL无法并行执行查询</p>
+<h4 id="哈希关联"><a href="#哈希关联" class="headerlink" title="哈希关联"></a>哈希关联</h4><p>mysql不支持哈希关联，所有关联都是嵌套循环关联</p>
+<h4 id="松散索引扫描"><a href="#松散索引扫描" class="headerlink" title="松散索引扫描"></a>松散索引扫描</h4><p>MySQL不支持松散索引扫描，无法按照不连续的方式扫描一个索引</p>
+<h4 id="最大值和最小值优化"><a href="#最大值和最小值优化" class="headerlink" title="最大值和最小值优化"></a>最大值和最小值优化</h4><p>使用LIMIT重写查询，从而使得扫描记录数尽可能少</p>
+<h4 id="在同一张表上查询更新"><a href="#在同一张表上查询更新" class="headerlink" title="在同一张表上查询更新"></a>在同一张表上查询更新</h4><p>一般i情况MySQL不允许对哦同一张表同时进行查询和更新。</p>
+<p>但是可以通过生成表的形式绕过限制</p>
+<p><img src="http://cdn.zblade.top/qiniu_img/1570331815508.png" alt></p>
+<h3 id="查询优化器的提示"><a href="#查询优化器的提示" class="headerlink" title="查询优化器的提示"></a>查询优化器的提示</h3><p>略</p>
+<h3 id="优化特定类型的查询"><a href="#优化特定类型的查询" class="headerlink" title="优化特定类型的查询"></a>优化特定类型的查询</h3><h4 id="优化COUNT-查询"><a href="#优化COUNT-查询" class="headerlink" title="优化COUNT()查询"></a>优化COUNT()查询</h4><p><code>COUNT()</code>：</p>
+<ul>
+<li>它可以统计某个列值的数量，也可以统计行数。在统计列值时要求列值是非空的（不统计NULL)。如果在C0UNT()的括号中指定了列或者列的表达式，则统计的就是这个表达式有值的结果数</li>
+<li>另一个作用是统计结果集的行数。当MySQL确认括号内的表达式值不可能为空时，实际上就是在统计行数</li>
+</ul>
+<p>MylSAM的C0UNTO函数总是非常快，不过这是有前提条件的，即只有没有任何WHERE条件的COUNT(*)才非常快</p>
+<p><strong>优化策略</strong></p>
+<ul>
+<li>使用近似值</li>
+<li>索引覆盖扫描</li>
+</ul>
+<h4 id="优化关联查询"><a href="#优化关联查询" class="headerlink" title="优化关联查询"></a>优化关联查询</h4><ul>
+<li>确保ON或者USING子句中的列上有索引</li>
+<li><strong>确保任何的GROUP BY和ORDER BY中的表达式只涉及到一个表中的列，这样MySQL才有可能使用索引来优化这个过程。</strong></li>
+</ul>
+<h4 id="优化GROUP-BY和DISTINCT"><a href="#优化GROUP-BY和DISTINCT" class="headerlink" title="优化GROUP BY和DISTINCT"></a>优化GROUP BY和DISTINCT</h4><p>无法使用索引的时候，Group BY使用两种策略完成</p>
+<ul>
+<li>使用临时表</li>
+<li>使用文件排序进行分组</li>
+</ul>
+<p>在分组査询的SELECT中直接使用非分组列通常导致结果是不定的，当索引改变，或者优化器选择不同的优化策略时都可能导致结果不一样</p>
+<p>如果没有通过ORDER BY子句显式地指定排序列，当査询使用<code>GROUP BY</code>子句的时候，<strong>结果集会自动按照分组的字段进行排序</strong>。如果不关心结果集的顺序，而这种默认排序又导致了需要文件排序，则可以使用<code>ORDER BY NULL</code>,让MySQL不再进行文件排序。也可以在<code>GROUP BY</code>子句中直接使用<code>DESC</code>或者<code>ASC</code>关键字，使分组的结果集按需要的方向排序</p>
+<h4 id="优化GROUP-BY-WITH-ROLLUP"><a href="#优化GROUP-BY-WITH-ROLLUP" class="headerlink" title="优化GROUP BY WITH ROLLUP"></a>优化GROUP BY WITH ROLLUP</h4><p>尽可能将该功能转移到应用程序中</p>
+<h4 id="优化LIMIT分页"><a href="#优化LIMIT分页" class="headerlink" title="优化LIMIT分页"></a>优化LIMIT分页</h4><ul>
+<li>尽可能地使用索引覆盖扫描</li>
+<li>做一次关联操作再返回所需的列（关联延迟）</li>
+<li>利用offset记录上次查询点直接向下查询</li>
+</ul>
+<p><img src="http://cdn.zblade.top/qiniu_img/1570335148560.png" alt></p>
+<h4 id="优化-SQL-CALC-FOUND-ROWS"><a href="#优化-SQL-CALC-FOUND-ROWS" class="headerlink" title="优化 SQL_CALC_FOUND_ROWS"></a>优化 SQL_CALC_FOUND_ROWS</h4><p>分页的时候，另一个常用的技巧是在LIMFT语句中加上``SQL_CALC_FOUND_ROWS`提示(hint)，这样就可以获得去掉LIMIT以后满足条件的行数，因此可以作为分页的总数</p>
+<p>另一种做法是先获取并缓存较多的数据，然后每次分页从缓存中获取</p>
+<h4 id="优化UNION查询"><a href="#优化UNION查询" class="headerlink" title="优化UNION查询"></a>优化UNION查询</h4><p>否则就一定要使用UNION ALL,这一点很重要。如果没有ALL关键字，MySQL会给临时表加上DISTINCT选项，这会导致对整个临时表的数据做唯一性检査。这样做的代价非常高。</p>
+<h4 id="静态查询分析"><a href="#静态查询分析" class="headerlink" title="静态查询分析"></a>静态查询分析</h4><h4 id="使用用户自定义变量"><a href="#使用用户自定义变量" class="headerlink" title="使用用户自定义变量"></a>使用用户自定义变量</h4><p>不能使用的情况</p>
+<ul>
+<li>使用自定义变量的査询，无法使用査询缓存。</li>
+<li>不能在使用常量或者标识符的地方使用自定义变量,例如表名、列名和LIMIT子句中。</li>
+<li>用户自定义变量的生命周期是在一个连接中有效，所以不能用它们来做连接间的通信。</li>
+<li>如果使用连接池或者持久化连接，自定义变量可能让看起来毫无关系的代码发生交互（如果是这样，通常是代码bug或者连接池bug,这类情况确实可能发生）。</li>
+<li>在5.0之前的版本，是大小写敏感的，所以要注意代码在不同MySQL版本间的兼容性问题。</li>
+<li>不能显式地声明自定义变量的类型。确定未定义变量的具体类型的时机在不同</li>
+<li>MySQL版本中也可能不一样。如果你希望变量是整数类型，那么最好在初始化的时候就赋值为0,如果希望是浮点型则赋值为0.0,如果希望是字符串则赋值为”，用&lt;M户自定义变量的类型在赋值的时候会改变。MySQL的用户自定义变量是一个动态<br>类型。</li>
+<li>MySQL优化器在某些场景下可能会将这些变量优化掉，这可能导致代码不按预想的方式运行。</li>
+<li>赋值的顺序和赋值的时间点并不总是固定的，这依赖于优化器的决定。实际情况可能很让人困惑，后面我们将看到这一点。</li>
+<li>赋值符号：=的优先级非常低，所以需要注意，赋值表达式应该使用明确的括号。</li>
+<li>使用未定义变量不会产生任何语法错误，如果没有意识到这一点，非常容易犯错。</li>
+</ul>
+<h3 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h3><h4 id="队列表"><a href="#队列表" class="headerlink" title="队列表"></a>队列表</h4><h4 id="计算两点之间距离"><a href="#计算两点之间距离" class="headerlink" title="计算两点之间距离"></a>计算两点之间距离</h4><h4 id="使用用户自定义的函数"><a href="#使用用户自定义的函数" class="headerlink" title="使用用户自定义的函数"></a>使用用户自定义的函数</h4><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p><img src="http://cdn.zblade.top/qiniu_img/1570511358318.jpeg" alt></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div class="post-share">分享到：</div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数据库/" rel="tag"># 数据库</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/10/collection2/" rel="next" title="List类知识点总结">
+                <i class="fa fa-chevron-left"></i> List类知识点总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/09/18/test/" rel="prev" title="markdown常用格式测试">
+                markdown常用格式测试 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -582,7 +1142,7 @@
                 <a href="/archives">
               
                   <span class="site-state-item-name">日志</span>
-				  <span class="site-state-item-count">46</span>
+				  <span class="site-state-item-count">47</span>
                 </a>
               </div>
             

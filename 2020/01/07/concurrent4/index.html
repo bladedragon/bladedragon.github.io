@@ -191,7 +191,7 @@
 
 
 
-  <title>Feel The Wind</title>
+  <title>线程间通信 | Feel The Wind</title>
   
 
 
@@ -211,8 +211,7 @@
     
   
 
-  <div class="container sidebar-position-right 
-  ">
+  <div class="container sidebar-position-right page-post-detail">
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><nav class="site-nav">
   
@@ -416,15 +415,291 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-  </section>
 
   
-  <nav class="pagination">
-    
-  </nav>
 
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-date">
+			<div class="post-month">01月</div>
+			<div class="post-day">07</div>
+	</div>
+  
+  <div class="post-badge">
+    
+      <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+        <a href="/categories/学习笔记/" itemprop="url" rel="index">
+          <span itemprop="name">学习笔记</span>
+        </a>
+      </span>
+    
+  </div>
+  
+
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://site.zblade.top/2020/01/07/concurrent4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="陌花采撷">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="http://cdn.zblade.top/qiniu_img/zavatar2.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Feel The Wind">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">线程间通信</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-07T19:02:21+08:00">2020-01-07</time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2020/01/07/concurrent4/" class="leancloud_visitors" data-flag-title="线程间通信">
+               <span class="post-meta-divider"></span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">被</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+                 <span class="post-meta-item-text">人浏览</span>
+             </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Java并发编程基础"><a href="#Java并发编程基础" class="headerlink" title="Java并发编程基础"></a>Java并发编程基础</h1><p>《并发编程的艺术》阅读笔记第四章，重点在于线程间的通信</p>
+<p><img src="http://cdn.zblade.top/qiniu_img/wallhaven-lqz9jr.jpg" alt></p>
+<a id="more"></a>
+
+<h2 id="一、线程简介"><a href="#一、线程简介" class="headerlink" title="一、线程简介"></a>一、线程简介</h2><p>首先对线程做一个简单的介绍</p>
+<p>使用多线程的原因：</p>
+<pre><code>1.更多的处理器核心：一个线程在一个时刻只能运行在一个处理器核心上
+2.更快的响应时间
+3.更好的编程模型</code></pre><p>JAVA程序运行所需线程（jdk1.8）</p>
+<p><img src="/2020/01/07/concurrent4/image-20200107210932356.png" alt="JAVA程序运行所需线程（jdk1.8）"></p>
+<p><strong>线程优先级</strong></p>
+<blockquote>
+<p>操作系统基本采用<strong>时分</strong>的形式调度运行的线程，操作系统会分出一个个时间片，线程会分配到若干时间片，当线程的时间片用完了就会发生线程调度，并等待着下次分配，线程分配到的时间片多少就决定了线程使用处理器资源的多少。</p>
+<p><strong>有些操作系统会忽略对线程优先级的设定</strong></p>
+</blockquote>
+<p>在Java线程中，通过一个整型成员变量<code>priority</code>来控制优先级，优先级的范围从<code>1~10</code>，在线程构建的时候可以通过<code>setPriority(int)</code>方法来修改优先级，默认优先级是<code>5</code>，优先级高的线程分配时间片的数量要多于优先级低的线程</p>
+<p><strong>线程的状态</strong></p>
+<p><code>6</code>种，在给定的时刻只能处于一种状态</p>
+<ul>
+<li><code>NEW</code>：初始状态，线程被构建，但还没有调用start方法</li>
+<li><code>RUNNABLE</code>：运行状态，java线程将==就绪和运行==两种状态统称为运行状态</li>
+<li>``BLOCKED`：阻塞状态，表明线程阻塞于锁</li>
+<li><code>WAITING</code>：等待状态，等待其他线程的通知或中断</li>
+<li><code>TIME_WAITING</code>：超时等待状态，可以在指定的时间自行返回</li>
+<li><code>TERMINATED</code>：终止状态，表示当前线程已经执行完毕</li>
+</ul>
+<p><img src="/2020/01/07/concurrent4/image-20200107211424804.png" alt="image-20200107211424804"></p>
+<p><strong>线程状态变迁</strong></p>
+<p><img src="/2020/01/07/concurrent4/image-20200108101032180.png" alt="image-20200108101032180"></p>
+<blockquote>
+<p>Java将操作系统中的运行和就绪两个状态合并称为==运行状态==。</p>
+<p>==阻塞状态==是线程阻塞在进入<code>synchronized</code>关键字修饰的方法或代码块（获取锁）时的状态</p>
+<p>但是==阻塞==在<code>java.concurrent</code>包中Lock接口的线程状态却是等待状态，因为<code>java.concurrent</code>包中Lock接口对于阻塞的实现均使用了<code>LockSupport</code>类中的相关方法</p>
+</blockquote>
+<p><strong>Daemon线程（守护线程）</strong></p>
+<blockquote>
+<p>指在程序运行的时候在后台提供一种通用服务的线程，比如垃圾回收线程。不属于程序中不可或缺的部分。</p>
+</blockquote>
+<p>当一个java虚拟机中不存在非守护线程时，虚拟机将会退出。可以通过设置<code>Thread.setDaemon(true)</code>将线程设置为daemon线程，<strong>必须在线程启动前设置</strong></p>
+<p>ps. 在构建Daemon线程时，不能依靠finally块中的内容来确保执行关闭或清理资源的逻辑,可能不执行</p>
+<h2 id="二、启动和终止线程"><a href="#二、启动和终止线程" class="headerlink" title="二、启动和终止线程"></a>二、启动和终止线程</h2><p>一个新构造的线程对象是==由其父线程==来进行空间分配的，而子线程的各种属性==继承自父线程，同时还会分配一个唯一的ID。==</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">看Thread.init()源码</span><br><span class="line">jdk1.8的源码中添加了很多关于ThreadGroup的判断操作</span><br><span class="line">估计是对线程的安全性和异常情况做了更完善的区分</span><br></pre></td></tr></table></figure>
+
+<p><strong>启动线程：</strong>start方法：当前线程同步告知虚拟机：只要线程规划器空闲，应立即启动调用start方法的线程，==最好在线程创建之前设置线程名称，有利于排查错误==</p>
+<p><strong>中断：</strong></p>
+<p>可以理解为线程的一个标识符属性，它标识一个运行中的线程是否被其他线程进行了中断操作。是一种简便的线程间交互方式。<br>线程通过<code>isInterrupted（）</code>方法判断是否被中断，也可以调用静态方法<code>Thread.interrupted()</code>对当前的线程中断标识位进行复位。</p>
+<pre><code>从java的API可以看出，许多声明抛出InterruptedException的方法在抛出这个异常前，java虚拟机会先将该线程的中断标志位清除，然后再抛异常。此时调用isInterrupted返回false</code></pre><ul>
+<li>当线程处于等待状态或者有超时的等待状态时（<code>TIMED_WAITING</code>，<code>WAITING</code>）我们可以通过调用线程的<code>·interrupt()</code>方法来中断线程的等待，此时线程会抛<code>InterruptedException</code>异常。</li>
+<li>但是当线程处于<code>BLOCKED</code>状态或者<code>RUNNABLE</code>（<code>RUNNING</code>）状态时，调用线程的<code>interrupt()</code>方法也只能将线程的状态位设置为<code>true</code>。停止线程的逻辑需要我们自己去实现。</li>
+</ul>
+<p><strong>过期API</strong>:<code>suspend()</code>,<code>resume()</code>,<code>stop()</code></p>
+<p>原因：占有资源的时候容易发生死锁问题，让线程共工作在不确定状态下</p>
+<p><strong>终止线程的做法</strong>:一种方法可以使用<code>interrupt()</code>方法，或者利用一个boolean变量将线程终止，使线程在终止时有机会去清理资源</p>
+<h2 id="三、线程间通信（重点）"><a href="#三、线程间通信（重点）" class="headerlink" title="三、线程间通信（重点）"></a>三、线程间通信（重点）</h2><h3 id="1、volatile和synchronized关键字"><a href="#1、volatile和synchronized关键字" class="headerlink" title="1、volatile和synchronized关键字"></a>1、volatile和synchronized关键字</h3><pre><code>volatile:告知程序任何对该变量的访问均需要从共享内存中获取，而对他的改变必须同步刷新回主内存，他能保证所有线程对变量访问的可见性。
+synchronized：确保多个线程在同一个时刻，只能有一个线程处于方法或同步块中，保证了线程对变量访问的可见性和排他性。不能保证重排序</code></pre><p>关于<code>synchronized</code>：本质是对一个对象的监视器（<code>monitor</code>）的获取，而这个获取过程是<strong>排他</strong>的，也就是同一时刻只能有一个线程获取到有<code>synchronized</code>所保护对象的监视器。任意一个对象都拥有自己的监视器。</p>
+<p><img src="/2020/01/07/concurrent4/image-20200108120155233.png" alt="image-20200108120155233"></p>
+<blockquote>
+<p>任意线程对Object的访问，首先要获得Object的监视器。如果获取失败，线程进入同步队列，线程状态变为<code>BLOCKED</code>。当访问Object的前驱（获得了锁的线程）释放了锁，则该释放操作唤醒阻塞在同步队列中的线程，使其重新尝试对监视器的获取。</p>
+</blockquote>
+<h3 id="2、等待-通知机制（生产者-消费者模型）"><a href="#2、等待-通知机制（生产者-消费者模型）" class="headerlink" title="2、等待/通知机制（生产者-消费者模型）"></a>2、等待/通知机制（生产者-消费者模型）</h3><blockquote>
+<p>等待/通知机制，是指一个线程A调用了对象O的<code>wait</code>方法进入等待状态，而另一个线程B调用了对象O的<code>notify</code>或<code>notifyall</code>方法，线程A收到通知后从对象O的<code>wait</code>方法返回，进而执行后续操作。</p>
+</blockquote>
+<p><img src="/2020/01/07/concurrent4/image-20200108120905668.png" alt="image-20200108120905668"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">此处的代码示例失效，wait线程没有正常被唤醒，也没有发生重排序</span><br><span class="line">原因时因为获取的锁不是同一个锁，因此导致无法正常解锁和加锁，需要把同步的对象设置为public static确保获得对象是同一个</span><br><span class="line">///示例不是这个问题，是因为一开始没有wait...、😂</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://blog.csdn.net/xssl_CSDN/article/details/78822868" target="_blank" rel="noopener">notify无法正常唤醒wait方法的问题</a></p>
+<p><strong>注意：</strong> </p>
+<p>（1）使用<code>wait</code>、<code>notify</code>、<code>notifyAll</code>时需要先对调用对象加锁</p>
+<p>（2）调用wait方法后，线程状态由<code>RUNNING</code>变为<code>WAITING</code>，并将当前线程防止到对象的等待队列</p>
+<p>（3）<code>notify</code>或<code>notifyAll</code>方法调用后，等待线程依旧不会从<code>wait</code>返回，需要调用<code>notify</code>或<code>notifyAll</code>的线程释放锁之后，等待线程才有机会从<code>wait</code>返回</p>
+<p>（4）<code>notify</code>方法将等待队列中的等待线程从等待队列中移到同步队列中，被移动的线程从<code>WAITING</code>变为<code>BLOCKED</code></p>
+<p>（5）从<code>wait</code>方法返回的前提是获得了调用对象的锁</p>
+<p><img src="/2020/01/07/concurrent4/image-20200108155848206.png" alt="image-20200108155848206"></p>
+<h3 id="3、等待-通知经典范式"><a href="#3、等待-通知经典范式" class="headerlink" title="3、等待/通知经典范式"></a>3、等待/通知经典范式</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">等待方：1.获取对象的锁</span><br><span class="line">       2.如果条件不满足，那么调用对象的wait方法，被通知后仍要检查条件</span><br><span class="line">       3.条件满足则执行对应的逻辑</span><br><span class="line">        伪代码：</span><br><span class="line">               synchronized(对象)&#123;</span><br><span class="line">                    while(条件不满足)&#123;</span><br><span class="line">                        对象.wait();</span><br><span class="line">                    &#125;</span><br><span class="line">                    对应的处理逻辑</span><br><span class="line">               &#125;</span><br><span class="line"></span><br><span class="line">通知方：1.获得对象的锁</span><br><span class="line">        2.改变条件</span><br><span class="line">       3.通知所有等待在对象上的线程</span><br><span class="line">       伪代码：</span><br><span class="line">               synchronized(对象)&#123;</span><br><span class="line">                    改变条件</span><br><span class="line">                    对象.notify();</span><br><span class="line">               &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4、管道输入输出流"><a href="#4、管道输入输出流" class="headerlink" title="4、管道输入输出流"></a>4、管道输入输出流</h3><blockquote>
+<p>管道输入/输出流和 普通的文件输入/输出流 或者 网络输入/输出流 不同之处在于，<strong>它主要用于线程之间的数据传输，而传输的媒介为内存</strong></p>
+</blockquote>
+<p><code>PipedOutputStream</code>、<code>PipedInputStream</code>(面向字节数据)</p>
+<p><code>PipedReader</code>、<code>PipedWriter</code>(面向字符)</p>
+<p>对于<code>piped</code>类型的流，使用时必须先调用<code>connect</code>方法进行绑定，否则会抛出异常</p>
+<p>管道输入缓冲区大小默认1024字节</p>
+<p><a href="https://www.cnblogs.com/skywang12345/p/io_04.html" target="_blank" rel="noopener">管道的详细解析</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">写示例代码的注意事项：</span><br><span class="line">1. write写入 read读出</span><br><span class="line">2. 打印的时候用的是System.out.print 而不是 System.out.prineln.后者会最后加回车</span><br></pre></td></tr></table></figure>
+
+<h3 id="5、Thread-join"><a href="#5、Thread-join" class="headerlink" title="5、Thread.join()"></a>5、Thread.join()</h3><p>含义：当前线程等待thread线程终止之后才从<code>thread.join</code>返回。<br>另外还有两个<code>join(long millis)</code>和<code>join(long millis,int nanos)</code>具备==超时特性==的方法（如果线程在给定的时间内没有终止，那么将会从该超时方法返回）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">join()等价于wait(0)，只要等指定线程锁释放就可以抢占锁</span><br><span class="line">如果指定时间后，就需要指定时间之后才能重新拥有锁（wait加参数本质上还是定时调用notify()方法，只是这段代码在JVM里面，比较底层）</span><br><span class="line">join如果加参数，第一次代表按照参数设置wait唤醒时间，之后循环检测线程活性，如果线程始终存活，才开始传入设置值和当前时间的差值</span><br></pre></td></tr></table></figure>
+
+<h3 id="6、ThreadLocal"><a href="#6、ThreadLocal" class="headerlink" title="6、ThreadLocal"></a>6、ThreadLocal</h3><blockquote>
+<p>ThreadLocal，即线程变量，是一个以ThreadLocal对象为键、任意对象为值的存储结构。这个结构被附带在线程上，也就是说一个线程可以根据一个ThreadLocal对象查询到绑定在这个线程上的一个值。</p>
+</blockquote>
+<p>是一个线程安全的局部变量</p>
+<h2 id="四、应用实例"><a href="#四、应用实例" class="headerlink" title="四、应用实例"></a>四、应用实例</h2><h3 id="一、等待超时模式"><a href="#一、等待超时模式" class="headerlink" title="一、等待超时模式"></a>一、等待超时模式</h3><blockquote>
+<p>调用一个方法时等待一段时间（一般来说是给定一个时间段），如果该方法能够在给定的时间段之内得到结果，那么将结果立刻返回，反之，超时返回默认结果。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> Object <span class="title">get</span><span class="params">(<span class="keyword">long</span> mills)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">	<span class="keyword">long</span> future = System.currentTimeMillis() + mills;</span><br><span class="line">	<span class="keyword">long</span> remaining = mills;</span><br><span class="line">	<span class="comment">// 当超时大于0并且result返回值不满足要求</span></span><br><span class="line">	<span class="keyword">while</span> ((result == <span class="keyword">null</span>) &amp;&amp; remaining &gt; <span class="number">0</span>) &#123;</span><br><span class="line">		wait(remaining);</span><br><span class="line">    	remaining = future - System.currentTimeMillis();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>典型案例：数据库连接池模式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">源码略</span><br></pre></td></tr></table></figure>
+
+<p>CountDownLatch：</p>
+<ul>
+<li>countDownLatch这个类使一个线程等待其他线程各自执行完毕后再执行。</li>
+<li>是通过一个计数器来实现的，计数器的初始值是线程的数量。每当一个线程执行完毕后，计数器的值就-1，当计数器的值为0时，表示所有线程都执行完毕，然后在闭锁上等待的线程就可以恢复工作了。</li>
+</ul>
+<h4 id="二、线程池技术"><a href="#二、线程池技术" class="headerlink" title="二、线程池技术"></a>二、线程池技术</h4><blockquote>
+<p>客户端可以通过execute(Job)方法将Job提交入线程池执行，而客户端自身不用等待Job的执行完成。除了execute(Job)方法以外，线程池接口提供了增大/减少工作者线程以及关闭线程池的方法。</p>
+<p>这里工作者线程代表着一个重复执行Job的线程，而每个由客户端提交的Job都将进入到一个工作队列中等待工作者线程的处理。</p>
+<p>线程池的本质就是使用了一个线程安全的工作队列连接工作者线程和客户端线程，客户端线程将任务放入工作队列后便返回，而工作者线程则不断地从工作队列上取出工作并执行</p>
+</blockquote>
+<p>典型案例：实现一个web服务器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">源码略</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div class="post-share">分享到：</div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+            <a href="/tags/高并发/" rel="tag"># 高并发</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/01/05/year-end-summery/" rel="next" title="2019年终总结">
+                <i class="fa fa-chevron-left"></i> 2019年终总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/01/09/concurrent5/" rel="prev" title="java中的锁">
+                java中的锁 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -572,7 +847,7 @@
                 <a href="/archives">
               
                   <span class="site-state-item-name">日志</span>
-				  <span class="site-state-item-count">46</span>
+				  <span class="site-state-item-count">47</span>
                 </a>
               </div>
             

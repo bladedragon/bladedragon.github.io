@@ -204,7 +204,7 @@
 
 
 
-  <title>Feel The Wind</title>
+  <title>搭建一个关灯神器 | Feel The Wind</title>
   
 
 
@@ -224,8 +224,7 @@
     
   
 
-  <div class="container sidebar-position-right 
-  ">
+  <div class="container sidebar-position-right page-post-detail">
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><nav class="site-nav">
   
@@ -429,15 +428,251 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-  </section>
 
   
-  <nav class="pagination">
-    
-  </nav>
 
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-date">
+			<div class="post-month">11月</div>
+			<div class="post-day">21</div>
+	</div>
+  
+  <div class="post-badge">
+    
+      <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+        <a href="/categories/一如既往，只是日常/" itemprop="url" rel="index">
+          <span itemprop="name">一如既往，只是日常</span>
+        </a>
+      </span>
+    
+  </div>
+  
+
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://site.zblade.top/2021/11/21/smart-switch/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="陌花采撷">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="http://cdn.zblade.top/qiniu_img/zavatar2.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Feel The Wind">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">搭建一个关灯神器</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-11-21T13:10:23+08:00">2021-11-21</time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2021/11/21/smart-switch/" class="leancloud_visitors" data-flag-title="搭建一个关灯神器">
+               <span class="post-meta-divider"></span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">被</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+                 <span class="post-meta-item-text">人浏览</span>
+             </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="/2021/11/21/smart-switch/89968294_p0.jpg" alt="89968294_p0"></p>
+<p>自从租房之后，生活环境发生了很大的变化。其实大部分的变化我尚且还算满意，但每当晚上躺在床上玩手机的时候，当困意袭来时，心里总是非常郁闷：我在这边，灯的开关在床的那边。没办法，只得再度下床关灯，再摸黑爬上床——此时睡意早已消失（大哭</p>
+<p>于是，我想到了关灯神器——远程操控开关关灯。</p>
+<a id="more"></a>
+
+<hr>
+<h2 id="方案设计"><a href="#方案设计" class="headerlink" title="方案设计"></a>方案设计</h2><p>因为只是想做一个解放双手的小玩具，自然没有打算做的非常复杂。鉴于家里的开关设计（如下图），只需要一个可以通电左右摇摆的舵机即可，给予一定的电信号，就物理控制开关上下拨动</p>
+<p><img src="/2021/11/21/smart-switch/u=2165159047,3614293207&fm=26&fmt=auto-16375971964056.jpeg" alt="img"></p>
+<p>方案很简单，只需要一块单片机和一个舵机就可以，考虑到拨动开关所需的强度，如果开关很硬可以考虑提供额外的电源供电来保持舵机输出功率。好在家里的开关还算听话（勉强刚刚好，鬼知道我调整了多少次角度和高度），这次就不额外添加配件了。</p>
+<p>参考B站的诸多”关灯神器”<a href="https://www.bilibili.com/video/BV1W3411y7PU/?spm_id_from=333.788.recommend_more_video.3" target="_blank" rel="noopener">视频</a>, 这里单片机选用了esp8266，类似下图</p>
+<p><img src="/2021/11/21/smart-switch/O1CN01vkRl1M29DcaqAmXTW_!!699018034.jpg" alt="img"></p>
+<p>舵机则是使用了<code>sg90</code>：</p>
+<p><img src="/2021/11/21/smart-switch/O1CN01p2GPB51OVDsOM7YnL_!!361121710.jpg" alt="img"></p>
+<p>总成本不到20元…</p>
+<p>(Ps:网上淘宝现成的开关神器换个马甲，多装个模块就能卖百来块…可见其中的利润空间，咱们理工男可不能被这种骗了钱去~)</p>
+<p>剩下就是控制方案</p>
+<p>常见的必然是手机app控制，这里必须借助第三方提供，自己写app也不是不可以，主要是不想徒增学习成本（说白了还是懒😂），连接方法有蓝牙、WiFi，这里可以看自己的开发板需求。</p>
+<h2 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h2><p>既然搞定了方案，接下来进行实践环节！</p>
+<h3 id="硬件实现"><a href="#硬件实现" class="headerlink" title="硬件实现"></a>硬件实现</h3><p>硬件方面很简单，注意看卖家给的引脚图不要插错即可。</p>
+<p><img src="/2021/11/21/smart-switch/image-20211122002407365.png" alt="image-20211122002407365"></p>
+<p><img src="/2021/11/21/smart-switch/image-20211122002447280.png" alt="image-20211122002447280"></p>
+<p>注意观察，如果发现线序不对，可能需要自己拆下舵机的线材固定器更改线序。运气很好，我买的不需要，就直接插上连PC就行了</p>
+<h3 id="软件实现"><a href="#软件实现" class="headerlink" title="软件实现"></a>软件实现</h3><p>这里需要用到软件和安装包如下</p>
+<p><img src="/2021/11/21/smart-switch/image-20211122003055867.png" alt="image-20211122003055867"></p>
+<ol>
+<li>8266开发板的配置包</li>
+<li>开发板开发软件</li>
+<li>blink电灯科技第三方应用的适配库文件</li>
+<li>COM串口驱动</li>
+</ol>
+<h4 id="安装arduino"><a href="#安装arduino" class="headerlink" title="安装arduino"></a>安装arduino</h4><p>首先安装arduino，直接无脑next即可</p>
+<p>安装完成后打开arduino，界面如图：</p>
+<p><img src="/2021/11/21/smart-switch/image-20211122003443664.png" alt="image-20211122003443664"></p>
+<h4 id="导入ESP8266配置包"><a href="#导入ESP8266配置包" class="headerlink" title="导入ESP8266配置包"></a>导入ESP8266配置包</h4><p>首先打开Arduino IDE菜单 &gt; 文件 &gt;首选项，在 <strong>附加开发板管理器网址</strong> 输入框中，填入以下网址：<code>https://www.arduino.cn/package_esp8266com_index.json</code> </p>
+<p><img src="/2021/11/21/smart-switch/image-20211122003558865.png" alt="image-20211122003558865"></p>
+<p>然后点击文件夹中的配置包：</p>
+<img src="/2021/11/21/smart-switch/image-20211122003654491.png" alt="image-20211122003654491" style="zoom:25%;">
+
+<p>导入配置。</p>
+<h4 id="安装三方库文件"><a href="#安装三方库文件" class="headerlink" title="安装三方库文件"></a>安装三方库文件</h4><p><img src="/2021/11/21/smart-switch/image-20211122003953235.png" alt="image-20211122003953235"></p>
+<p>添加库中添加<code>blinker-library-0.3.80210803.zip</code></p>
+<h4 id="配置开发板"><a href="#配置开发板" class="headerlink" title="配置开发板"></a>配置开发板</h4><p>接下来新建文件-&gt; 保存一下 -&gt;如下图配置开发板信息</p>
+<p><img src="/2021/11/21/smart-switch/image-20211122003807420.png" alt="image-20211122003807420"></p>
+<p>如果没有<code>8266</code>开发选项，如下图，搜索<code>8266</code>，安装上图对应<code>module</code></p>
+<p><img src="/2021/11/21/smart-switch/image-20211122004307352.png" alt="image-20211122004307352"></p>
+<p>接下来就是编写代码,这边已经提供好了一个模板</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> BLINKER_WIFI</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> BLINKER_MIOT_LIGHT</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;Blinker.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;Servo.h&gt;</span></span></span><br><span class="line"></span><br><span class="line">Servo myservo;<span class="comment">//定义舵机</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">char</span> auth[] = <span class="string">"xxxxxxxx"</span>;  <span class="comment">//点灯Key</span></span><br><span class="line"><span class="keyword">char</span> ssid[] = <span class="string">"SELF-WIFI"</span>;      <span class="comment">//wifi名称</span></span><br><span class="line"><span class="keyword">char</span> pswd[] = <span class="string">"password"</span>;     <span class="comment">//wifi密码</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 新建组件对象，注意这里的名称要和电灯科技app里保持一致</span></span><br><span class="line"><span class="function">BlinkerButton <span class="title">Button1</span><span class="params">(<span class="string">"test"</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> counter = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//注意如果接入小爱同学，其监听的就是这个电源事件</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">miotPowerState</span><span class="params">(<span class="keyword">const</span> String &amp; state)</span><span class="comment">//电源类操作</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    BLINKER_LOG(<span class="string">"need set power state: "</span>, state);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (state == BLINKER_CMD_ON) &#123;</span><br><span class="line">      </span><br><span class="line">        myservo.write(<span class="number">150</span>);<span class="comment">//收到“on”的指令后舵机旋转150度</span></span><br><span class="line">        BlinkerMIOT.powerState(<span class="string">"on"</span>);</span><br><span class="line">        BlinkerMIOT.print();<span class="comment">//反馈状态</span></span><br><span class="line">        delay(<span class="number">1000</span>);<span class="comment">//延时1秒</span></span><br><span class="line">        myservo.write(<span class="number">90</span>);<span class="comment">//舵机归零，回到垂直状态</span></span><br><span class="line">         </span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (state == BLINKER_CMD_OFF) &#123;</span><br><span class="line">      </span><br><span class="line">         myservo.write(<span class="number">30</span>);            <span class="comment">//舵机偏转30°</span></span><br><span class="line">         BlinkerMIOT.powerState(<span class="string">"off"</span>);</span><br><span class="line">         BlinkerMIOT.print();</span><br><span class="line">         delay(<span class="number">1000</span>);</span><br><span class="line">         myservo.write(<span class="number">90</span>);</span><br><span class="line">         </span><br><span class="line">      </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 按下按键即会执行该函数</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">button1_callback</span><span class="params">(<span class="keyword">const</span> String &amp; state)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    BLINKER_LOG(<span class="string">"get button state: "</span>, state);</span><br><span class="line">    <span class="keyword">if</span> (state==<span class="string">"on"</span>) </span><br><span class="line">    &#123;</span><br><span class="line">        myservo.write(<span class="number">170</span>);<span class="comment">//收到“on”的指令后舵机旋转150</span></span><br><span class="line">        delay(<span class="number">1000</span>);<span class="comment">//延时</span></span><br><span class="line">        myservo.write(<span class="number">90</span>);<span class="comment">//舵机归零垂直</span></span><br><span class="line">         </span><br><span class="line">        </span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span>(state==<span class="string">"press"</span>||state==<span class="string">"tap"</span>)</span><br><span class="line">    &#123;</span><br><span class="line">       myservo.write(<span class="number">10</span>);<span class="comment">//长按开关按键后舵机旋转10</span></span><br><span class="line">       delay(<span class="number">1000</span>);<span class="comment">//延时</span></span><br><span class="line">       myservo.write(<span class="number">90</span>);<span class="comment">//舵机归零垂直(90度)</span></span><br><span class="line">    &#125;</span><br><span class="line">        </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 如果未绑定的组件被触发，则会执行其中内容</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">dataRead</span><span class="params">(<span class="keyword">const</span> String &amp; data)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    BLINKER_LOG(<span class="string">"Blinker readString: "</span>, data);</span><br><span class="line">    counter++;</span><br><span class="line"> </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">setup</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 初始化串口</span></span><br><span class="line">    Serial.begin(<span class="number">115200</span>);</span><br><span class="line">    BLINKER_DEBUG.stream(Serial);</span><br><span class="line">    <span class="comment">// 初始化舵机</span></span><br><span class="line">    myservo.attach(<span class="number">2</span>);<span class="comment">//舵机的IO口，nodemcu的D4口</span></span><br><span class="line">    myservo.write(<span class="number">90</span>);<span class="comment">//上电时舵机归零垂直</span></span><br><span class="line">  BlinkerMIOT.attachPowerState(miotPowerState);</span><br><span class="line">  </span><br><span class="line">    <span class="comment">// 初始化blinker</span></span><br><span class="line">    Blinker.begin(auth, ssid, pswd);</span><br><span class="line">    Blinker.attachData(dataRead);</span><br><span class="line"></span><br><span class="line">    Button1.attach(button1_callback);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">loop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    BLINKER_LOG(<span class="string">"Blinked running..."</span>);</span><br><span class="line">    Blinker.run();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接下来，只需要点击左上角编译通过就完成了。</p>
+<p>如果编译没有问题，接下来就需要将程序上传到开发板上。首先注意下图端口，经过之前安装com端口驱动，理论上这边端口可以正常显示</p>
+<p><img src="/2021/11/21/smart-switch/image-20211122221850553.png" alt="image-20211122221850553"></p>
+<p>如果不能，查看设备管理器看是否端口正常显示。</p>
+<p><img src="/2021/11/21/smart-switch/image-20211122221934991.png" alt="image-20211122221934991"></p>
+<h3 id="安装APP"><a href="#安装APP" class="headerlink" title="安装APP"></a>安装APP</h3><p>还记得代码里的<code>key</code>吗？接下来就是下载电灯科技APP并申请<code>key</code></p>
+<p><img src="/2021/11/21/smart-switch/image-20211122223606482.png" alt="image-20211122223606482"></p>
+<p>一般应用市场都有，如果没有的话可以去<a href="https://www.diandeng.tech/home" target="_blank" rel="noopener">官网</a>下.</p>
+<h4 id="注册设备"><a href="#注册设备" class="headerlink" title="注册设备"></a>注册设备</h4><p>下载并注册点灯科技账号之后，在右上角加号-&gt;独立设备-&gt; 网络接入</p>
+<p><img src="/2021/11/21/smart-switch/image-20211122223926556.png" alt="image-20211122223926556"></p>
+<p>一般推荐阿里云 接入，但是我目前的版本只能接入点灯科技服务，实测无论是控制还是接入小爱同学都没有影响，这里就看大家选择。</p>
+<p><img src="/2021/11/21/smart-switch/image-20211122224104935-16375920710875.png" alt="image-20211122224104935"></p>
+<p>完成设备注册后如上图所示，这时你会获取一个<code>key</code>，填入代码中即可。</p>
+<h4 id="开发界面"><a href="#开发界面" class="headerlink" title="开发界面"></a>开发界面</h4><p>这里大家就可以按照代码中发信指引自己制作开关界面。我这边在网上找到一份简单的界面配置文件</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;¨config¨&#123;¨headerColor¨¨transparent¨¨headerStyle¨¨dark¨¨background¨&#123;¨img¨¨assets/img/headerbg.jpg¨¨isFull¨«&#125;&#125;¨dashboard¨|&#123;¨type¨¨btn¨¨ico¨¨fad fa-lightbulb-on¨¨mode¨Ê¨t0¨¨开灯¨¨t1¨¨文本2¨¨bg¨Ì¨cols¨Í¨rows¨Í¨key¨¨test¨´x´Ë´y´Ì¨speech¨|÷¨cus¨¨on¨¨lstyle¨Ë¨clr¨¨#076EEF¨&#125;&#123;ßAßBßC¨fad fa-lightbulb¨ßEÉßF¨关灯¨ßHßIßJÌßKÍßLÍßMßN´x´Ë´y´ÑßO|÷ßRËßSßT&#125;&#123;ßA¨deb¨ßEÉßJÉßKÑßLÌßM¨debug¨´x´É´y´¤D&#125;÷¨actions¨|¦¨cmd¨¦¨switch¨‡¨text¨‡ßQ¨打开?name¨¨off¨¨关闭?name¨—÷¨triggers¨|&#123;¨source¨ßa¨source_zh¨¨开关状态¨¨state¨|ßQßd÷¨state_zh¨|¨打开¨¨关闭¨÷&#125;÷&#125;</span><br></pre></td></tr></table></figure>
+
+<p>将这份文件导入到配置信息即可。（上面的乱码是真的（汗））</p>
+<p>导入后配置如下：</p>
+<p><img src="/2021/11/21/smart-switch/image-20211122231307946.png" alt="image-20211122231307946"></p>
+<p>接下来就可以自己操控查看配置情况了。</p>
+<h2 id="接入小爱同学"><a href="#接入小爱同学" class="headerlink" title="接入小爱同学"></a>接入小爱同学</h2><p>接入小爱同学其实很简单，就看第三方服务方提不提供支持</p>
+<p>米家-&gt;接入其他设备-&gt;点灯科技-&gt;同步配置即可</p>
+<h2 id="设备安装"><a href="#设备安装" class="headerlink" title="设备安装"></a>设备安装</h2><p>这一步在实际操作中反倒是最难的，因为每个人情况不同，按钮的强度也不一样，我一开始还是非常担心舵机的功率可能不足以拨动开关的。实际上确实在尝试了很多角度之后总是无法成功实现。</p>
+<p>曾经尝试过给舵机扇叶进行延长增大接触面积，但是这些方案最终没有一个很好的实现。最后我尝试回归起点，通过垫高舵机，使得扇叶和开关产生一定的间隔，这样在扇叶旋转的时候，会有一个惯性辅助用力。接着使用纸板和502将舵机固定，并用透明胶在外层进行二次辅助固定，最终总算实现了开关的正常拨动（虽然有的时候还是不太灵敏）</p>
+<p>最终实现图如下：</p>
+<p><img src="/2021/11/21/smart-switch/E7SKR8UK$16%60M55RVC%5D9E7.jpg" alt="img"></p>
+<h2 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h2><p>这里给出一个<a href="https://www.bilibili.com/video/BV1K44y1Y7uK/" target="_blank" rel="noopener">链接</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div class="post-share">分享到：</div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/单片机/" rel="tag"># 单片机</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/11/07/jvm-commands/" rel="next" title="JVM调试的一次经历">
+                <i class="fa fa-chevron-left"></i> JVM调试的一次经历
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/11/21/nvmfirst/" rel="prev" title="nvm安装记录">
+                nvm安装记录 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -585,7 +820,7 @@
                 <a href="/archives">
               
                   <span class="site-state-item-name">日志</span>
-				  <span class="site-state-item-count">46</span>
+				  <span class="site-state-item-count">47</span>
                 </a>
               </div>
             

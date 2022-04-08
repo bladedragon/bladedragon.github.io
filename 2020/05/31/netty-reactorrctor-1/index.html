@@ -188,7 +188,7 @@
 
 
 
-  <title>Feel The Wind</title>
+  <title>netty_reactor线程模型 | Feel The Wind</title>
   
 
 
@@ -208,8 +208,7 @@
     
   
 
-  <div class="container sidebar-position-right 
-  ">
+  <div class="container sidebar-position-right page-post-detail">
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><nav class="site-nav">
   
@@ -413,15 +412,335 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-  </section>
 
   
-  <nav class="pagination">
-    
-  </nav>
 
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-date">
+			<div class="post-month">05月</div>
+			<div class="post-day">31</div>
+	</div>
+  
+  <div class="post-badge">
+    
+      <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+        <a href="/categories/技术探索/" itemprop="url" rel="index">
+          <span itemprop="name">技术探索</span>
+        </a>
+      </span>
+    
+  </div>
+  
+
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://site.zblade.top/2020/05/31/netty-reactorrctor-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="陌花采撷">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="http://cdn.zblade.top/qiniu_img/zavatar2.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Feel The Wind">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">netty_reactor线程模型</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-31T16:13:22+08:00">2020-05-31</time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2020/05/31/netty-reactorrctor-1/" class="leancloud_visitors" data-flag-title="netty_reactor线程模型">
+               <span class="post-meta-divider"></span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">被</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+                 <span class="post-meta-item-text">人浏览</span>
+             </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="http://cdn.zblade.top/qiniu_img/1587564658461.jpeg" alt></p>
+<p><code>Netty</code>是一个封装了<code>JAVA NIO</code>的异步网络应用框架，它简化了我们网络编程，同时保证了高可用和高性能，因此我认为学习<code>netty</code>对以后深入一些RPC框架，或者接触一些网络通信都大有裨益。</p>
+<p>今天就是想从源码角度学习一下<code>netty</code>的<code>reactor</code>线程模型，这应该是<code>netty</code>的核心之一，整篇文章包含的只是我作为一个初学者的粗浅见解，同时也借鉴了大量的博客文章，因此对部分内容认识不够深入，或者存在逻辑不通的情况，希望能够谅解。</p>
+<a id="more"></a>
+
+<h2 id="Reactor简介"><a href="#Reactor简介" class="headerlink" title="Reactor简介"></a>Reactor简介</h2><p>在接触<code>netty</code>之前，首先先介绍一些基础知识，让我们了解一下什么是<code>Reactor</code>模式</p>
+<p>维基百科的解读如下</p>
+<blockquote>
+<p>The reactor design pattern is an <strong>event handling pattern</strong> for handling service requests delivered <strong>concurrently</strong> to a service handler by <strong>one or more inputs</strong>. The service handler then <strong>demultiplexes</strong> the incoming requests and dispatches them synchronously to the associated request handlers.</p>
+</blockquote>
+<p>翻译总结主要有这么几点</p>
+<blockquote>
+<ul>
+<li>reactor是一种事件驱动的设计模式</li>
+<li>reactor可以同步地接受多个输入源</li>
+<li>reactor以多路复用的模式分发多个请求到对应的处理器上去</li>
+</ul>
+</blockquote>
+<p>让我们拿实际情景做例子。</p>
+<p>在传统<code>BIO</code>中，一旦遇到多个事件请求并发，事件监听器只会将后面的线程阻塞，等到当前线程处理结束后才能继续进行监听接受后续请求，这样会大大降低吞吐量，增大系统的负载，在高并发的场景下容易造成明显的数据延迟。</p>
+<p>因此在<code>NIO</code>中将耗时的<code>IO</code>处理操作和请求的监听接受分离开来，由一个线程专门监听事件请求，当接受一个请求后再开启一条线程专门处理<code>IO</code>请求，从而主线程不阻塞，达到了非阻塞。</p>
+<p>至此，<code>Reactor</code>的基本架构已经出来了，在上述文字中已经隐含了<code>Reactor</code>的三种基础角色：</p>
+<blockquote>
+<ul>
+<li><strong>Reactor</strong> 将I/O事件分派给对应的Handler</li>
+<li><strong>Acceptor</strong> 处理客户端新连接，并分派请求到处理器链中</li>
+<li><strong>Handlers</strong> 执行非阻塞读/写 任务</li>
+</ul>
+</blockquote>
+<p>经典的<code>reactor</code>线程模型如图所示，</p>
+<p><img src="https://oscimg.oschina.net/oscnet/e9f813b5b08ac68021039ae5141c03f3cfc.jpg" alt="img"></p>
+<p>但是这只是最初级的架构，针对具体复杂的场景，还需要做出诸多优化，比如构建处理<code>IO</code>请求的线程池、将监听事件和分发事件进一步解耦、进一步减少资源开销等，这些在这里就不再展开了。</p>
+<p><code>netty</code>中核心的<code>reactor</code>线程模型就是一个相对更成熟和高性能的模型，它的架构更像是下图，是一个多<code>reactor</code>多线程的模型。</p>
+<p>其中<code>mainReactor</code> 主要是用来处理网络<code>IO</code> 连接建立操作，通常一个线程就可以处理，而<code>subReactor</code>主要做和建立起来的<code>socket</code>做数据交互和事件业务处理操作，它的个数上一般是和<code>CPU</code>个数等同，每个<code>subReactor</code>一个线程来处理。</p>
+<p><img src="https://oscimg.oschina.net/oscnet/7ea7f4beb7b3c1d1c87d7b9e3bab8b6afb4.jpg" alt="img"></p>
+<p>关于<code>reactor</code>模式的暂时就介绍这么多了，其实关于事件的处理还有其他的处理模式。在<code>Douglas Schmidt</code>的作品《POSA2》中提到了有四种事件处理模式:</p>
+<blockquote>
+<ol>
+<li><strong>Reactor</strong>　　</li>
+<li><strong>Proactor</strong>　　</li>
+<li><strong>Asynchronous Completion Token</strong>　　</li>
+<li><strong>Acceptor-Connector</strong></li>
+</ol>
+</blockquote>
+<p>这些以后有时间再研究，今天就先专注<code>netty</code>的事件处理</p>
+<h2 id="Reacor线程的启动和创建"><a href="#Reacor线程的启动和创建" class="headerlink" title="Reacor线程的启动和创建"></a>Reacor线程的启动和创建</h2><p>得益于<code>netty</code>良好的封装，使得我们只要接触过<code>netty</code>，相信都能直接感受其中<code>reactor</code>模式的存在，下面给一个简单的<code>netty</code>服务端的启动<code>demo</code> <mark><strong>(本人环境 netty-all-4.1.48 )</strong></mark>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NettyServer</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">int</span> PORT = <span class="number">8000</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//netty的启动引导类</span></span><br><span class="line">        ServerBootstrap serverBootstrap = <span class="keyword">new</span> ServerBootstrap();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//绑定线程组，这时我们今天重点关注对象</span></span><br><span class="line">        NioEventLoopGroup boss = <span class="keyword">new</span> NioEventLoopGroup();</span><br><span class="line">        NioEventLoopGroup worker = <span class="keyword">new</span> NioEventLoopGroup();</span><br><span class="line">        <span class="comment">//在引导类中配置相关选项，这些暂时不要去在意它</span></span><br><span class="line">        serverBootstrap</span><br><span class="line">                .group(boss,worker)</span><br><span class="line">                .option(ChannelOption.TCP_NODELAY,<span class="keyword">true</span>)</span><br><span class="line">                .option(ChannelOption.SO_BACKLOG,<span class="number">1024</span>)</span><br><span class="line">                .option(ChannelOption.SO_KEEPALIVE,<span class="keyword">true</span>)</span><br><span class="line">                .channel(NioServerSocketChannel.class)</span><br><span class="line">                <span class="comment">//添加事件处理类，就是reactor中的handler角色</span></span><br><span class="line">                .childHandler(<span class="keyword">new</span> ChannelInitializer&lt;NioSocketChannel&gt;() &#123;</span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">initChannel</span><span class="params">(NioSocketChannel ch)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line"></span><br><span class="line">                        ch.pipeline().addLast(<span class="keyword">new</span> EchoHandler());</span><br><span class="line"></span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;).bind(port);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中最重要的就是<code>NioEventLoopGroup</code>，因为在这里我们创建了事件的监听和分发器。那什么是<code>NioEventLoopGroup</code>呢？通过词义可以看到词根是<code>EventLoop</code>, 在<code>Js</code>中我们知道<code>Eventloop</code>就是<code>Js</code>的运行机制，是通过单线程循环调度处理事件，这其实也和<code>reactor</code>模式中用单线程监听接受事件非常相似，那再<code>netty</code>中是否就是这个意思呢？让我们先往下看</p>
+<h3 id="NioEventLoopGroup"><a href="#NioEventLoopGroup" class="headerlink" title="NioEventLoopGroup"></a>NioEventLoopGroup</h3><p>因此,现在就让我们扒一扒<code>NioEventLoopGroup</code>的源码，看看里面做了什么。首先进入<code>NioEventLoopGroup</code>，发现它继承了<code>MultithreadEventLoopGroup</code>，先不急看父类，看一下它的构造函数：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NioEventLoopGroup</span> <span class="keyword">extends</span> <span class="title">MultithreadEventLoopGroup</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">NioEventLoopGroup</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">//...省略中间若干个构造函数</span></span><br><span class="line"><span class="comment">//从第一个无参构造函数开始，发现最终到达了这个构造函数</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">NioEventLoopGroup</span><span class="params">(...)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(nThreads, executor, <span class="keyword">new</span> Object[]&#123;selectorProvider, selectStrategyFactory, RejectedExecutionHandlers.reject()&#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//...省略其他</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>观察一下其中的传入参数,其中大部分参数都被设置了默认值</p>
+<ul>
+<li><code>nThreads</code> ：表示线程池中的线程数，<mark>注意这里的线程并非是我们常见的线程，大家先这个thread看成是某个实体，接下来会揭晓这个实体是什么</mark></li>
+<li><code>executor</code>: 传入的线程池实例，这个暂时不表，只要知道是给上述那个实体用的</li>
+<li><code>selectorProvider</code>:  我们需要通过它来实例化 JDK 的 <code>Selector</code>，也就是说那个实体持有selector</li>
+<li><code>selectStrategyFactory</code> ：关于<code>selector</code>如何<code>select</code>的策略，之后等揭晓了这个实体之后会做出解答</li>
+</ul>
+<p>其他参数</p>
+<ul>
+<li><code>chooserFactory</code>： 选择从线程池中选择线程（那个实体）的策略</li>
+<li><code>rejectedExecutionHandler</code>： 线程池中出现拒绝执行时的策略, <code>netty</code>的默认拒绝策略是抛出异常</li>
+</ul>
+<p>接下里我们进入父类查看构造方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> DEFAULT_EVENT_LOOP_THREADS = Math.max(<span class="number">1</span>, 	SystemPropertyUtil.getInt(<span class="string">"io.netty.eventLoopThreads"</span>, NettyRuntime.availableProcessors() * <span class="number">2</span>));</span><br><span class="line"><span class="comment">//看到nThreads如果没有被设置过就被初始化成核心数*2</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="title">MultithreadEventLoopGroup</span><span class="params">(<span class="keyword">int</span> nThreads, ThreadFactory threadFactory, Object... args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(nThreads == <span class="number">0</span> ? DEFAULT_EVENT_LOOP_THREADS : nThreads, threadFactory, args);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>继续进入父类查看</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//进入下面的构造方法</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="title">MultithreadEventExecutorGroup</span><span class="params">(<span class="keyword">int</span> nThreads, ThreadFactory threadFactory, Object... args)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(nThreads, (Executor)(threadFactory == <span class="keyword">null</span> ? <span class="keyword">null</span> : <span class="keyword">new</span> ThreadPerTaskExecutor(threadFactory)), args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="title">MultithreadEventExecutorGroup</span><span class="params">(<span class="keyword">int</span> nThreads, Executor executor, Object... args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(nThreads, executor, DefaultEventExecutorChooserFactory.INSTANCE, args);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>到这里<code>MultithreadEventExecutorGroup</code>会先设置一个<code>ThreadPerTaskExecutor</code>，就是上面所说的<code>executor</code></p>
+<p>再设置一个<code>chooserFactory</code>，用来实现在线程池中选择线程的选择策略，这部分代码比较简单，就不贴出来了</p>
+<p>接着<code>this()</code>就会进入正式配置的构造方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="title">MultithreadEventExecutorGroup</span><span class="params">(<span class="keyword">int</span> nThreads, Executor executor, EventExecutorChooserFactory chooserFactory, Object... args)</span> </span>&#123;</span><br><span class="line">		<span class="comment">//....</span></span><br><span class="line">    	<span class="comment">//将所有child实例化</span></span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nThreads; ++i) &#123;</span><br><span class="line">        <span class="keyword">boolean</span> success = <span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">boolean</span> var18 = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">         <span class="keyword">try</span> &#123;</span><br><span class="line">            var18 = <span class="keyword">true</span>;</span><br><span class="line">            <span class="comment">//注意这里，构造了一个线程池数组</span></span><br><span class="line">            <span class="keyword">this</span>.children = <span class="keyword">new</span> EventExecutor[nThreads];</span><br><span class="line"></span><br><span class="line">            <span class="keyword">int</span> j;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nThreads; ++i) &#123;</span><br><span class="line">                <span class="keyword">boolean</span> success = <span class="keyword">false</span>;</span><br><span class="line">                <span class="keyword">boolean</span> var18 = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    var18 = <span class="keyword">true</span>;</span><br><span class="line">                    <span class="comment">//实例化一个child</span></span><br><span class="line">                    <span class="keyword">this</span>.children[i] = <span class="keyword">this</span>.newChild((Executor)executor, args);</span><br><span class="line">                    success = <span class="keyword">true</span>;</span><br><span class="line">                    var18 = <span class="keyword">false</span>;</span><br><span class="line">                &#125; <span class="keyword">catch</span> (Exception var19) &#123;</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"failed to create a child event loop"</span>, var19);</span><br><span class="line">                &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">		<span class="comment">//...</span></span><br><span class="line"></span><br><span class="line">                    <span class="comment">////这里指上面实例化child失败，执行下面逻辑</span></span><br><span class="line">                <span class="keyword">if</span> (!success) &#123;</span><br><span class="line">                    <span class="keyword">for</span>(j = <span class="number">0</span>; j &lt; i; ++j) &#123;</span><br><span class="line">                        <span class="keyword">this</span>.children[j].shutdownGracefully();</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">for</span>(j = <span class="number">0</span>; j &lt; i; ++j) &#123;</span><br><span class="line">                        EventExecutor e = <span class="keyword">this</span>.children[j];</span><br><span class="line"></span><br><span class="line">                        <span class="keyword">try</span> &#123;</span><br><span class="line">                            <span class="keyword">while</span>(!e.isTerminated()) &#123;</span><br><span class="line">                                e.awaitTermination(<span class="number">2147483647L</span>, TimeUnit.SECONDS);</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125; <span class="keyword">catch</span> (InterruptedException var22) &#123;</span><br><span class="line">                            Thread.currentThread().interrupt();</span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//所有child都已经实例化</span></span><br><span class="line">            <span class="comment">//设置线程选择策略</span></span><br><span class="line">            <span class="keyword">this</span>.chooser = chooserFactory.newChooser(<span class="keyword">this</span>.children);</span><br><span class="line">            <span class="comment">//添加监听器，监听每个线程是否termination                </span></span><br><span class="line">            FutureListener&lt;Object&gt; terminationListener = <span class="keyword">new</span> FutureListener&lt;Object&gt;() &#123;</span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">operationComplete</span><span class="params">(Future&lt;Object&gt; future)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">                    <span class="keyword">if</span> (MultithreadEventExecutorGroup.<span class="keyword">this</span>.terminatedChildren.incrementAndGet() == MultithreadEventExecutorGroup.<span class="keyword">this</span>.children.length) &#123;</span><br><span class="line">                        MultithreadEventExecutorGroup.<span class="keyword">this</span>.terminationFuture.setSuccess((Object)<span class="keyword">null</span>);</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;;</span><br><span class="line">            EventExecutor[] var24 = <span class="keyword">this</span>.children;</span><br><span class="line">            j = var24.length;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> var26 = <span class="number">0</span>; var26 &lt; j; ++var26) &#123;</span><br><span class="line">                EventExecutor e = var24[var26];</span><br><span class="line">                e.terminationFuture().addListener(terminationListener);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">//...</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>接着进入上面的<code>newChild()</code>方法,实际上是进入的<code>NioEventLoop</code>的方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> EventLoop <span class="title">newChild</span><span class="params">(Executor executor, Object... args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        EventLoopTaskQueueFactory queueFactory = args.length == <span class="number">4</span> ? (EventLoopTaskQueueFactory)args[<span class="number">3</span>] : <span class="keyword">null</span>;</span><br><span class="line">    <span class="comment">//实际上是创建了一个新的NioEventLoop</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> NioEventLoop(<span class="keyword">this</span>, executor, (SelectorProvider)args[<span class="number">0</span>], ((SelectStrategyFactory)args[<span class="number">1</span>]).newSelectStrategy(), (RejectedExecutionHandler)args[<span class="number">2</span>], queueFactory);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>至此可以揭晓谜底了，线程池中的线程，那个实体指的就是<code>NioEventLoop</code>!所以我们整段代码看下来，可以得出结论，<code>NioEventLoopGroup</code>只是一个创建<code>NioEventLoop</code>的实体池，而很多构造方法里的参数最终也是要进入<code>NioEventLoop</code>进行使用。</p>
+<p>其实我们看词义和继承关系也能看出个大概，<code>NioEventLoop</code>继承了<code>MultithreadEventLoopGroup</code>，而<code>NioEventLoop</code>继承了<code>SingleThreadEventLoop</code>，也是多和一的关系。</p>
+<h3 id="NioEventLoop"><a href="#NioEventLoop" class="headerlink" title="NioEventLoop"></a>NioEventLoop</h3><p>那接下来我们就要查看<code>NioEventLoop</code>的源码，康康里面究竟卖着什么葫芦药</p>
+<p>首先看看它的构造方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">NioEventLoop(...) &#123;</span><br><span class="line">	<span class="keyword">super</span>(parent, executor, <span class="keyword">false</span>, newTaskQueue(queueFactory), newTaskQueue(queueFactory), rejectedExecutionHandler);</span><br><span class="line"><span class="comment">//老面孔</span></span><br><span class="line">        <span class="keyword">this</span>.provider = (SelectorProvider)ObjectUtil.checkNotNull(selectorProvider, <span class="string">"selectorProvider"</span>);</span><br><span class="line"><span class="comment">//老面孔</span></span><br><span class="line">        <span class="keyword">this</span>.selectStrategy = (SelectStrategy)ObjectUtil.checkNotNull(strategy, <span class="string">"selectStrategy"</span>);</span><br><span class="line"><span class="comment">//selecor，重要的组件</span></span><br><span class="line">        NioEventLoop.SelectorTuple selectorTuple = <span class="keyword">this</span>.openSelector();</span><br><span class="line">        <span class="keyword">this</span>.selector = selectorTuple.selector;</span><br><span class="line">        <span class="keyword">this</span>.unwrappedSelector = selectorTuple.unwrappedSelector;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//看一下父类的构造方法</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="title">SingleThreadEventLoop</span><span class="params">(...)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(parent, executor, addTaskWakesUp, taskQueue, rejectedExecutionHandler);</span><br><span class="line">        <span class="keyword">this</span>.tailTasks = (Queue)ObjectUtil.checkNotNull(tailTaskQueue, <span class="string">"tailTaskQueue"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">//看一下父类的构造方法</span></span><br><span class="line">   <span class="function"><span class="keyword">protected</span> <span class="title">SingleThreadEventExecutor</span><span class="params">(...)</span> </span>&#123;</span><br><span class="line">		<span class="comment">//...</span></span><br><span class="line">       <span class="comment">//老面孔</span></span><br><span class="line">        <span class="keyword">this</span>.executor = ThreadExecutorMap.apply(executor, <span class="keyword">this</span>);</span><br><span class="line">       <span class="comment">//其中最重要的就是这个taskQueue，联想一下js中的Eventloop是不是也有这个东西？</span></span><br><span class="line">       <span class="comment">//任务队列，提交给 NioEventLoop 的任务都会进入到这个 taskQueue 中等待被执行</span></span><br><span class="line">        <span class="keyword">this</span>.taskQueue = (Queue)ObjectUtil.checkNotNull(taskQueue, <span class="string">"taskQueue"</span>);</span><br><span class="line">       <span class="comment">//老面孔</span></span><br><span class="line">        <span class="keyword">this</span>.rejectedExecutionHandler = (RejectedExecutionHandler)ObjectUtil.checkNotNull(rejectedHandler, <span class="string">"rejectedHandler"</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>发现了很多老面孔了，这些都是直接从外层传递进来的，但是也有一些比较重要的东西，比如<code>selector</code>，这是<code>reactor</code>的重要角色</p>
+<p>现在我们其实对<code>NioEventLoop</code>的具体工作流程尚不了解，但是通过对构造函数的分析，相信大家也都明白了这个实体类的重要性。这里做一下总结，接下来会继续分析<code>NioEventLoop</code>的具体工作</p>
+<ul>
+<li>从构造上可以看出，<code>NioEventLoop</code>实际上是一个线程池，只不过是一个单线程的线程池，里面持有一个<code>Selector</code>，负责<code>Reactor</code>中最重要的角色</li>
+<li>我们利用<code>NioEventLoopGroup</code>构建<code>NioEventLoop</code>，<code>NioEventLoopGroup</code>是一个<code>NioEventLoop</code>池，默认创建<code>2*核心数</code>个<code>NioEventLoop</code>，同时，客户端创建一个<code>NioEventLoopGroup</code>，服务端创建两个<code>NioEventLoopGroup</code>，实际上是多reactor模型，对事件的接受和分发做解耦，这个之后回顾整体架构的时候再细说</li>
+</ul>
+<h2 id="执行"><a href="#执行" class="headerlink" title="执行"></a>执行</h2><p>在<code>netty</code>服务端的<code>demo</code>启动后，代码会执行到<code>NioEventLoop</code>的<code>run</code>方法，让我们直接进入<code>run</code>方法查看<code>eventloop</code>是如何工作的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> selectCnt = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</span><br><span class="line">        <span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</span><br><span class="line">            <span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    <span class="keyword">int</span> strategy;</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        <span class="comment">//注意这里，这里的selectStrategy就是我们之前所提到的构造方法里的一个参数</span></span><br><span class="line">                        <span class="comment">//这里有三个值：-1代表 SELECT -2代表CONTINUE -3代表BUSY_WAIT</span></span><br><span class="line">                        <span class="comment">//</span></span><br><span class="line">                        strategy = <span class="keyword">this</span>.selectStrategy.calculateStrategy(<span class="keyword">this</span>.selectNowSupplier, <span class="keyword">this</span>.hasTasks());</span><br><span class="line">                        <span class="keyword">switch</span>(strategy) &#123;</span><br><span class="line">                        <span class="keyword">case</span> -<span class="number">3</span>:</span><br><span class="line">                        <span class="keyword">case</span> -<span class="number">1</span>:</span><br><span class="line">                            <span class="keyword">long</span> curDeadlineNanos = <span class="keyword">this</span>.nextScheduledTaskDeadlineNanos();</span><br><span class="line">                            <span class="keyword">if</span> (curDeadlineNanos == -<span class="number">1L</span>) &#123;</span><br><span class="line">                                curDeadlineNanos = <span class="number">9223372036854775807L</span>;</span><br><span class="line">                            &#125;</span><br><span class="line"></span><br><span class="line">                            <span class="keyword">this</span>.nextWakeupNanos.set(curDeadlineNanos);</span><br><span class="line"></span><br><span class="line">                            <span class="keyword">try</span> &#123;</span><br><span class="line">                                <span class="keyword">if</span> (!<span class="keyword">this</span>.hasTasks()) &#123;</span><br><span class="line">                                    strategy = <span class="keyword">this</span>.select(curDeadlineNanos);</span><br><span class="line">                                &#125;</span><br><span class="line">                                <span class="keyword">break</span>;</span><br><span class="line">                            &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                                <span class="keyword">this</span>.nextWakeupNanos.lazySet(-<span class="number">1L</span>);</span><br><span class="line">                            &#125;</span><br><span class="line">                        <span class="keyword">case</span> -<span class="number">2</span>:</span><br><span class="line">                            <span class="keyword">continue</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125; <span class="keyword">catch</span> (IOException var38) &#123;</span><br><span class="line">                        <span class="keyword">this</span>.rebuildSelector0();</span><br><span class="line">                        selectCnt = <span class="number">0</span>;</span><br><span class="line">                        handleLoopException(var38);</span><br><span class="line">                        <span class="keyword">continue</span>;</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    ++selectCnt;</span><br><span class="line">                    <span class="keyword">this</span>.cancelledKeys = <span class="number">0</span>;</span><br><span class="line">                    <span class="keyword">this</span>.needsToSelectAgain = <span class="keyword">false</span>;</span><br><span class="line">                    <span class="comment">///ioRatio 的默认值是50</span></span><br><span class="line">                    <span class="keyword">int</span> ioRatio = <span class="keyword">this</span>.ioRatio;</span><br><span class="line">                    <span class="keyword">boolean</span> ranTasks;</span><br><span class="line">                    <span class="keyword">if</span> (ioRatio == <span class="number">100</span>) &#123;</span><br><span class="line">                        <span class="keyword">try</span> &#123;</span><br><span class="line">                            <span class="keyword">if</span> (strategy &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                                <span class="keyword">this</span>.processSelectedKeys();</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                            ranTasks = <span class="keyword">this</span>.runAllTasks();</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (strategy &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                        <span class="keyword">long</span> ioStartTime = System.nanoTime();</span><br><span class="line">                        <span class="keyword">boolean</span> var26 = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">                        <span class="keyword">try</span> &#123;</span><br><span class="line">                            var26 = <span class="keyword">true</span>;</span><br><span class="line">                            <span class="keyword">this</span>.processSelectedKeys();</span><br><span class="line">                            var26 = <span class="keyword">false</span>;</span><br><span class="line">                        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                            <span class="keyword">if</span> (var26) &#123;</span><br><span class="line">                                <span class="keyword">long</span> ioTime = System.nanoTime() - ioStartTime;</span><br><span class="line">                                <span class="keyword">this</span>.runAllTasks(ioTime * (<span class="keyword">long</span>)(<span class="number">100</span> - ioRatio) / (<span class="keyword">long</span>)ioRatio);</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                        <span class="keyword">long</span> ioTime = System.nanoTime() - ioStartTime;</span><br><span class="line">                        ranTasks = <span class="keyword">this</span>.runAllTasks(ioTime * (<span class="keyword">long</span>)(<span class="number">100</span> - ioRatio) / (<span class="keyword">long</span>)ioRatio);</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        ranTasks = <span class="keyword">this</span>.runAllTasks(<span class="number">0L</span>);</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                  <span class="comment">//...</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>重点关注其中的一个 <code>switch(strategy)</code>，一个 <code>if (ioRatio == 100)</code></p>
+<p>这里其实主要涉及到三个操作、</p>
+<ul>
+<li><code>select()</code>：轮询，接受注册到<code>reactor</code>线程上的事件</li>
+<li><code>processSelectedKeys()</code>：处理产生网络<code>IO</code>事件的<code>channel</code></li>
+<li><code>runAllTasks()</code>：处理任务队列</li>
+</ul>
+<p>这三个操作就是<code>NioEventLoop</code>的核心操作，实际上就包含了<code>channel</code>的接受，分发和处理，下面就分别介绍一下这三个操作</p>
+<h3 id="select"><a href="#select" class="headerlink" title="select()"></a>select()</h3><p>截取run方法中的一部分</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">switch</span>(strategy) &#123;</span><br><span class="line">        <span class="comment">//这里有三个值：-1代表 SELECT -2代表CONTINUE -3代表BUSY_WAIT</span></span><br><span class="line">                            <span class="keyword">case</span> -<span class="number">1</span>:</span><br><span class="line">                                <span class="keyword">long</span> curDeadlineNanos = <span class="keyword">this</span>.nextScheduledTaskDeadlineNanos();</span><br><span class="line">                                <span class="keyword">if</span> (curDeadlineNanos == -<span class="number">1L</span>) &#123;</span><br><span class="line">                                    curDeadlineNanos = <span class="number">9223372036854775807L</span>;</span><br><span class="line">                                &#125;</span><br><span class="line"></span><br><span class="line">                                <span class="keyword">this</span>.nextWakeupNanos.set(curDeadlineNanos);</span><br><span class="line"></span><br><span class="line">                                <span class="keyword">try</span> &#123;</span><br><span class="line">                                    <span class="keyword">if</span> (!<span class="keyword">this</span>.hasTasks()) &#123;</span><br><span class="line">                                        strategy = <span class="keyword">this</span>.select(curDeadlineNanos);</span><br><span class="line">                                    &#125;</span><br><span class="line">                                    <span class="keyword">break</span>;</span><br><span class="line">                                &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                                    <span class="keyword">this</span>.nextWakeupNanos.lazySet(-<span class="number">1L</span>);</span><br><span class="line">                                &#125;</span><br><span class="line">                        &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里主要关注<code>select</code>分支，首先要注意的是<code>select</code>是一个阻塞方法，返回值表示多少<code>channel</code>准备就绪，可以进入处理。</p>
+<p>看一看<code>select</code>前后处理逻辑，首先设置当前最迟的轮询时间，然后进入<code>select</code>方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">select</span><span class="params">(<span class="keyword">long</span> deadlineNanos)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">       <span class="keyword">if</span> (deadlineNanos == <span class="number">9223372036854775807L</span>) &#123;</span><br><span class="line">           <span class="keyword">return</span> <span class="keyword">this</span>.selector.select();</span><br><span class="line">       &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">           <span class="comment">//设置边界时间为0.995s</span></span><br><span class="line">           <span class="keyword">long</span> timeoutMillis = deadlineToDelayNanos(deadlineNanos + <span class="number">995000L</span>) / <span class="number">1000000L</span>;</span><br><span class="line">           <span class="keyword">return</span> timeoutMillis &lt;= <span class="number">0L</span> ? <span class="keyword">this</span>.selector.selectNow() : <span class="keyword">this</span>.selector.select(timeoutMillis);</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>netty</code>里面定时任务队列是按照延迟时间从小到大进行排序，每次获取任务都是从延迟时间最小的开始获取。<code>select</code>就是通过判断是否有任务正在排队来决定是否进行<code>select</code></p>
+<p>这里，如果时间小于<code>0.995s</code>，表示截止事件时间快到了，那就立刻<code>select</code>一次，调用<code>selectNow()</code>方法。</p>
+<p>其中还设置了下一次唤醒时间，如果截止时间到了但是任务还没有被处理，就会自动唤醒</p>
+<p>·</p>
+<h3 id="processSelectedKeys"><a href="#processSelectedKeys" class="headerlink" title="processSelectedKeys()"></a>processSelectedKeys()</h3><p>让我们进入processSelectedKeys()方法看看里面干了什么</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">processSelectedKeys</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.selectedKeys != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">//处理优化过的SelectionKey</span></span><br><span class="line">            <span class="keyword">this</span>.processSelectedKeysOptimized();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">//处理正常情况的SelectionKey</span></span><br><span class="line">            <span class="keyword">this</span>.processSelectedKeysPlain(<span class="keyword">this</span>.selector.selectedKeys());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们知道<code>SelectionKey</code>代表事件返回的对象，里面有感兴趣事件集合，准备就绪的事件集合，<code>channel</code>，<code>selector</code>，<code>attachment</code>等</p>
+<p>优化过的<code>SelectionKey</code>和正常的<code>SelectionKey</code>的区别在于<code>netty</code>重写了<code>SelectedSelectionKeySet</code>的<code>selectedKeys</code>属性和<code>publicSelectedKeys</code>属性，使得原来的set变成数组，降低了修改元素的事件复杂度。</p>
+<p>看一下<code>processSelectedKeysOptimized()</code>的代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">processSelectedKeysOptimized</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="keyword">this</span>.selectedKeys.size; ++i) &#123;</span><br><span class="line">        <span class="comment">//取出IO事件和channel</span></span><br><span class="line">        SelectionKey k = <span class="keyword">this</span>.selectedKeys.keys[i];</span><br><span class="line">        <span class="keyword">this</span>.selectedKeys.keys[i] = <span class="keyword">null</span>;</span><br><span class="line">        <span class="comment">//获取selectoinKey中的attachment</span></span><br><span class="line">        Object a = k.attachment();</span><br><span class="line">        <span class="comment">//attachment一般是AbstractNioChannel，存放着具体IO事件</span></span><br><span class="line">        <span class="keyword">if</span> (a <span class="keyword">instanceof</span> AbstractNioChannel) &#123;</span><br><span class="line">            <span class="keyword">this</span>.processSelectedKey(k, (AbstractNioChannel)a);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            NioTask&lt;SelectableChannel&gt; task = (NioTask)a;</span><br><span class="line">            processSelectedKey(k, task);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//部分情况可能出现需要再次轮询的情况</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.needsToSelectAgain) &#123;</span><br><span class="line">            <span class="keyword">this</span>.selectedKeys.reset(i + <span class="number">1</span>);</span><br><span class="line">            <span class="keyword">this</span>.selectAgain();</span><br><span class="line">            i = -<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>什么时候需要再次轮询？</p>
+<ul>
+<li>在<code>channel</code>从<code>selector</code>上移除的时候，调用<code>cancel</code>函数将<code>key</code>取消，并且当被去掉的<code>key</code>到达 <code>CLEANUP_INTERVAL</code> 的时候，设置<code>needsToSelectAgain</code>为<code>true</code>,<code>CLEANUP_INTERVAL</code>默认值为<code>256</code></li>
+<li>因此每满<code>256</code>次会将<code>selectedKeys</code>的内部数组全部清空，然后重新<code>selectAgain</code>重新装载<code>selectionKey</code></li>
+</ul>
+<h3 id="runTasks"><a href="#runTasks" class="headerlink" title="runTasks()"></a>runTasks()</h3><p>先看<code>run</code>方法的代码片段</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">					++selectCnt;</span><br><span class="line">                        <span class="keyword">this</span>.cancelledKeys = <span class="number">0</span>;</span><br><span class="line">                        <span class="keyword">this</span>.needsToSelectAgain = <span class="keyword">false</span>;</span><br><span class="line"><span class="comment">//ioRatio是 IO 任务的执行时间比例,如果等于100表示所有时间都被用来处理io任务，默认是50</span></span><br><span class="line">                        <span class="keyword">int</span> ioRatio = <span class="keyword">this</span>.ioRatio;</span><br><span class="line">                        <span class="keyword">boolean</span> ranTasks;</span><br><span class="line">                        <span class="keyword">if</span> (ioRatio == <span class="number">100</span>) &#123;</span><br><span class="line">                            <span class="keyword">try</span> &#123;</span><br><span class="line">                                <span class="keyword">if</span> (strategy &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                                    <span class="keyword">this</span>.processSelectedKeys();</span><br><span class="line">                                &#125;</span><br><span class="line">                            &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                                ranTasks = <span class="keyword">this</span>.runAllTasks();</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (strategy &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                            <span class="keyword">long</span> ioStartTime = System.nanoTime();</span><br><span class="line">                            <span class="keyword">boolean</span> var26 = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">                            <span class="keyword">try</span> &#123;</span><br><span class="line">                                var26 = <span class="keyword">true</span>;</span><br><span class="line">                                <span class="keyword">this</span>.processSelectedKeys();</span><br><span class="line">                                var26 = <span class="keyword">false</span>;</span><br><span class="line">                            &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                                <span class="keyword">if</span> (var26) &#123;</span><br><span class="line">                                    <span class="keyword">long</span> ioTime = System.nanoTime() - ioStartTime;</span><br><span class="line">                                    <span class="keyword">this</span>.runAllTasks(ioTime * (<span class="keyword">long</span>)(<span class="number">100</span> - ioRatio) / (<span class="keyword">long</span>)ioRatio);</span><br><span class="line">                                &#125;</span><br><span class="line">                            &#125;</span><br><span class="line"></span><br><span class="line">                            <span class="keyword">long</span> ioTime = System.nanoTime() - ioStartTime;</span><br><span class="line">                            ranTasks = <span class="keyword">this</span>.runAllTasks(ioTime * (<span class="keyword">long</span>)(<span class="number">100</span> - ioRatio) / (<span class="keyword">long</span>)ioRatio);</span><br><span class="line">                        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                            ranTasks = <span class="keyword">this</span>.runAllTasks(<span class="number">0L</span>);</span><br><span class="line">                        &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果<code>ioRatio</code>为<code>100</code>同时就直接执行<code>IO</code>操作，并最后处理返回的任务</li>
+<li>如果<code>ioRatio</code>不是<code>100</code> 就计算<code>io</code>处理限制时间，设置处理返回任务的截止时间，让处理<code>I/O</code>事件的时间和执行任务的时间为1:1。</li>
+</ul>
+<p>再看<code>runAllTasks</code>的实现之前，先要明白<code>task</code>究竟是什么。在<code>netty</code>中一共有两种任务，一种是<mark>普通任务</mark>，一种是<mark>定时任务</mark>。这里先抛出结论：普通任务存放在<code>taskQueue</code>中，定时任务存放在<code>PriorityQueue</code>中，这部分的代码追踪暂时就不写出来了，让我们首先关注如何去运行致谢<code>tasks</code>吧</p>
+<p>进入<code>runAllTasks()</code>看一下:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">boolean</span> <span class="title">runAllTasks</span><span class="params">(<span class="keyword">long</span> timeoutNanos)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//等会讲</span></span><br><span class="line">       <span class="keyword">this</span>.fetchFromScheduledTaskQueue();</span><br><span class="line">    <span class="comment">//从队列中取出任务</span></span><br><span class="line">       Runnable task = <span class="keyword">this</span>.pollTask();</span><br><span class="line">       <span class="keyword">if</span> (task == <span class="keyword">null</span>) &#123;</span><br><span class="line">           <span class="keyword">this</span>.afterRunningAllTasks();</span><br><span class="line">           <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">       &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">           <span class="keyword">long</span> deadline = timeoutNanos &gt; <span class="number">0L</span> ? ScheduledFutureTask.nanoTime() + timeoutNanos : <span class="number">0L</span>;</span><br><span class="line">           <span class="keyword">long</span> runTasks = <span class="number">0L</span>;</span><br><span class="line"></span><br><span class="line">           <span class="keyword">long</span> lastExecutionTime;</span><br><span class="line">           <span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</span><br><span class="line">               <span class="comment">//处理任务，这里的task其实就是一个Runnable类，方法里直接run就行了</span></span><br><span class="line">               safeExecute(task);</span><br><span class="line">               <span class="comment">//记录处理完的任务数</span></span><br><span class="line">               ++runTasks;</span><br><span class="line">               <span class="comment">//每64个任务才检查一次timeout，因为nanoTime()开销比较大</span></span><br><span class="line">               <span class="keyword">if</span> ((runTasks &amp; <span class="number">63L</span>) == <span class="number">0L</span>) &#123;</span><br><span class="line">                   lastExecutionTime = ScheduledFutureTask.nanoTime();</span><br><span class="line">                   <span class="keyword">if</span> (lastExecutionTime &gt;= deadline) &#123;</span><br><span class="line">                       <span class="keyword">break</span>;</span><br><span class="line">                   &#125;</span><br><span class="line">               &#125;</span><br><span class="line">		<span class="comment">//继续处理下一个任务</span></span><br><span class="line">               task = <span class="keyword">this</span>.pollTask();</span><br><span class="line">               <span class="keyword">if</span> (task == <span class="keyword">null</span>) &#123;</span><br><span class="line">                   lastExecutionTime = ScheduledFutureTask.nanoTime();</span><br><span class="line">                   <span class="keyword">break</span>;</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">           <span class="keyword">this</span>.afterRunningAllTasks();</span><br><span class="line">           <span class="keyword">this</span>.lastExecutionTime = lastExecutionTime;</span><br><span class="line">           <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p>整体逻辑还算简单，主要先看看<code>fetchFromScheduledTaskQueue()</code>里面做了什么</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">fetchFromScheduledTaskQueue</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.scheduledTaskQueue != <span class="keyword">null</span> &amp;&amp; !<span class="keyword">this</span>.scheduledTaskQueue.isEmpty()) &#123;</span><br><span class="line">            <span class="keyword">long</span> nanoTime = AbstractScheduledEventExecutor.nanoTime();</span><br><span class="line"></span><br><span class="line">            Runnable scheduledTask;</span><br><span class="line">            <span class="keyword">do</span> &#123;</span><br><span class="line">                <span class="comment">//在定时任务队列中获取一个离截止时间最近的任务</span></span><br><span class="line">                scheduledTask = <span class="keyword">this</span>.pollScheduledTask(nanoTime);</span><br><span class="line">                <span class="keyword">if</span> (scheduledTask == <span class="keyword">null</span>) &#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">                &#125;<span class="comment">//添加普通队列中去</span></span><br><span class="line">                &#125; <span class="keyword">while</span>(<span class="keyword">this</span>.taskQueue.offer(scheduledTask));</span><br><span class="line">	</span><br><span class="line">            <span class="comment">//如果添加失败，就归还定时任务</span></span><br><span class="line">            <span class="keyword">this</span>.scheduledTaskQueue.add((ScheduledFutureTask)scheduledTask);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>之前说过<code>task</code>包含普通任务和定时任务，分别处在不同的队列中。可见这个函数的主要作用就是将定时任务添加到普通队列中去，这样后面处理任务的时候就可以统一一个队列中获取。</p>
+<p>为什么是放在普通队列中？因为定时队列是按照时间优先级的顺序排列，普通任务也无法正常的插入定时任务队列，反之快到截止时间的定时任务是可以看作是普通任务来处理的。</p>
+<p>到这里<code>runTasks</code>的逻辑也基本讲完了。总结一下主要干了这些事</p>
+<ul>
+<li>协调<code>IO</code>时间和处理任务的时间，计算处理任务需要的<code>deadline</code>截止时间</li>
+<li>聚合定时任务和普通任务，循环取出任务执行</li>
+<li>每执行<code>64</code>次任务就检查一次截止时间，到期退出循环</li>
+<li>在<code>afterRunningAllTasks()</code>中，做一些收尾动作</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>至此，<code>EventLoop</code>上的所有任务都开始执行了，整个流程也结束了。·</p>
+<p>最后让我们看看<code>reactor</code>模式及对应下各个角色的具体实现，让我们再看一眼<img src="http://cdn.zblade.top/qiniu_img/112151380898648.jpg" alt></p>
+<p><code>Reactor</code>线程模型的主要实现实体：<code>NioEventLoop</code></p>
+<p><code>client</code>： 请求的事件，可以理解是一个<code>channel</code></p>
+<p><code>acceptor</code>： <code>selector</code>，主要指<code>selector</code>的<code>select()</code>负责的监听并接受事件</p>
+<p><code>mainReactor</code>和<code>sunReactor</code>：在服务端会绑定两个<code>NioEventLoopGroup</code>：<code>parentGroup</code>和<code>childGroup</code>，一般在<code>parentGroup</code>中处理<code>accept</code>事件，再<code>childGroup</code>中处理其他事件。<code>IO</code>事件的处理主要是在<code>processSelectedKeys()</code>函数里，判断<code>SelectionKey</code>的类型，并交给不同的函数处理。</p>
+<p><code>queued tasks</code>:当建立了连接后，待处理任务就会进入<code>tasks queue</code>，等到再<code>runTasks()</code>中循环队列处理，每个任务对应从<code>threadpool</code>中取出一条<code>worker thread</code>进行处理</p>
+<h2 id="参考博客"><a href="#参考博客" class="headerlink" title="参考博客"></a>参考博客</h2><p><a href="https://my.oschina.net/u/1859679/blog/1844109#h2_8" target="_blank" rel="noopener">【NIO系列】——之Reactor模型</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/23488863" target="_blank" rel="noopener">Java NIO浅析-美团技术团队</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div class="post-share">分享到：</div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+            <a href="/tags/netty/" rel="tag"># netty</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/12/scrapy1/" rel="next" title="scrapy爬虫入门">
+                <i class="fa fa-chevron-left"></i> scrapy爬虫入门
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/06/01/cors/" rel="prev" title="记录一次跨域问题">
+                记录一次跨域问题 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -569,7 +888,7 @@
                 <a href="/archives">
               
                   <span class="site-state-item-name">日志</span>
-				  <span class="site-state-item-count">46</span>
+				  <span class="site-state-item-count">47</span>
                 </a>
               </div>
             

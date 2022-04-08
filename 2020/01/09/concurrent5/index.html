@@ -199,7 +199,7 @@
 
 
 
-  <title>Feel The Wind</title>
+  <title>java中的锁 | Feel The Wind</title>
   
 
 
@@ -219,8 +219,7 @@
     
   
 
-  <div class="container sidebar-position-right 
-  ">
+  <div class="container sidebar-position-right page-post-detail">
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><nav class="site-nav">
   
@@ -424,15 +423,348 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-  </section>
 
   
-  <nav class="pagination">
-    
-  </nav>
 
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-date">
+			<div class="post-month">01月</div>
+			<div class="post-day">09</div>
+	</div>
+  
+  <div class="post-badge">
+    
+      <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+        <a href="/categories/学习笔记/" itemprop="url" rel="index">
+          <span itemprop="name">学习笔记</span>
+        </a>
+      </span>
+    
+  </div>
+  
+
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://site.zblade.top/2020/01/09/concurrent5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="陌花采撷">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="http://cdn.zblade.top/qiniu_img/zavatar2.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Feel The Wind">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">java中的锁</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-09T19:25:12+08:00">2020-01-09</time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2020/01/09/concurrent5/" class="leancloud_visitors" data-flag-title="java中的锁">
+               <span class="post-meta-divider"></span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">被</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+                 <span class="post-meta-item-text">人浏览</span>
+             </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>《并发编程的艺术》阅读笔记第五章，图文绝配</p>
+<p>你锁我，我锁你，两者互不相让，然后就进入了死局，这像极了爱情。</p>
+<p><img src="http://cdn.zblade.top/qiniu_img/wallhaven-lqz9jr.jpg" alt></p>
+<a id="more"></a>
+
+<h2 id="一、Lock接口"><a href="#一、Lock接口" class="headerlink" title="一、Lock接口"></a>一、Lock接口</h2><p>提供了synchronized不具有的特性：</p>
+<ol>
+<li>尝试非阻塞地获取锁：<code>tryLock()</code>，调用方法后立刻返回</li>
+<li>能被中断地获取锁：<code>lockInterruptibly()</code>:在锁的获取中可以中断当前线程</li>
+<li>超时获取锁:<code>tryLock(time,unit)</code>，超时返回</li>
+</ol>
+<p>Lock接口的实现基本都是通过==聚合了一个同步器的子类来完成线程访问控制的。==</p>
+<p> <strong>使用注意事项</strong>   </p>
+<ul>
+<li><code>unlock</code>方法要在<code>finally</code>中使用，目的保证在获取到锁之后，最终能被释放</li>
+<li><code>lock</code>方法不能放在<code>try</code>块中，因为如果<code>try catch</code>抛出异常，会导致锁无故释放</li>
+</ul>
+<p><img src="/2020/01/09/concurrent5/image-20200108213701147.png" alt="image-20200108213701147"></p>
+<h2 id="二、队列同步器"><a href="#二、队列同步器" class="headerlink" title="二、队列同步器"></a>二、队列同步器</h2><blockquote>
+<p>队列同步器<code>AbstractQueuedSynchronizer</code>是用来构建锁或其他同步组件的基础框架。<br>它使用一个<code>int</code>成员变量表示同步状态，通过内置的<code>FIFO</code>队列来完成资源获取线程的排队工作。</p>
+<p>同步器的主要使用方式是继承，子类通过继承同步器并实现它的抽象方法来管理同步状态。同步器既可以支持独占式地获取同步状态，也可以支持共享式地获取同步状态,这样就可以方便实现不同类型的同步组件（<code>ReentrantLock</code>、<br><code>ReentrantReadWriteLock</code>和<code>CountDownLatch</code>等）</p>
+</blockquote>
+<p>==<strong>同步器</strong>==是实现锁的关键，在锁的实现中聚合同步器，利用同步器实现锁的语义。<br>理解两者的关系：</p>
+<ul>
+<li>锁是面向使用者的，它定义了使用者与锁交互的接口，隐藏了实现细节；</li>
+<li>同步器是面向锁的实现者，它简化了锁的实现方式，屏蔽了同步状态管理、线程的排队、等待和唤醒等底层操作。</li>
+</ul>
+<h3 id="队列同步器的接口与示例"><a href="#队列同步器的接口与示例" class="headerlink" title="队列同步器的接口与示例"></a><strong>队列同步器的接口与示例</strong></h3><blockquote>
+<p>同步器的设计是基于模板方法模式的，也就是说，使用者需要继承同步器并重写指定的方法，随后将同步器组合在自定义同步组件的实现中，并调用同步器提供的模板方法，而这些模板方法将会调用使用者重写的方法。</p>
+</blockquote>
+<p>重写同步器指定的方法时，需要使用同步器提供的如下3个方法来<strong>访问或修改同步状态</strong></p>
+<ul>
+<li><code>getState</code>()：获取当前同步状态。</li>
+<li><code>setState(int newState)</code>：设置当前同步状态。</li>
+<li><code>compareAndSetState(int expect,int update)</code>：使用CAS设置当前状态，该方法能够保证状态设置的原子性。</li>
+</ul>
+<p><img src="/2020/01/09/concurrent5/image-20200108214810059.png" alt="image-20200108214810059"></p>
+<p><img src="/2020/01/09/concurrent5/image-20200108214826047.png" alt="image-20200108214826047"></p>
+<p>同步器提供的模板方法基本上分为3类：==<strong>独占式获取与释放同步状态</strong>==、==<strong>共享式获取与释放同步状态</strong>==和==<strong>查询同步队列中的等待线程情况</strong>==。自定义同步组件将使用同步器提供的模板方法来实现自己的同步语义。</p>
+<h3 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MUtux源代码略</span><br></pre></td></tr></table></figure>
+
+<h3 id="队列同步器的实现分析"><a href="#队列同步器的实现分析" class="headerlink" title="队列同步器的实现分析"></a>队列同步器的实现分析</h3><h4 id="1-同步队列"><a href="#1-同步队列" class="headerlink" title="1.同步队列"></a>1.同步队列</h4><p>通过一个<code>FIFO双向队列</code>来完成同步状态的管理，当前线程获取同步状态失败时，同步器会将当前线程以及等待状态等信息构造成一个<code>Node</code>并将其加入同步队列，同时会阻塞当前线程，当同步状态释放时，会把首节点中的线程唤醒，使其再次尝试获取同步状态。</p>
+<p>首节点是获取同步状态成功的节点，首节点在释放同步状态时，会唤醒后继节点，而后继节点在获取同步状态成功时将自己设置为首节点。</p>
+<p><strong>节点的属性类型与名称以及描述</strong></p>
+<h4 id><a href="#" class="headerlink" title></a><img src="/2020/01/09/concurrent5/image-20200108221052601.png" alt="image-20200108221052601"></h4><p><img src="/2020/01/09/concurrent5/image-20200108221142725.png" alt="image-20200108221142725"></p>
+<h4 id="2-独占式同步状态获取和释放"><a href="#2-独占式同步状态获取和释放" class="headerlink" title="2.独占式同步状态获取和释放"></a>2.独占式同步状态获取和释放</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">acquire</span><span class="params">(<span class="keyword">int</span> arg)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!tryAcquire(arg) 					&amp;&amp;acquireQueued(addWaiter(Node.EXCLUSIVE), arg))</span><br><span class="line">            <span class="comment">//如果上述操作失败，则阻塞线程</span></span><br><span class="line">            selfInterrupt();</span><br><span class="line"> &#125;</span><br><span class="line"><span class="comment">//上述代码主要完成了同步状态获取、节点构造、加入同步队列以及在同步队列中自旋等待的相关工作，</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>代码分析：</strong><br>首先尝试获取同步状态，如果获取失败，构造独占式同步节点(<code>独占式
+Node.EXCLUSIVE</code>)并将其加入到节点的尾部，然后调用<code>acquireQueued</code>，使节点一死循环的方式去获取同步状态，如果获取不到就阻塞节点中的线程。</p>
+<p><strong>两个死循环：入队、入队后</strong></p>
+<ol>
+<li><p><code>addWaiter</code>和<code>enq</code>方法·</p>
+<p>在“死循环”中只有通过<code>CAS</code>将节点设置成为尾节点之后，当前线程才能从该方法返回，否则，当前线程不断地尝试设置。可以看出，<code>enq(final Node node)</code>方法将并发添加节点的请求通过CAS变得“串行化”了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">addWaiter方法尝试快速添加，但是存在出现并发导致节点无法正常添加成功（获取尾节点==null），因此enq方法无限循环添加节点，将节点加入到尾部</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ol>
+<ol start="2">
+<li><p><code>acquireQueued</code>方法</p>
+<p>·==只有前驱节点是头结点才能尝试获取同步状态==，原因：</p>
+</li>
+<li><p>头结点是成功获取到同步状态的节点，而头结点的线程释放了同步状态后，将会唤醒其后继节点，后继节点的线程被唤醒后需要检查自己的前驱节点是否为头节点。</p>
+</li>
+<li><p>维护同步队列的FIFO原则。节点之间互不通信，便于对过早通知的处理（过早通知是指前驱节点不是头节点的线程<br>由于中断而被唤醒）</p>
+</li>
+</ol>
+<p>释放同步状态使用<code>release</code>方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">release</span><span class="params">(<span class="keyword">int</span> arg)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (tryRelease(arg)) &#123;</span><br><span class="line">		Node h = head;</span><br><span class="line">		<span class="keyword">if</span> (h != <span class="keyword">null</span> &amp;&amp; h.waitStatus != <span class="number">0</span></span><br><span class="line">            <span class="comment">//unparkSuccessor(Node node)方法使用LockSupport（在后面的章节会专门介绍）来唤醒处于等待状态的线程</span></span><br><span class="line">			unparkSuccessor(h);</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<pre><code>总结：在获取同步状态时，同步器维护一个同步队列，获取状态失败的线程都会被加入到队列中并在队列中进行自旋，移出队列（停止自旋）的条件是前驱节点是头结点且成功获取了同步状态。在释放同步状态时，同步器调用tryRelease方法释放同步状态，然后唤醒头结点的后继节点</code></pre><p><img src="/2020/01/09/concurrent5/image-20200109142300387.png" alt="image-20200109142300387"></p>
+<h4 id="3-共享式同步状态获取和释放"><a href="#3-共享式同步状态获取和释放" class="headerlink" title="3.共享式同步状态获取和释放"></a>3.共享式同步状态获取和释放</h4><p>主要区别：同一时刻是否有多个线程同时获取到同步状态</p>
+<pre><code>共享式访问资源时，其他共享式的访问均被允许，而独占式访问被阻塞。独占式访问资源时，同一时刻其他访问均被阻塞。</code></pre><ul>
+<li><code>tryAcquireShared(int arg)</code>方法返回值为<code>int</code>类型，当返回值大于等于<code>0</code>时，表示能够获取到同步状态</li>
+<li><code>releaseShared</code>·方法和独占式主要区别在于<code>tryReleaseShared(int arg)</code>方法必须确保同步状态（或者资源数）线程安全释放，一般是通过循环和<code>CAS</code>来保证的，因为释放同步状态的操作会同时来自多个线程。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">源码细节还是有很多没有看懂</span><br><span class="line">比如interrupt的放置时机，如何保证共享的时候线程安全性、共享获取同步状态中的传播和信号都是什么意思。。。</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-独占式超时获取同步状态"><a href="#4-独占式超时获取同步状态" class="headerlink" title="4.独占式超时获取同步状态"></a>4.独占式超时获取同步状态</h4><blockquote>
+<p>通过调用同步器的<code>doAcquireNanos(int arg,long nanosTimeout)</code>方法可以超时获取同步状态，即在指定的时间段内获取同步状态，如果获取到同步状态则返回<code>true</code>，否则，返回<code>false</code>。该方法提供了传统<code>Java</code>同步操作（比如<code>synchronized</code>关键字）所不具备的特性。</p>
+</blockquote>
+<p><strong>响应中断的同步状态获取过程</strong></p>
+<p>在Java 5中，同步器提供了<code>acquireInterruptibly(int arg)</code>方法，这个方法在等待获取同步状态时，如果当前线程被中断，会立刻返回，并抛出<code>InterruptedException</code>。</p>
+<p><code>doAcquireNanos(int arg,long nanosTimeout)</code>方法在支持响应中断的基础上，增加了超时获取的特性。针对超时获取，主要需要计算出需要睡眠的时间间隔<code>nanosTimeout</code>，为了防止过早通知，<code>nanosTimeout</code>计算公式为：<code>nanosTimeout-=now-lastTime</code>，其中<code>now</code>为当前唤醒时间，<code>lastTime</code>为上次唤醒时间，如果<code>nanosTimeout</code>大于<code>0</code>则表示超时时间未到，需要继续睡眠<code>nanosTimeout</code>纳秒，反之，表示已经超时·</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">独占式超时获取同步状态和独占式获取同步状态流程上非常相似</span><br><span class="line"></span><br><span class="line">主要区别在于未获取到同步状态时的处理逻辑。acquire(int args)在未获取到同步状态时，将会使当前线程一直处于等待状态，而doAcquireNanos(int arg,long nanosTimeout)会使当前线程等待nanosTimeout纳秒，如果当前线程在nanosTimeout纳秒内没有获取到同步状态，将会从等待逻辑中自动返回</span><br><span class="line"></span><br><span class="line">当时间小于等于一个超时自旋门限时则不再进行超时等待，而是进入快速的自旋过程</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/01/09/concurrent5/image-20200109152737429.png" alt="image-20200109152737429"></p>
+<h2 id="三、重入锁（ReentrantLock）"><a href="#三、重入锁（ReentrantLock）" class="headerlink" title="三、重入锁（ReentrantLock）"></a>三、重入锁（ReentrantLock）</h2><blockquote>
+<p>synchronized关键字隐式地支持重入</p>
+<p>ReentrantLock不像synchronized隐式支持，在调用lock方法时，已经获取到锁的线程，能够再次调用lock方法获取锁而不被阻塞。</p>
+</blockquote>
+<p>公平的获取锁，也就是等待时间最长的线程最优先获取锁，也可以说锁获取是顺序的</p>
+<p>事实上，公平的锁机制往往没有非公平的效率高，但是公平锁的好处在于：公平锁能够减少“饥饿”发生的概率，等待越久的请求越是能够得到优先满足。</p>
+<h3 id="1-重入的实现"><a href="#1-重入的实现" class="headerlink" title="1.重入的实现"></a>1.重入的实现</h3><p>两个问题：</p>
+<ol>
+<li><p>再次获取锁</p>
+<p>锁需要识别获取锁的线程是否为当前占据锁的线程，如果时，再次成功获取</p>
+</li>
+<li><p>最终释放</p>
+<p>要求锁对于获取进行自增计数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">问题：意义何在？</span><br><span class="line">防止出现循环获取锁影响性能或者造成死锁</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">可重入获取锁的机制，在获取的时候如果不是第一次获取，状态加一，实际上没有进行CAS操作，因此在释放锁的时候要求state为0，才能彻底释放锁</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ol>
+<h3 id="2-公平锁与非公平锁的区别："><a href="#2-公平锁与非公平锁的区别：" class="headerlink" title="2.公平锁与非公平锁的区别："></a>2.公平锁与非公平锁的区别：</h3><p>如果一个锁是公平的，那么锁的获取顺序就应该符合请求的绝对时间顺序，也就是FIFO</p>
+<pre><code>公平锁：CAS成功，且是队列的首节点（判断多了一层对前去前驱节点的判断）
+非公平锁：CAS成功即可</code></pre><p>重入锁的默认实现是非公平锁，原因：虽然会导致饥饿，但是非公平锁的的开销少（线程切换次数少），从而可以有更高的吞吐量。</p>
+<h2 id="四、读写锁（ReentrantReadWriteLock）"><a href="#四、读写锁（ReentrantReadWriteLock）" class="headerlink" title="四、读写锁（ReentrantReadWriteLock）"></a>四、读写锁（ReentrantReadWriteLock）</h2><blockquote>
+<p>前文中的锁基本都是排他锁，在同一时刻只允许一个线程访问。</p>
+<p>读写所在同一时刻可以允许多个读线程访问，但在写线程访问时，所有读线程和其他写线程均被阻塞。（保证了写操作的可见性）</p>
+<p>读写锁维护了一对锁，一个读锁和一个写锁，通过分离读锁和写锁，使得并发性相比一般的排他锁有了很大提升。</p>
+</blockquote>
+<h3 id="读写锁的实现分析"><a href="#读写锁的实现分析" class="headerlink" title="读写锁的实现分析"></a>读写锁的实现分析</h3><h4 id="1-读写状态的设计"><a href="#1-读写状态的设计" class="headerlink" title="1.读写状态的设计"></a>1.读写状态的设计</h4><p>依赖自定义同步器，读写锁的自定义同步器需要在同步状态（一个int值）上维护多个读线程和一个写线程的状态，高16位表示读，低16位表示写。</p>
+<p><img src="/2020/01/09/concurrent5/image-20200109181223912.png" alt="image-20200109181223912"></p>
+<pre><code>位运算
+当前同步状态表示一个线程已经获取了写锁，且重进入了两次，同时也连续获取了两次
+读锁。读写锁是如何迅速确定读和写各自的状态呢？答案是通过位运算。假设当前同步状态
+值为S，写状态等于S&amp;0x0000FFFF（将高16位全部抹去），读状态等于S&gt;&gt;&gt;16（无符号补0右移16位）。当写状态增加1时，等于S+1，当读状态增加1时，等于S+(1&lt;&lt;16)，也就是
+S+0x00010000。</code></pre><h4 id="2-写锁的获取与释放"><a href="#2-写锁的获取与释放" class="headerlink" title="2.写锁的获取与释放"></a>2.写锁的获取与释放</h4><p><img src="/2020/01/09/concurrent5/image-20200109170244571.png" alt="image-20200109170244571"></p>
+<p>写锁是一个支持重入的排他锁，如果当前线程已经获取了写锁，则增加写状态。<br>如果当前线程在获取写锁时，读锁已经被获取或者该线程不是已经获取写锁的线程，则当前线程进入等待状态。</p>
+<p>==<strong>读锁存在，写锁不能获取：</strong>==</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">读写锁要确保写锁的操作对读锁可见，如果允许读锁在已被获取的情况下对写锁的获取，那么正在运行的其他读线程就无法感知到当前写线程的操作。因此，只有等待其他读线程都释放了读锁，写锁才能被当前线程获取，而写锁一旦被获取，则其他读写线程的后续访问均被阻塞。</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-读锁的获取与释放"><a href="#3-读锁的获取与释放" class="headerlink" title="3.读锁的获取与释放"></a>3.读锁的获取与释放</h4><p>在没有其他写线程访问时，读锁总会被成功地获取。如果写锁已经被其他线程获取，则进入等待状态。</p>
+<p>读锁的每次释放（线程安全的，可能有多个读线程同时释放读锁）均减少读状态，减少的值是<code>（1&lt;&lt;16）</code>。</p>
+<p>==读状态的线程安全由CAS保证==</p>
+<h4 id="4-锁降级（写锁降级成为读锁）"><a href="#4-锁降级（写锁降级成为读锁）" class="headerlink" title="4.锁降级（写锁降级成为读锁）"></a>4.锁降级（写锁降级成为读锁）</h4><p>定义：==把持住写锁==，再获取到读锁，随后释放写锁的过程</p>
+<pre><code>writeLock.lock();
+readLock.lock();
+writeLock.unlock();</code></pre><blockquote>
+<p>这边不是很理解。。。。</p>
+</blockquote>
+<blockquote>
+<p>锁降级的前提是所有线程都希望对数据变化敏感，但是因为写锁只有一个，所以会发生降级。如果先释放写锁，再获取读锁，可能在获取之前，会有其他线程获取到写锁，阻塞读锁的获取，就无法感知数据变化了。所以需要先hold住写锁，保证数据无变化，获取读锁，然后再释放写锁。锁降级中读锁获取的必要性：</p>
+</blockquote>
+<pre><code>为了保证数据的可见性，如果当前线程不获取读锁而是直接释放写锁，假设此刻另一个线程获取了写锁并修改了数据，那么当前线程无法感知到数据的更新.如果当前线程获取读锁，则另一个线程会被阻塞，直到当前线程使用数据并释放锁之后，另一个线程才能获取写锁进行数据更新。</code></pre><h2 id="五、LockSupport工具"><a href="#五、LockSupport工具" class="headerlink" title="五、LockSupport工具"></a>五、LockSupport工具</h2><blockquote>
+<p>LockSupport定义了一组的公共静态方法，这些方法提供了最基本的线程阻塞和唤醒功能，而LockSupport也成为构建同步组件的基础工具</p>
+</blockquote>
+<p><img src="/2020/01/09/concurrent5/image-20200109183846583.png" alt="image-20200109183846583"></p>
+<p>在Java 6中，LockSupport增加了park(Object blocker)、parkNanos(Object blocker,long nanos)和parkUntil(Object blocker,long deadline)3个方法，用于实现阻塞当前线程的功能，其中参数blocker是用来标识当前线程在等待的对象（以下称为阻塞对象），该对象主要用于问题排查和系统监控。</p>
+<h2 id="六、Condition接口"><a href="#六、Condition接口" class="headerlink" title="六、Condition接口"></a>六、Condition接口</h2><blockquote>
+<p>Condition接口也提供了类似Object的监视器方法，与Lock配合可以实现等待/通知模式，但是这两者在使用方式以及功能特性上还是有差别的</p>
+</blockquote>
+<h3 id="1-Condition接口和示例"><a href="#1-Condition接口和示例" class="headerlink" title="1.Condition接口和示例"></a>1.Condition接口和示例</h3><p><img src="/2020/01/09/concurrent5/image-20200109185111173.png" alt="image-20200109185111173"></p>
+<p>Condition在调用方法之前先获取锁</p>
+<p><img src="/2020/01/09/concurrent5/image-20200109190057594.png" alt="image-20200109190057594"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">在添加和删除方法中使用while循环而非if判断，目的是防止过早或意外的通知，只有条件</span><br><span class="line">符合才能够退出循环。回想之前提到的等待/通知的经典范式，二者是非常类似的。</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-Condition的实现分析"><a href="#2-Condition的实现分析" class="headerlink" title="2.Condition的实现分析"></a>2.Condition的实现分析</h3><blockquote>
+<p><code>ConditionObject</code>是同步器<code>AbstractQueuedSynchronizer</code>的内部类，因为<code>Condition</code>的操作需要获取相关联的锁，所以作为同步器的内部类也较为合理。每个<code>Condition</code>对象都包含着一个队列（以下称为等待队列），该队列是<code>Condition</code>对象实现等待/通知功能的关键。</p>
+</blockquote>
+<p><strong>等待队列</strong></p>
+<p>等待队列是一个FIFO的队列，在队列中的每个节点都包含了一个线程引用，该线程就是<br>在Condition对象上等待的线程，如果一个线程调用了Condition.await()方法，那么该线程将会释放锁、构造成节点加入等待队列并进入等待状态（和同步队列类似）</p>
+<p><img src="/2020/01/09/concurrent5/image-20200109190800698.png" alt="image-20200109190800698"></p>
+<blockquote>
+<p>在Object的监视器模型上，一个对象拥有一个同步队列和等待队列，而并发包中的<br>Lock（更确切地说是同步器）拥有一个同步队列和多个等待队列</p>
+<p>上述节点引用更新的过程并没有使用CAS保证，原因在于调用await()方法的线程必定是获取了锁的线程，也就是说该过程是由锁来保证线程安全</p>
+</blockquote>
+<p><strong>等待</strong></p>
+<p>调用Condition的signal()方法，将会唤醒在等待队列中等待时间最长的节点（首节点），在<br>唤醒节点之前，会将节点移到同步队列中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">源码略</span><br><span class="line">1. 使用locksupport中的park()方法进入等待状态，判断是否唤醒节点的标志是查看节点是否在同步队列上，因为通知condition在唤醒节点之前后将节点转移到同步队列上</span><br><span class="line">唤醒后注意还有判断唤醒方式是通知还是中断</span><br><span class="line">2. 从队列角度，线程加入Condition的等待队列实质是构造了新的节点加入等待队列</span><br></pre></td></tr></table></figure>
+
+<p><strong>通知</strong></p>
+<p>调用Condition的signal()方法，将会唤醒在等待队列中等待时间最长的节点（首节点），在<br>唤醒节点之前，会将节点移到同步队列中。</p>
+<p><img src="/2020/01/09/concurrent5/image-20200109192336832.png" alt="image-20200109192336832"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div class="post-share">分享到：</div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+            <a href="/tags/高并发/" rel="tag"># 高并发</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/01/07/concurrent4/" rel="next" title="线程间通信">
+                <i class="fa fa-chevron-left"></i> 线程间通信
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/01/20/mybatis/" rel="prev" title="mybatis基础特性和sqlsession原理">
+                mybatis基础特性和sqlsession原理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -580,7 +912,7 @@
                 <a href="/archives">
               
                   <span class="site-state-item-name">日志</span>
-				  <span class="site-state-item-count">46</span>
+				  <span class="site-state-item-count">47</span>
                 </a>
               </div>
             
