@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+
+
+
+
+<html class="theme-next pisces" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#da532c">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="google-site-verification" content="fRFpn2MbE7qpAtGAMkPwOq1xWyHF0BtvPVdE_P3qZFY">
+
+
+
+
+
+
+
+
+  <meta name="baidu-site-verification" content="t4cHu1Oo6Q">
+
+
+
+
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.loli.net/css?family=Sigmar One:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+
+  
+
+<link href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=0.0.50" rel="stylesheet" type="text/css">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=0.0.50">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/布丁.png?v=0.0.50">
+
+
+  <link rel="mask-icon" href="/safari-pinned-tab.svg?v=0.0.50" color="#da532c">
+
+
+
+
+
+
+  <meta name="keywords" content="keys">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="翻译了阿里巴巴Java编码指南中涉及的54条规则">
+<meta property="og:type" content="article">
+<meta property="og:title" content="编码规范翻译">
+<meta property="og:url" content="http://site.zblade.top/2022/08/20/trans-p3c/index.html">
+<meta property="og:site_name" content="Feel The Wind">
+<meta property="og:description" content="翻译了阿里巴巴Java编码指南中涉及的54条规则">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2022-08-21T15:20:13.965Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="编码规范翻译">
+<meta name="twitter:description" content="翻译了阿里巴巴Java编码指南中涉及的54条规则">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '0.0.50',
+    sidebar: {"position":"right","display":"always","offset":52,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    since: '9/22/2019 11:30:00',
+    onlineAPI: '',
+    site: {
+      title: 'Feel The Wind',
+      subtitle: '',
+      author: '陌花采撷'
+    },
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    leancloud: {
+      enable: false,
+      appID: 'dTfoweWyLJr7wTEW4CUhKHJQ-gzGzoHsz',
+      appKey: 'xh7FpohCp7PmwlHYAyqSaXov'
+    },
+    favicon: {
+      visibilitychange: true,
+      narmal: '/images/布丁.png',
+      hidden: '/images/failure.ico',
+      show_text: '(/≧▽≦/)咦！又好了！',
+      hide_text: 'Warning! 404-NoFound'
+    }
+  };
+</script>
+
+
+
+
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+
+  <script type="text/javascript" src="null"></script>
+
+
+
+
+
+
+
+
+  <title>编码规范翻译 | Feel The Wind</title>
+  
+
+
+
+
+
+
+
+
+ 
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans" class="theme-darling">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-首页">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-小项目">
+          <a href="javascript:;" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-flask"></i> <br>
+            
+            小项目
+          </a>
+          
+            <ul class="submenu submenu-小项目">
+              
+                
+                <li class="submenu-item submenu-item-old_blog">
+                  <a href="http://zblade.top:85/wordpress/" rel="section" target="_blank">
+                    Old_Blog
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-短网址生成">
+                  <a href="http://zblade.top:8081/" rel="section" target="_blank">
+                    短网址生成
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-资源站">
+                  <a href="http://inner.cquptict.com:90/" rel="section" target="_blank">
+                    资源站
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-ict-pan">
+                  <a href="http://www.cquptict.com:8000/" rel="section" target="_blank">
+                    ICT-Pan
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-招新系统">
+                  <a href="http://zblade.top:83/#/" rel="section" target="_blank">
+                    招新系统
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-领奖系统">
+                  <a href="https://github.com/bladedragon/PrizeTool" rel="section" target="_blank">
+                    领奖系统
+                  </a>
+                </li>
+              
+            </ul>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-归档">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-分类">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-server"></i> <br>
+            
+            分类
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-标签">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tag"></i> <br>
+            
+            标签
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-留言板">
+          <a href="/message/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-pencil"></i> <br>
+            
+            留言板
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-关于">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rocket"></i> <br>
+            
+            关于
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-coding_set">
+          <a href="https://bladedragon.github.io/coding_docs/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sign-language"></i> <br>
+            
+            Coding_Set
+          </a>
+          
+        </li>
+      
+
+      
+      <li class="menu-item search">
+          <form class="search-form">
+            <input name="keyword" type="text" class="search-input" placeholder="站内搜索">
+            <button type="submit" class="search-submit"><i class="fa fa-search"></i></button>
+          </form>
+      </li>
+      <!--<li class="menu-item online"><span id="online-count">?</span>人在线</li>-->
+    </ul>
+  
+
+  
+</nav>
+
+<div class="site-brand-wrapper" style="background-image: url(http://cdn.zblade.top/qiniu_img/wallhaven-6k1j7l.jpg)">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <div class="brand">
+        <span class="logo-line-before"><i></i></span>
+        <div class="site-title">
+          <div id="animate" class="animate">
+            <span>F</span><span>e</span><span>e</span><span>l</span><span> </span><span>T</span><span>h</span><span>e</span><span> </span><span>W</span><span>i</span><span>n</span><span>d</span>
+          </div>
+          <div id="guide" class="guide">
+            <span>F</span><span>e</span><span>e</span><span>l</span><span> </span><span>T</span><span>h</span><span>e</span><span> </span><span>W</span><span>i</span><span>n</span><span>d</span>
+          </div>
+        </div>
+        <span class="logo-line-after"><i></i></span>
+      </div>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<div class="site-master" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-master-avatar" itemprop="image" src="http://cdn.zblade.top/qiniu_img/zavatar2.jpg" alt="陌花采撷">
+    <h2 class="site-master-description" itemprop="description">
+        <span>即使天无雨，</span><span>吾亦留此地</span>
+    </h2>
+</div>
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-date">
+			<div class="post-month">08月</div>
+			<div class="post-day">20</div>
+	</div>
+  
+
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://site.zblade.top/2022/08/20/trans-p3c/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="陌花采撷">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="http://cdn.zblade.top/qiniu_img/zavatar2.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Feel The Wind">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">编码规范翻译</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-08-20T18:08:20+08:00">2022-08-20</time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>翻译了阿里巴巴Java编码指南中涉及的54条规则</p>
+<a id="more"></a>
+
+<h2 id="并发"><a href="#并发" class="headerlink" title="并发"></a>并发</h2><ol>
+<li><p>[强制]定制的ThreadLocal变量必须回收，特别是在使用线程池(其中线程经常被重用)时。否则，它可能会影响后续的业务逻辑，并导致内存泄漏等意外问题。</p>
+</li>
+<li><p>[强制]一个有意义的线程名称有助于跟踪错误信息，因此在创建线程或线程池时分配一个名称。</p>
+<p>案例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TimerTaskThread</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TimerTaskThread</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.setName(<span class="string">"TimerTaskThread"</span>); … &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>[强制]线程应该由线程池提供。不允许显式地创建线程。注意:使用线程池可以减少创建和销毁线程的时间，节省系统资源。如果我们不使用线程池，将会创建许多类似的线程，从而导致“内存耗尽”或过度切换问题。</p>
+</li>
+<li><p>线程池应该由ThreadPoolExecutor而不是executor创建。这样就可以理解线程池的参数。它还将减少耗尽系统资源的风险。注意:以下是使用executor创建线程池所产生的问题:</p>
+<ul>
+<li><p>FixedThreadPool和SingleThreadPool:最大请求队列大小。大量的请求可能会导致OOM。</p>
+</li>
+<li><p>CachedThreadPool ScheduledThreadPool:  </p>
+<p>允许创建的线程数为Integer.MAX_VALUE。创建太多的线程可能会导致OOM</p>
+</li>
+</ul>
+</li>
+<li><p>[强制]SimpleDataFormat是不安全的，不要将其定义为静态变量。如果必须使用，则必须使用lock或Apache DateUtils类。正例:使用DateUtils时要注意线程安全。建议使用如下:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> ThreadLocal&lt;DateFormat&gt; df = <span class="keyword">new</span> ThreadLocal&lt;DateFormat&gt;() &#123;  </span><br><span class="line">    <span class="meta">@Override</span>  </span><br><span class="line">    <span class="function"><span class="keyword">protected</span> DateFormat <span class="title">initialValue</span><span class="params">()</span> </span>&#123;  </span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyy-MM-dd"</span>);  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<pre><code>注意:在JDK8中，可以使用Instant代替Date;同样地，Calendar被LocalDateTime取代，SimpleDateFormatter被DateTimeFormatter取代。</code></pre></li>
+<li><p>[强制]使用ScheduledExecutorService而不是Timer来运行多个timeask，因为Timer将在捕获异常失败的情况下杀死所有正在运行的线程。</p>
+</li>
+<li><p>[推荐]当使用CountDownLatch将异步操作转换为同步操作时，每个线程退出前必须调用countdown方法。确保在线程运行期间捕获任何异常，以便执行倒计时方法。如果主线程无法到达await方法，程序将返回，直到超时。注意:子线程抛出的异常不能被主线程捕获。</p>
+</li>
+<li><p>[推荐]避免多线程使用随机实例。尽管它是线程安全的，但在同一种子上的竞争会损害性能。注意:随机实例包括java.util.Random和Math.random()的实例。  </p>
+<p>正面例子:</p>
+<p>JDK7之后，可以直接使用ThreadLocalRandom API。但是在JDK7之前，需要在每个线程中创建实例。</p>
+</li>
+</ol>
+<h2 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h2>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div class="post-share">分享到：</div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/08/14/spark-ui-param/" rel="next" title="spark源码笔记-UI参数原理">
+                <i class="fa fa-chevron-left"></i> spark源码笔记-UI参数原理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/11/20/next-blog/" rel="prev" title="新的博客">
+                新的博客 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+  <div class="comments" id="comments">
+      <div id="gitalk-container"></div>
+    </div>
+	
+  
+
+
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+        <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+		<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    
+		<script type="text/javascript">
+		const gitalk = new Gitalk({
+		clientID: '8c4098d1aa1409852b19',
+		clientSecret: 'cdc136702eaaa9600bc46ab7da3c95a8537116ef',
+		repo: 'Blog_message_repo',
+		owner: 'BladeDragon',
+		admin: ['BladeDragon'],
+		id: window.location.pathname,      // Ensure uniqueness and length less than 50
+		});
+		
+		gitalk.render('gitalk-container');
+		</script>
+
+    
+
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://cdn.zblade.top/qiniu_img/zcard2.png" alt="陌花采撷">
+            
+              <p class="site-author-name" itemprop="name"><span style="opacity:.2;"></span>陌花采撷</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/bladedragon" target="_blank" title="GitHub" data-balloon="GitHub" data-balloon-pos="up">
+                    
+                       <i class="fa fa-fw fa-github"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://telegram.com" target="_blank" title="telegram" data-balloon="telegram" data-balloon-pos="up">
+                    
+                       <i class="fa fa-fw fa-telegram"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:zaft1156673039@gmail.com" target="_blank" title="E-Mail" data-balloon="E-Mail" data-balloon-pos="up">
+                    
+                       <i class="fa fa-fw fa-envelope"></i></a>
+                </span>
+              
+            
+          </div>
+
+         
+
+          
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-name">日志</span>
+				  <span class="site-state-item-count">51</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-name">分类</span>
+				   <span class="site-state-item-count">4</span>
+                </a>
+              </div>
+            
+            
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+				 <span class="site-state-item-name">标签</span>
+				  <span class="site-state-item-count">26</span>
+                </a>
+              </div>
+            
+            
+
+          </nav>
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              
+            </div>
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#并发"><span class="nav-text">并发</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#集合"><span class="nav-text">集合</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-image"></div>
+      <div class="footer-inner">
+        <p>本博客已出生<span id="since"></span><span class="my-face">(●'◡'●)ﾉ♥</span></p>
+<p></p>
+
+Theme By <a href="https://github.com/DIYgod/hexo-theme-sagiri" target="_blank" class="external" rel="nofollow">Sagiri</a>
+
+<p>Made with <i class="fa fa-heart throb" style="color: #d43f57;"></i> by <span class="author" itemprop="copyrightHolder">陌花采撷</span>. </p>
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    <canvas id="evanyou"></canvas>
+    <div id="aplayer-fixed"></div>
+
+    
+	
+  </div>
+
+	
+  <script type="text/javascript" src="/js/sagiri.min.js?v=0.0.50"></script>
+	
+  
+
+
+
+
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+  <!--<script>
+    // remove service worker cache
+    // from https://stackoverflow.com/questions/33704791/how-do-i-uninstall-a-service-worker
+    "use strict";
+    if(navigator.serviceWorker)
+    {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            for(let registration of registrations) {
+                registration.unregister()
+            }
+        })
+    }
+  </script>-->
+
+  <!--<script>
+    var serviceWorkerUri = '/sw.js';
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register(serviceWorkerUri).then(function() {
+          if (navigator.serviceWorker.controller) {
+            console.log('Assets cached by the controlling service worker.');
+          } else {
+            console.log('Please reload this page to allow the service worker to handle network operations.');
+          }
+        }).catch(function(error) {
+          console.log('ERROR: ' + error);
+        });
+    } else {
+        console.log('Service workers are not supported in the current browser.');
+    }
+  </script>-->
+  
+  
+
+	
+</body>
+</html>
