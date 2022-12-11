@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+
+
+
+
+<html class="theme-next pisces" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#da532c">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="google-site-verification" content="fRFpn2MbE7qpAtGAMkPwOq1xWyHF0BtvPVdE_P3qZFY">
+
+
+
+
+
+
+
+
+  <meta name="baidu-site-verification" content="t4cHu1Oo6Q">
+
+
+
+
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.loli.net/css?family=Sigmar One:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+
+  
+
+<link href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=0.0.50" rel="stylesheet" type="text/css">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=0.0.50">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/布丁.png?v=0.0.50">
+
+
+  <link rel="mask-icon" href="/safari-pinned-tab.svg?v=0.0.50" color="#da532c">
+
+
+
+
+
+
+  <meta name="keywords" content="大数据,Spark,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="最近因为一些工作场景需要获取spark 任务的更多信息，所以要修改spark 源码添加新的metric。顺便串一下整个metric体系，形成整体认知。 以下讨论基于spark3.1.2，让我们开始吧">
+<meta name="keywords" content="大数据,Spark">
+<meta property="og:type" content="article">
+<meta property="og:title" content="给Spark添加自定义的metric信息">
+<meta property="og:url" content="http://site.zblade.top/2022/12/11/spark-metric/index.html">
+<meta property="og:site_name" content="Feel The Wind">
+<meta property="og:description" content="最近因为一些工作场景需要获取spark 任务的更多信息，所以要修改spark 源码添加新的metric。顺便串一下整个metric体系，形成整体认知。 以下讨论基于spark3.1.2，让我们开始吧">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2022-12-11T09:01:12.353Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="给Spark添加自定义的metric信息">
+<meta name="twitter:description" content="最近因为一些工作场景需要获取spark 任务的更多信息，所以要修改spark 源码添加新的metric。顺便串一下整个metric体系，形成整体认知。 以下讨论基于spark3.1.2，让我们开始吧">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '0.0.50',
+    sidebar: {"position":"right","display":"always","offset":52,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    since: '9/22/2019 11:30:00',
+    onlineAPI: '',
+    site: {
+      title: 'Feel The Wind',
+      subtitle: '',
+      author: '陌花采撷'
+    },
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    leancloud: {
+      enable: false,
+      appID: 'dTfoweWyLJr7wTEW4CUhKHJQ-gzGzoHsz',
+      appKey: 'xh7FpohCp7PmwlHYAyqSaXov'
+    },
+    favicon: {
+      visibilitychange: true,
+      narmal: '/images/布丁.png',
+      hidden: '/images/failure.ico',
+      show_text: '(/≧▽≦/)咦！又好了！',
+      hide_text: 'Warning! 404-NoFound'
+    }
+  };
+</script>
+
+
+
+
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+
+  <script type="text/javascript" src="null"></script>
+
+
+
+
+
+
+
+
+  <title>给Spark添加自定义的metric信息 | Feel The Wind</title>
+  
+
+
+
+
+
+
+
+
+ 
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans" class="theme-darling">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-首页">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-小项目">
+          <a href="javascript:;" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-flask"></i> <br>
+            
+            小项目
+          </a>
+          
+            <ul class="submenu submenu-小项目">
+              
+                
+                <li class="submenu-item submenu-item-old_blog">
+                  <a href="http://zblade.top:85/wordpress/" rel="section" target="_blank">
+                    Old_Blog
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-短网址生成">
+                  <a href="http://zblade.top:8081/" rel="section" target="_blank">
+                    短网址生成
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-资源站">
+                  <a href="http://inner.cquptict.com:90/" rel="section" target="_blank">
+                    资源站
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-ict-pan">
+                  <a href="http://www.cquptict.com:8000/" rel="section" target="_blank">
+                    ICT-Pan
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-招新系统">
+                  <a href="http://zblade.top:83/#/" rel="section" target="_blank">
+                    招新系统
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-领奖系统">
+                  <a href="https://github.com/bladedragon/PrizeTool" rel="section" target="_blank">
+                    领奖系统
+                  </a>
+                </li>
+              
+            </ul>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-归档">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-分类">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-server"></i> <br>
+            
+            分类
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-标签">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tag"></i> <br>
+            
+            标签
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-留言板">
+          <a href="/message/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-pencil"></i> <br>
+            
+            留言板
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-关于">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rocket"></i> <br>
+            
+            关于
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-coding_set">
+          <a href="https://bladedragon.github.io/coding_docs/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sign-language"></i> <br>
+            
+            Coding_Set
+          </a>
+          
+        </li>
+      
+
+      
+      <li class="menu-item search">
+          <form class="search-form">
+            <input name="keyword" type="text" class="search-input" placeholder="站内搜索">
+            <button type="submit" class="search-submit"><i class="fa fa-search"></i></button>
+          </form>
+      </li>
+      <!--<li class="menu-item online"><span id="online-count">?</span>人在线</li>-->
+    </ul>
+  
+
+  
+</nav>
+
+<div class="site-brand-wrapper" style="background-image: url(http://cdn.zblade.top/qiniu_img/wallhaven-6k1j7l.jpg)">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <div class="brand">
+        <span class="logo-line-before"><i></i></span>
+        <div class="site-title">
+          <div id="animate" class="animate">
+            <span>F</span><span>e</span><span>e</span><span>l</span><span> </span><span>T</span><span>h</span><span>e</span><span> </span><span>W</span><span>i</span><span>n</span><span>d</span>
+          </div>
+          <div id="guide" class="guide">
+            <span>F</span><span>e</span><span>e</span><span>l</span><span> </span><span>T</span><span>h</span><span>e</span><span> </span><span>W</span><span>i</span><span>n</span><span>d</span>
+          </div>
+        </div>
+        <span class="logo-line-after"><i></i></span>
+      </div>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<div class="site-master" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-master-avatar" itemprop="image" src="http://cdn.zblade.top/qiniu_img/zavatar2.jpg" alt="陌花采撷">
+    <h2 class="site-master-description" itemprop="description">
+        <span>即使天无雨，</span><span>吾亦留此地</span>
+    </h2>
+</div>
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-date">
+			<div class="post-month">12月</div>
+			<div class="post-day">11</div>
+	</div>
+  
+
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://site.zblade.top/2022/12/11/spark-metric/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="陌花采撷">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="http://cdn.zblade.top/qiniu_img/zavatar2.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Feel The Wind">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">给Spark添加自定义的metric信息</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-12-11T16:54:46+08:00">2022-12-11</time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近因为一些工作场景需要获取spark 任务的更多信息，所以要修改spark 源码添加新的metric。顺便串一下整个metric体系，形成整体认知。</p>
+<p>以下讨论基于spark3.1.2，让我们开始吧</p>
+<a id="more"></a>
+
+<h3 id="ListenerBus-机制"><a href="#ListenerBus-机制" class="headerlink" title="ListenerBus 机制"></a>ListenerBus 机制</h3><p>在动手实操之前，首先我们需要了解spark的listener机制<br>spark中存在多个模块的协同操作，通过考虑到实时性和结构的解耦，spark引入了事件总线的机制，通过注册和监听事件的方式，可以spark各种事件的触发点执行不同的操作。</p>
+<p>在spark中可以指定某个操作的执行作为事件，并事先注册在事件总线中。当该操作执行后发送事件，事件总线就会接受到该事件并异步地将该事件传递给所有监听该事件的监听器，并执行对应方法。这实际上也是典型的生产-消费者模式。我们需要人为的生产一条事件，然后便会有消费者去消费这个事件。最经典的用法就是在某个任务执行前后监听该任务，并近实时获取该任务的开始结束状态，从而获取该任务执行过程中的各种统计信息，也就是我们下面会讲到的metric。</p>
+<br>
+
+<p>在spark中如果想要自行添加事件监听也非常简单，不过对代码有一些侵入性。这里以task开始执行的为例。<br>首先我们需要注册事件到listenerBus，先创建一个case class继承SparkListenerEvent</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">case</span> class <span class="title">SparkListenerTaskStart</span><span class="params">(stageId: Int, stageAttemptId: Int, taskInfo: TaskInfo)</span></span></span><br><span class="line"><span class="function">  extends SparkListenerEvent</span></span><br></pre></td></tr></table></figure>
+
+<p>SparkListenerEvent的具体实现如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@DeveloperApi</span></span><br><span class="line"><span class="meta">@JsonTypeInfo</span>(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = <span class="string">"Event"</span>)</span><br><span class="line">trait SparkListenerEvent &#123;</span><br><span class="line">  <span class="comment">/* Whether output this event to the event log */</span></span><br><span class="line">  <span class="keyword">protected</span>[spark] def logEvent: Boolean = <span class="keyword">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>SparkListenerEvent 会被SparkListener接受，并回调指定的方法，具体看SparkListener.scala中的实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@DeveloperApi</span></span><br><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">SparkListener</span> <span class="keyword">extends</span> <span class="title">SparkListenerInterface</span> </span>&#123;</span><br><span class="line">  <span class="function">override def <span class="title">onTaskStart</span><span class="params">(taskStart: SparkListenerTaskStart)</span>: Unit </span>= &#123; &#125;</span><br><span class="line">  <span class="comment">// Some code here ...</span></span><br><span class="line">  <span class="function">override def <span class="title">onOtherEvent</span><span class="params">(event: SparkListenerEvent)</span>: Unit </span>= &#123; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从上面的代码中我们可以得知两点，一是spark内置了一些event的回调方法，但是如果我们自定义event，最终会走到onOtherEvent方法中，所以实际上只需要继承onOtherEvent方法，并在其中进行模式匹配，就可以监听我们自定义的事件，从而减少了对spark core代码的侵入。 二是我们可以继承SparkListener来重载方法，从而加入我们自己的监听逻辑.</p>
+<p>至于SparkListener 是如何实现监听的，我们就需要来看ListenerBus的具体实现，在ListenerBus.scala中：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span>[spark] trait ListenerBus[L &lt;: AnyRef, E] extends Logging &#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Marked `private[spark]` for access in tests.</span></span><br><span class="line">  <span class="keyword">private</span>[spark] def listeners = listenersPlusTimers.asScala.map(_._1).asJava</span><br><span class="line"></span><br><span class="line"><span class="comment">//Some code here ...</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Post the event to all registered listeners. The `postToAll` caller should guarantee calling</span></span><br><span class="line"><span class="comment">   * `postToAll` in the same thread for all events.</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line"><span class="function">def <span class="title">postToAll</span><span class="params">(event: E)</span>: Unit </span>= &#123;</span><br><span class="line">    <span class="comment">// JavaConverters can create a JIterableWrapper if we use asScala.</span></span><br><span class="line">    <span class="comment">// However, this method will be called frequently. To avoid the wrapper cost, here we use</span></span><br><span class="line">    <span class="comment">// Java Iterator directly.</span></span><br><span class="line">    val iter = listenersPlusTimers.iterator</span><br><span class="line">    <span class="keyword">while</span> (iter.hasNext) &#123;</span><br><span class="line">      val listenerAndMaybeTimer = iter.next()</span><br><span class="line">      val listener = listenerAndMaybeTimer._1</span><br><span class="line">      val maybeTimer = listenerAndMaybeTimer._2</span><br><span class="line">      val maybeTimerContext = <span class="keyword">if</span> (maybeTimer.isDefined) &#123;</span><br><span class="line">        maybeTimer.get.time()</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">null</span></span><br><span class="line">      &#125;</span><br><span class="line">      lazy val listenerName = Utils.getFormattedClassName(listener)</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        doPostEvent(listener, event)</span><br><span class="line">        <span class="keyword">if</span> (Thread.interrupted()) &#123;</span><br><span class="line">          <span class="comment">// We want to throw the InterruptedException right away so we can associate the interrupt</span></span><br><span class="line">          <span class="comment">// with this listener, as opposed to waiting for a queue.take() etc. to detect it.</span></span><br><span class="line">          <span class="keyword">throw</span> <span class="keyword">new</span> InterruptedException()</span><br><span class="line">        &#125;</span><br><span class="line">      &#125; <span class="keyword">catch</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> ie: InterruptedException =&gt;</span><br><span class="line">          logError(s<span class="string">"Interrupted while posting to $&#123;listenerName&#125;. Removing that listener."</span>, ie)</span><br><span class="line">          removeListenerOnError(listener)</span><br><span class="line">        <span class="function"><span class="keyword">case</span> <span class="title">NonFatal</span><span class="params">(e)</span> <span class="keyword">if</span> !<span class="title">isIgnorableException</span><span class="params">(e)</span> </span>=&gt;</span><br><span class="line">          logError(s<span class="string">"Listener $&#123;listenerName&#125; threw an exception"</span>, e)</span><br><span class="line">      &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (maybeTimerContext != <span class="keyword">null</span>) &#123;</span><br><span class="line">          val elapsed = maybeTimerContext.stop()</span><br><span class="line">          <span class="keyword">if</span> (logSlowEventEnabled &amp;&amp; elapsed &gt; logSlowEventThreshold) &#123;</span><br><span class="line">            logInfo(s<span class="string">"Process of event $&#123;redactEvent(event)&#125; by listener $&#123;listenerName&#125; took "</span> +</span><br><span class="line">              s<span class="string">"$&#123;elapsed / 1000000000d&#125;s."</span>)</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面的代码可以简单解释一下，在listenerBus中实际用一个list保存所有的监听器Listener，并用一个定时器去定时调度，执行监听方法。这里只是基础实现，实际上我们常用的SparkListenerBus 具体由AsyncEventQueue实现，在实际发送事件时采用异步的方式，不会引起阻塞。</p>
+<br>
+
+<p>了解了ListenerBus的具体实现，我们就可以更自如的使用它。在我们具体的实现类中，只需要传入listener Bus的实例，如下面dagScheduler.scala的例子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span>[spark] <span class="class"><span class="keyword">class</span> <span class="title">DAGScheduler</span>(</span></span><br><span class="line">    private[scheduler] val sc: SparkContext,</span><br><span class="line">    <span class="keyword">private</span>[scheduler] val taskScheduler: TaskScheduler,</span><br><span class="line">    listenerBus: LiveListenerBus,</span><br><span class="line">    mapOutputTracker: MapOutputTrackerMaster,</span><br><span class="line">    blockManagerMaster: BlockManagerMaster,</span><br><span class="line">    env: SparkEnv,</span><br><span class="line">    clock: Clock = <span class="keyword">new</span> SystemClock())</span><br><span class="line">  extends Logging &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// some code here ...</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后在需要监听的行为后面发送事件：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span>[scheduler] <span class="function">def <span class="title">handleBeginEvent</span><span class="params">(task: Task[_], taskInfo: TaskInfo)</span>: Unit </span>= &#123;</span><br><span class="line">    <span class="comment">// Note that there is a chance that this task is launched after the stage is cancelled.</span></span><br><span class="line">    <span class="comment">// In that case, we wouldn't have the stage anymore in stageIdToStage.</span></span><br><span class="line">    val stageAttemptId =</span><br><span class="line">      stageIdToStage.get(task.stageId).map(_.latestInfo.attemptNumber).getOrElse(-<span class="number">1</span>)</span><br><span class="line">    listenerBus.post(SparkListenerTaskStart(task.stageId, stageAttemptId, taskInfo))</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样，在执行到任务开始的逻辑后，spark就会自动监听并发送事件，我们的listener接受到事件后，就会执行onTaskStart的方法。</p>
+<h3 id="Metric体系"><a href="#Metric体系" class="headerlink" title="Metric体系"></a>Metric体系</h3><p>spark 引用了一个第三方的<a href="http://metrics.codahale.com/" target="_blank" rel="noopener">metric 系统</a> 其基本逻辑也就是从注册一些指标，用kv存储的方式统计这些指标，并实现对应的输出<br>主要概念有三个</p>
+<ul>
+<li><p>source metric的来源，例如JvmSource</p>
+</li>
+<li><p>sink metric的输出， spark支持多种输出方式，例如CSVSink</p>
+</li>
+<li><p>MetricRegistry，具体存储metric的类，由第三方库实现</p>
+<p>我们今天暂时不讲metric如果具体实现，而是关注SparkUI如何展示这些metric。以ExecutorMetric为例。<br>进入ExecutorMetric.scala, 我们可以看到实际上executorMetric实际是一层封装，具体的metric信息在ExecutorMetricType.scala中：</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">class ExecutorMetrics private[spark] extends Serializable &#123;</span><br><span class="line">  <span class="comment">// Metrics are indexed by ExecutorMetricType.metricToOffset</span></span><br><span class="line">  <span class="keyword">private</span> val metrics = <span class="keyword">new</span> Array[Long](ExecutorMetricType.numMetrics)</span><br><span class="line"></span><br><span class="line"><span class="comment">/** Returns the value for the specified metric. */</span></span><br><span class="line">  <span class="function">def <span class="title">getMetricValue</span><span class="params">(metricName: String)</span>: Long </span>= &#123;</span><br><span class="line">    metrics(ExecutorMetricType.metricToOffset(metricName))</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// Some code here ..</span></span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span>[spark] object ExecutorMetricType &#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// List of all executor metric getters</span></span><br><span class="line">  val metricGetters = IndexedSeq(</span><br><span class="line">    JVMHeapMemory,</span><br><span class="line">    JVMOffHeapMemory,</span><br><span class="line">    OnHeapExecutionMemory,</span><br><span class="line">    OffHeapExecutionMemory,</span><br><span class="line">    OnHeapStorageMemory,</span><br><span class="line">    OffHeapStorageMemory,</span><br><span class="line">    OnHeapUnifiedMemory,</span><br><span class="line">    OffHeapUnifiedMemory,</span><br><span class="line">    DirectPoolMemory,</span><br><span class="line">    MappedPoolMemory,</span><br><span class="line">    ProcessTreeMetrics,</span><br><span class="line">    GarbageCollectionMetrics</span><br><span class="line">  )</span><br><span class="line"></span><br><span class="line">  val (metricToOffset, numMetrics) = &#123;</span><br><span class="line">    <span class="keyword">var</span> numberOfMetrics = <span class="number">0</span></span><br><span class="line">    val definedMetricsAndOffset = mutable.LinkedHashMap.empty[String, Int]</span><br><span class="line">    metricGetters.foreach &#123; m =&gt;</span><br><span class="line">      (<span class="number">0</span> until m.names.length).foreach &#123; idx =&gt;</span><br><span class="line">        definedMetricsAndOffset += (m.names(idx) -&gt; (idx + numberOfMetrics))</span><br><span class="line">      &#125;</span><br><span class="line">      numberOfMetrics += m.names.length</span><br><span class="line">    &#125;</span><br><span class="line">    (definedMetricsAndOffset, numberOfMetrics)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里我们就不看这些metric的实际统计方法了，只关注如何保存这些metric。实际上在ExecutorMetricType的类中很多都是调用JMX实现的统计。</p>
+<p>这些metric是如何展示的呢？我们首先来看看api.scala，这里保存了executorMetric:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">class ExecutorStageSummary private[spark](</span><br><span class="line">    val taskTime : Long,</span><br><span class="line">    val failedTasks : Int,</span><br><span class="line">    val succeededTasks : Int,</span><br><span class="line">    val killedTasks : Int,</span><br><span class="line">    val inputBytes : Long,</span><br><span class="line">    val inputRecords : Long,</span><br><span class="line">    val outputBytes : Long,</span><br><span class="line">    val outputRecords : Long,</span><br><span class="line">    val shuffleRead : Long,</span><br><span class="line">    val shuffleReadRecords : Long,</span><br><span class="line">    val shuffleWrite : Long,</span><br><span class="line">    val shuffleWriteRecords : Long,</span><br><span class="line">    val memoryBytesSpilled : Long,</span><br><span class="line">    val diskBytesSpilled : Long,</span><br><span class="line">    <span class="meta">@deprecated</span>(<span class="string">"use isExcludedForStage instead"</span>, <span class="string">"3.1.0"</span>)</span><br><span class="line">    val isBlacklistedForStage: Boolean,</span><br><span class="line">    <span class="meta">@JsonSerialize</span>(using = classOf[ExecutorMetricsJsonSerializer])</span><br><span class="line">    <span class="meta">@JsonDeserialize</span>(using = classOf[ExecutorMetricsJsonDeserializer])</span><br><span class="line">    val peakMemoryMetrics: Option[ExecutorMetrics],</span><br><span class="line">    val isExcludedForStage: Boolean)</span><br></pre></td></tr></table></figure>
+
+<p>这里随便挑了一个类，实际上还有别的类里保存了executorMetric,我们可以发现这里的metric信息排列其实和sparkUI上的展示如出一辙，可以联想到，在前端展示的数据格式就是这种。</p>
+<p>再向上追溯，我们发现它被封装成LiveEntity：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> class <span class="title">LiveExecutorStageSummary</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">    stageId: Int,</span></span></span><br><span class="line"><span class="function"><span class="params">    attemptId: Int,</span></span></span><br><span class="line"><span class="function"><span class="params">    executorId: String)</span> extends LiveEntity </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">import</span> LiveEntityHelpers._</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> taskTime = <span class="number">0L</span></span><br><span class="line">  <span class="keyword">var</span> succeededTasks = <span class="number">0</span></span><br><span class="line">  <span class="keyword">var</span> failedTasks = <span class="number">0</span></span><br><span class="line">  <span class="keyword">var</span> killedTasks = <span class="number">0</span></span><br><span class="line">  <span class="keyword">var</span> isExcluded = <span class="keyword">false</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> metrics = createMetrics(<span class="keyword">default</span> = <span class="number">0L</span>)</span><br><span class="line"></span><br><span class="line">  val peakExecutorMetrics = <span class="keyword">new</span> ExecutorMetrics()</span><br><span class="line"></span><br><span class="line">  <span class="function">override <span class="keyword">protected</span> def <span class="title">doUpdate</span><span class="params">()</span>: Any </span>= &#123;</span><br><span class="line">    val info = <span class="keyword">new</span> v1.ExecutorStageSummary(</span><br><span class="line">      taskTime,</span><br><span class="line">      failedTasks,</span><br><span class="line">      succeededTasks,</span><br><span class="line">      killedTasks,</span><br><span class="line">      metrics.inputMetrics.bytesRead,</span><br><span class="line">      metrics.inputMetrics.recordsRead,</span><br><span class="line">      metrics.outputMetrics.bytesWritten,</span><br><span class="line">      metrics.outputMetrics.recordsWritten,</span><br><span class="line">      metrics.shuffleReadMetrics.remoteBytesRead + metrics.shuffleReadMetrics.localBytesRead,</span><br><span class="line">      metrics.shuffleReadMetrics.recordsRead,</span><br><span class="line">      metrics.shuffleWriteMetrics.bytesWritten,</span><br><span class="line">      metrics.shuffleWriteMetrics.recordsWritten,</span><br><span class="line">      metrics.memoryBytesSpilled,</span><br><span class="line">      metrics.diskBytesSpilled,</span><br><span class="line">      isExcluded,</span><br><span class="line">      Some(peakExecutorMetrics).filter(_.isSet),</span><br><span class="line">      isExcluded)</span><br><span class="line">    <span class="keyword">new</span> ExecutorStageSummaryWrapper(stageId, attemptId, executorId, info)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这里暴露它的更新方法doUpdate()。 再向上追溯我们可以看到再LiveEntity.scala中提供了对象的保存方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// LiveEntity.scala </span></span><br><span class="line"><span class="function">def <span class="title">write</span><span class="params">(store: ElementTrackingStore, now: Long, checkTriggers: Boolean = <span class="keyword">false</span>)</span>: Unit </span>= &#123;</span><br><span class="line">    <span class="comment">// Always check triggers on the first write, since adding an element to the store may</span></span><br><span class="line">    <span class="comment">// cause the maximum count for the element type to be exceeded.</span></span><br><span class="line">    store.write(doUpdate(), checkTriggers || lastWriteTime == -<span class="number">1L</span>)</span><br><span class="line">    lastWriteTime = now</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里我们可以得到，metric的实际信息会最终保存到一个kv 存储中供前端调用。而这个实体类是如何更新的呢？跳转到该方法的引用位置，我们发现实际上该方法是被appStatusListener的监听方法调用。基于上一部分的探索，由此我们可以得出结论，metric的更新就是通过SparkListener的监听机制更新。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">private[spark] class AppStatusListener(</span><br><span class="line">    kvstore: ElementTrackingStore,</span><br><span class="line">    conf: SparkConf,</span><br><span class="line">    live: Boolean,</span><br><span class="line">    appStatusSource: Option[AppStatusSource] = None,</span><br><span class="line">    lastUpdateTime: Option[Long] = None) extends SparkListener with Logging &#123;</span><br><span class="line"></span><br><span class="line">    // Some code here...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="在sparkUI上添加自定义的executor-metric"><a href="#在sparkUI上添加自定义的executor-metric" class="headerlink" title="在sparkUI上添加自定义的executor metric"></a>在sparkUI上添加自定义的executor metric</h3><p>有了上面的知识储备，我们总算能在spark UI 中自由加入自己的metric。由于前端数据的交互都是js实现，我们只需要定位到对应的js文件就能找到数据的展示位置。<br>我们以executorMetric为例，首先找到 executor对应的page，在executorspage.js中：</p>
+<p>我们找到如下ajax函数：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$.<span class="keyword">get</span>(createTemplateURI(appId, "executorspage"), function (template) &#123; ...&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>实际的数据展示就是以下面的方式展示：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">              data: <span class="function"><span class="keyword">function</span> (<span class="params">row, type</span>) </span>&#123;</span><br><span class="line">                <span class="keyword">var</span> peakMemoryMetrics = row.peakMemoryMetrics;</span><br><span class="line">                <span class="keyword">if</span> (<span class="keyword">typeof</span> peakMemoryMetrics !== <span class="string">'undefined'</span>) &#123;</span><br><span class="line">                  <span class="keyword">if</span> (type !== <span class="string">'display'</span>)</span><br><span class="line">                    <span class="keyword">return</span> peakMemoryMetrics.DirectPoolMemory;</span><br><span class="line">                  <span class="keyword">else</span></span><br><span class="line">                    <span class="keyword">return</span> (formatBytes(peakMemoryMetrics.DirectPoolMemory, type) + <span class="string">' / '</span> +</span><br><span class="line">                      formatBytes(peakMemoryMetrics.MappedPoolMemory, type));</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                  <span class="keyword">if</span> (type !== <span class="string">'display'</span>) &#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">                  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="string">'0.0 B / 0.0 B'</span>;</span><br><span class="line">                  &#125;</span><br><span class="line">                &#125;</span><br><span class="line">              &#125;</span><br><span class="line">            &#125;</span><br></pre></td></tr></table></figure>
+
+<p>在前端展示则是在以下html元素：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- in executorspage-template.html--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">th</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span> <span class="attr">data-toggle</span>=<span class="string">"tooltip"</span> <span class="attr">data-placement</span>=<span class="string">"top"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">title</span>=<span class="string">"Peak direct byte buffer / memory-mapped buffer pool memory used by JVM. This refers to BufferPoolMXBean with form 'java.nio:type=BufferPool,name=direct' and 'java.nio:type=BufferPool,name=mapped'."</span>&gt;</span></span><br><span class="line">              Peak Pool Memory Direct / Mapped</span><br><span class="line">  <span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>  可以看到这里直接 从后端数据中获取peakMemoryMetrics这个对象，那么数据返回格式什么呢？我们查询前端请求函数：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">// executorspage.js</span></span><br><span class="line"> <span class="keyword">var</span> endPoint = createRESTEndPointForExecutorsPage(appId);</span><br><span class="line"></span><br><span class="line"> <span class="comment">// utils.js</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createRESTEndPointForExecutorsPage</span>(<span class="params">appId</span>) </span>&#123;</span><br><span class="line"><span class="keyword">var</span> words = getBaseURI().split(<span class="string">'/'</span>);</span><br><span class="line"><span class="keyword">var</span> ind = words.indexOf(<span class="string">"proxy"</span>);</span><br><span class="line"><span class="keyword">var</span> newBaseURI;</span><br><span class="line"><span class="keyword">if</span> (ind &gt; <span class="number">0</span>) &#123;</span><br><span class="line">  appId = words[ind + <span class="number">1</span>];</span><br><span class="line">  newBaseURI = words.slice(<span class="number">0</span>, ind + <span class="number">2</span>).join(<span class="string">'/'</span>);</span><br><span class="line">  <span class="keyword">return</span> newBaseURI + <span class="string">"/api/v1/applications/"</span> + appId + <span class="string">"/allexecutors"</span>;</span><br><span class="line">&#125;</span><br><span class="line">ind = words.indexOf(<span class="string">"history"</span>);</span><br><span class="line"><span class="keyword">if</span> (ind &gt; <span class="number">0</span>) &#123;</span><br><span class="line">  appId = words[ind + <span class="number">1</span>];</span><br><span class="line">  <span class="keyword">var</span> attemptId = words[ind + <span class="number">2</span>];</span><br><span class="line">  newBaseURI = words.slice(<span class="number">0</span>, ind).join(<span class="string">'/'</span>);</span><br><span class="line">  <span class="keyword">if</span> (<span class="built_in">isNaN</span>(attemptId)) &#123;</span><br><span class="line">    <span class="keyword">return</span> newBaseURI + <span class="string">"/api/v1/applications/"</span> + appId + <span class="string">"/allexecutors"</span>;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> newBaseURI + <span class="string">"/api/v1/applications/"</span> + appId + <span class="string">"/"</span> + attemptId + <span class="string">"/allexecutors"</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> uiRoot + <span class="string">"/api/v1/applications/"</span> + appId + <span class="string">"/allexecutors"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>发现请求的是“/allexecutors”，于是我们查找后端对应处理逻辑：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// OneApplicationResource.scala</span></span><br><span class="line">  <span class="meta">@GET</span></span><br><span class="line">  <span class="meta">@Path</span>(<span class="string">"allexecutors"</span>)</span><br><span class="line">  <span class="function">def <span class="title">allExecutorList</span><span class="params">()</span>: Seq[ExecutorSummary] </span>= withUI(_.store.executorList(<span class="keyword">false</span>))</span><br></pre></td></tr></table></figure>
+
+<p>发现返回的格式就是我们之前查看到的ExecutorSummary类。至此，我们已经完成掌握了metric的前端展示逻辑。</p>
+<br>
+那么我们如何添加自定义的metric信息呢？假设我们需要在executor页面上新增一个metric。
+
+<p>首先第一步：在api.scala 中的executorSummary类添加我们自己的metric对象</p>
+<p>第二步：在appStausListener.scala 中 在我们想要更新metric的事件的监听逻辑加入我们自己的metric更新逻辑</p>
+<p>第三步：在executorspage.js 中的data展示数组中添加一个对象，加入我们自己的数据展示逻辑</p>
+<p>第四步：不要忘记在executorspage-template.html中heml元素来展示我们的数据。注意数据展示的顺序是数据的顺序，一定要和js中数组的数据保存顺序一致。</p>
+<br>
+
+<p>由此，我们就实现了在SparkUI中添加我们的自定义metric信息了。你学废了吗？</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div class="post-share">分享到：</div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/大数据/" rel="tag"># 大数据</a>
+          
+            <a href="/tags/Spark/" rel="tag"># Spark</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/12/09/diary-2022-12-09/" rel="next" title="一些感想">
+                <i class="fa fa-chevron-left"></i> 一些感想
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+  <div class="comments" id="comments">
+      <div id="gitalk-container"></div>
+    </div>
+	
+  
+
+
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+        <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+		<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    
+		<script type="text/javascript">
+		const gitalk = new Gitalk({
+		clientID: '8c4098d1aa1409852b19',
+		clientSecret: 'cdc136702eaaa9600bc46ab7da3c95a8537116ef',
+		repo: 'Blog_message_repo',
+		owner: 'BladeDragon',
+		admin: ['BladeDragon'],
+		id: window.location.pathname,      // Ensure uniqueness and length less than 50
+		});
+		
+		gitalk.render('gitalk-container');
+		</script>
+
+    
+
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://cdn.zblade.top/qiniu_img/zcard2.png" alt="陌花采撷">
+            
+              <p class="site-author-name" itemprop="name"><span style="opacity:.2;"></span>陌花采撷</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/bladedragon" target="_blank" title="GitHub" data-balloon="GitHub" data-balloon-pos="up">
+                    
+                       <i class="fa fa-fw fa-github"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://telegram.com" target="_blank" title="telegram" data-balloon="telegram" data-balloon-pos="up">
+                    
+                       <i class="fa fa-fw fa-telegram"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:zaft1156673039@gmail.com" target="_blank" title="E-Mail" data-balloon="E-Mail" data-balloon-pos="up">
+                    
+                       <i class="fa fa-fw fa-envelope"></i></a>
+                </span>
+              
+            
+          </div>
+
+         
+
+          
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-name">日志</span>
+				  <span class="site-state-item-count">53</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-name">分类</span>
+				   <span class="site-state-item-count">4</span>
+                </a>
+              </div>
+            
+            
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+				 <span class="site-state-item-name">标签</span>
+				  <span class="site-state-item-count">28</span>
+                </a>
+              </div>
+            
+            
+
+          </nav>
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              
+            </div>
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#ListenerBus-机制"><span class="nav-text">ListenerBus 机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Metric体系"><span class="nav-text">Metric体系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在sparkUI上添加自定义的executor-metric"><span class="nav-text">在sparkUI上添加自定义的executor metric</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-image"></div>
+      <div class="footer-inner">
+        <p>本博客已出生<span id="since"></span><span class="my-face">(●'◡'●)ﾉ♥</span></p>
+<p></p>
+
+Theme By <a href="https://github.com/DIYgod/hexo-theme-sagiri" target="_blank" class="external" rel="nofollow">Sagiri</a>
+
+<p>Made with <i class="fa fa-heart throb" style="color: #d43f57;"></i> by <span class="author" itemprop="copyrightHolder">陌花采撷</span>. </p>
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    <canvas id="evanyou"></canvas>
+    <div id="aplayer-fixed"></div>
+
+    
+	
+  </div>
+
+	
+  <script type="text/javascript" src="/js/sagiri.min.js?v=0.0.50"></script>
+	
+  
+
+
+
+
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+  <!--<script>
+    // remove service worker cache
+    // from https://stackoverflow.com/questions/33704791/how-do-i-uninstall-a-service-worker
+    "use strict";
+    if(navigator.serviceWorker)
+    {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            for(let registration of registrations) {
+                registration.unregister()
+            }
+        })
+    }
+  </script>-->
+
+  <!--<script>
+    var serviceWorkerUri = '/sw.js';
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register(serviceWorkerUri).then(function() {
+          if (navigator.serviceWorker.controller) {
+            console.log('Assets cached by the controlling service worker.');
+          } else {
+            console.log('Please reload this page to allow the service worker to handle network operations.');
+          }
+        }).catch(function(error) {
+          console.log('ERROR: ' + error);
+        });
+    } else {
+        console.log('Service workers are not supported in the current browser.');
+    }
+  </script>-->
+  
+  
+
+	
+</body>
+</html>
