@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+
+
+
+
+<html class="theme-next pisces" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#da532c">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="google-site-verification" content="fRFpn2MbE7qpAtGAMkPwOq1xWyHF0BtvPVdE_P3qZFY">
+
+
+
+
+
+
+
+
+  <meta name="baidu-site-verification" content="t4cHu1Oo6Q">
+
+
+
+
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.loli.net/css?family=Sigmar One:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+
+  
+
+<link href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=0.0.50" rel="stylesheet" type="text/css">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=0.0.50">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/布丁.png?v=0.0.50">
+
+
+  <link rel="mask-icon" href="/safari-pinned-tab.svg?v=0.0.50" color="#da532c">
+
+
+
+
+
+
+  <meta name="keywords" content="测试,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="搭环境，其实是很多人学习的第一步，因为只有搭好了基础环境，才能使用各种工具。在自己的电脑搭一个私人的环境就非常简单，什么都不用思考，按照教程达到工具能跑通的程度就可以了，后面就可以自己去随心所以的使用工具。但是，如果我不只是想要自己捣鼓几个轻量的小工具，而是想把整套系统应用到生产环境，就没有那么简单。 正巧最近工作在调研技术升级，需要将一些传统技术上云，相当于需要从零搭建一个全新的生产可用的系统。">
+<meta name="keywords" content="测试">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何从零开始搭建生产系统">
+<meta property="og:url" content="http://site.zblade.top/2023/02/26/how-to-build-a-test-env/index.html">
+<meta property="og:site_name" content="Feel The Wind">
+<meta property="og:description" content="搭环境，其实是很多人学习的第一步，因为只有搭好了基础环境，才能使用各种工具。在自己的电脑搭一个私人的环境就非常简单，什么都不用思考，按照教程达到工具能跑通的程度就可以了，后面就可以自己去随心所以的使用工具。但是，如果我不只是想要自己捣鼓几个轻量的小工具，而是想把整套系统应用到生产环境，就没有那么简单。 正巧最近工作在调研技术升级，需要将一些传统技术上云，相当于需要从零搭建一个全新的生产可用的系统。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2023-02-28T16:10:24.503Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何从零开始搭建生产系统">
+<meta name="twitter:description" content="搭环境，其实是很多人学习的第一步，因为只有搭好了基础环境，才能使用各种工具。在自己的电脑搭一个私人的环境就非常简单，什么都不用思考，按照教程达到工具能跑通的程度就可以了，后面就可以自己去随心所以的使用工具。但是，如果我不只是想要自己捣鼓几个轻量的小工具，而是想把整套系统应用到生产环境，就没有那么简单。 正巧最近工作在调研技术升级，需要将一些传统技术上云，相当于需要从零搭建一个全新的生产可用的系统。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '0.0.50',
+    sidebar: {"position":"right","display":"always","offset":52,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    since: '9/22/2019 11:30:00',
+    onlineAPI: '',
+    site: {
+      title: 'Feel The Wind',
+      subtitle: '',
+      author: '陌花采撷'
+    },
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    leancloud: {
+      enable: false,
+      appID: 'dTfoweWyLJr7wTEW4CUhKHJQ-gzGzoHsz',
+      appKey: 'xh7FpohCp7PmwlHYAyqSaXov'
+    },
+    favicon: {
+      visibilitychange: true,
+      narmal: '/images/布丁.png',
+      hidden: '/images/failure.ico',
+      show_text: '(/≧▽≦/)咦！又好了！',
+      hide_text: 'Warning! 404-NoFound'
+    }
+  };
+</script>
+
+
+
+
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+
+  <script type="text/javascript" src="null"></script>
+
+
+
+
+
+
+
+
+  <title>如何从零开始搭建生产系统 | Feel The Wind</title>
+  
+
+
+
+
+
+
+
+
+ 
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans" class="theme-darling">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-首页">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-小项目">
+          <a href="javascript:;" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-flask"></i> <br>
+            
+            小项目
+          </a>
+          
+            <ul class="submenu submenu-小项目">
+              
+                
+                <li class="submenu-item submenu-item-old_blog">
+                  <a href="http://zblade.top:85/wordpress/" rel="section" target="_blank">
+                    Old_Blog
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-短网址生成">
+                  <a href="http://zblade.top:8081/" rel="section" target="_blank">
+                    短网址生成
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-资源站">
+                  <a href="http://inner.cquptict.com:90/" rel="section" target="_blank">
+                    资源站
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-ict-pan">
+                  <a href="http://www.cquptict.com:8000/" rel="section" target="_blank">
+                    ICT-Pan
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-招新系统">
+                  <a href="http://zblade.top:83/#/" rel="section" target="_blank">
+                    招新系统
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-领奖系统">
+                  <a href="https://github.com/bladedragon/PrizeTool" rel="section" target="_blank">
+                    领奖系统
+                  </a>
+                </li>
+              
+            </ul>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-归档">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-分类">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-server"></i> <br>
+            
+            分类
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-标签">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tag"></i> <br>
+            
+            标签
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-留言板">
+          <a href="/message/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-pencil"></i> <br>
+            
+            留言板
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-关于">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rocket"></i> <br>
+            
+            关于
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-coding_set">
+          <a href="https://bladedragon.github.io/coding_docs/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sign-language"></i> <br>
+            
+            Coding_Set
+          </a>
+          
+        </li>
+      
+
+      
+      <li class="menu-item search">
+          <form class="search-form">
+            <input name="keyword" type="text" class="search-input" placeholder="站内搜索">
+            <button type="submit" class="search-submit"><i class="fa fa-search"></i></button>
+          </form>
+      </li>
+      <!--<li class="menu-item online"><span id="online-count">?</span>人在线</li>-->
+    </ul>
+  
+
+  
+</nav>
+
+<div class="site-brand-wrapper" style="background-image: url(http://cdn.zblade.top/qiniu_img/wallhaven-6k1j7l.jpg)">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <div class="brand">
+        <span class="logo-line-before"><i></i></span>
+        <div class="site-title">
+          <div id="animate" class="animate">
+            <span>F</span><span>e</span><span>e</span><span>l</span><span> </span><span>T</span><span>h</span><span>e</span><span> </span><span>W</span><span>i</span><span>n</span><span>d</span>
+          </div>
+          <div id="guide" class="guide">
+            <span>F</span><span>e</span><span>e</span><span>l</span><span> </span><span>T</span><span>h</span><span>e</span><span> </span><span>W</span><span>i</span><span>n</span><span>d</span>
+          </div>
+        </div>
+        <span class="logo-line-after"><i></i></span>
+      </div>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<div class="site-master" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-master-avatar" itemprop="image" src="http://cdn.zblade.top/qiniu_img/zavatar2.jpg" alt="陌花采撷">
+    <h2 class="site-master-description" itemprop="description">
+        <span>即使天无雨，</span><span>吾亦留此地</span>
+    </h2>
+</div>
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-date">
+			<div class="post-month">02月</div>
+			<div class="post-day">26</div>
+	</div>
+  
+
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://site.zblade.top/2023/02/26/how-to-build-a-test-env/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="陌花采撷">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="http://cdn.zblade.top/qiniu_img/zavatar2.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Feel The Wind">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">如何从零开始搭建生产系统</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-02-26T18:39:26+08:00">2023-02-26</time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>搭环境，其实是很多人学习的第一步，因为只有搭好了基础环境，才能使用各种工具。在自己的电脑搭一个私人的环境就非常简单，什么都不用思考，按照教程达到工具能跑通的程度就可以了，后面就可以自己去随心所以的使用工具。但是，如果我不只是想要自己捣鼓几个轻量的小工具，而是想把整套系统应用到生产环境，就没有那么简单。</p>
+<p>正巧最近工作在调研技术升级，需要将一些传统技术上云，相当于需要从零搭建一个全新的生产可用的系统。今天就来聊聊一些心得。</p>
+<a id="more"></a>
+
+<h2 id="什么是生产系统"><a href="#什么是生产系统" class="headerlink" title="什么是生产系统"></a>什么是生产系统</h2><p>在公司级别的应用部署环境，一般分为开发，测试和生产环境。其中开发环境用于个人开发测试程序，测试环境专门执行系统的测试工作，生产环境部署正式业务。当开发工程师开发完程序，并自己调整测试完毕后，就可以将程序流转到测试环境。测试环境由专门的测试工程师对开发程序进行系统的测试流程，例如压力测试，冒烟测试等。当测试通过后，程序便可以流转到生产环境正式上线，接受正式用户的流量，正式履行工作职责。</p>
+<p>生产系统，故名思意，即运行在生产环境，正常可用的系统。它和我们一般意义的程序软件的不同点在于：首先，它是生产可用的。这意味着，这个系统，肯定需要满足最严格的部署流程，各项参数需要调整到最佳状态，确保它的运行能完美达到你的预期。因此，除了系统本身功能性的联通外，你还需要考虑诸如网络的连通，性能的优化，运维的方式等等，这需要一套完整的架构方案；其次，它是系统，是各种应用的集合体，其内构的复杂程度会影响整体部署的策略选择。因此。部署一个生产可用的系统，需要思考的点还是很多的，如何能快速梳理要点，高效搭建一个生产可用的系统，这就是我接下来想要聊聊的。</p>
+<h2 id="搭建前的准备"><a href="#搭建前的准备" class="headerlink" title="搭建前的准备"></a>搭建前的准备</h2><p>在准备搭建生产系统前，首先要做的自然是技术选型。相信大家在搭建前，一定有一套自己的架构方案。一般来说，如果搭建前已经有了非常详细的架构方案，那后续正式搭建时自然会简单流畅许多，但实际情况往往是初期的方案会比较笼统，有的可能只是选定某些技术，但缺少具体的搭建细节；有的可能只是选定了某个目标，比如侧重成本考量，或者侧重性能考量，而对技术选型尚未由明确的指定；即使初期的方案足够具体，实际搭建过程中也会出现较多和预期不符的情况，从而让整体的搭建流程不太顺畅。</p>
+<p>因此，我认为，在搭建前的准备，方案的详细程度不是最重要的，因为搭建新系统的都动作往往伴随着项目运作，决策层一定是希望能尽快看到项目执行的效果，这要求执行层要动作高效，响应迅速。因此前期的准备工作不必面面俱到，只要要点达成，具备实施的条件，即可动手搭建。</p>
+<p>在准备中，由这个几个要点需要注意</p>
+<ol>
+<li><p>明确目标，确定系统需要达成的目的，这是后续测试系统是否可用的前提</p>
+</li>
+<li><p>评估基建可行性。系统的基建，即底层的运行环境，例如公有云或者私有云。无论是哪种环境，都需要确保其具备运行你们系统的基本条件。自建私有云相对简单，因为自己人支持比较方便，如果选择公有云厂商的方案，就要了解其方案的特性，例如我们在选型的时候考虑过AWS的EMR on eks的方案，这是aws基于k8s定制的一套服务环境，但我们经过评估放弃了该方案，因为其中AWS的定制化程度较高，部分组件我们需要替换自研组件难度较大，遂放弃了该方案。在评估过程中可能会存在一些不确定的因素，也可以选择暂时保留，将选型和测试下推到搭建环境，只要时间和人力充足即可。</p>
+</li>
+<li><p>合理的时间规划。这其实也是项目管理的一部分，在搭建系统过程中需要梳理时间节点，将流程规范化，防止由于部分因素干扰导致整体目标无法完成。至于如何将搭建环境梳理节点，下面我会讲到。</p>
+</li>
+</ol>
+<h2 id="搭建生产环境"><a href="#搭建生产环境" class="headerlink" title="搭建生产环境"></a>搭建生产环境</h2><p>开始着手搭建环境了。先说一下我搭建系统的背景。原先我们用的是云厂商AWS的容器主机，称之为EC2（Elastic Container），上层部署大数据计算服务组件，即Hadoop+yarn+spark。现在因为技术迭代以及成本优化的考量，选择将计算服务上云，把Hadoop 和 spark搬上k8s。因此需要基于公有云厂商提供的k8s环境部署大数据计算系统，目标连通上层调度和下层计算，同时确保服务高可用，用户提交任务方式不变，可以无缝从旧环境切换到新环境。</p>
+<p>这里我们就需要明确几个步骤</p>
+<ol>
+<li><p>系统内循环打通</p>
+</li>
+<li><p>系统外循环打通</p>
+</li>
+<li><p>底层弹性伸缩自动化</p>
+</li>
+<li><p>性能基准测试</p>
+</li>
+<li><p>外围设施补齐， 流程集成</p>
+</li>
+</ol>
+<h3 id="系统内循环打通"><a href="#系统内循环打通" class="headerlink" title="系统内循环打通"></a>系统内循环打通</h3><p>在不考虑外围因素的前提下，我们首先要做的就是将系统内部的功能串通。例如，搭建一个大数据计算服务，就可以先部署联调好hadoop，hive，spark等组件的功能。因为这部分相对独立，实现比较快速。同时，如果底层基于第三方云厂商，优先调通自身功能可以减少沟通成本，提高效率。</p>
+<h3 id="系统外循环打通"><a href="#系统外循环打通" class="headerlink" title="系统外循环打通"></a>系统外循环打通</h3><p>当系统内部基本功能实现后，可以尝试接入三方的组件，将系统的“架子”放到底座上。这一步就可以考虑接入efs、s3等外部存储服务，或者其他组件，帮助完善系统功能。</p>
+<h3 id="底层弹性伸缩自动化"><a href="#底层弹性伸缩自动化" class="headerlink" title="底层弹性伸缩自动化"></a>底层弹性伸缩自动化</h3><p>如果是基于k8s这种可以弹性伸缩的集群，需要考虑伸缩策略，实现资源的高效利用</p>
+<h3 id="性能基准测试"><a href="#性能基准测试" class="headerlink" title="性能基准测试"></a>性能基准测试</h3><p>当系统已经在新的集群上跑通后，就可以对其进行性能测试，在这个过程中，可以对技术方案进行适当调整，来让最终的搭建方案更满足最初的目标。</p>
+<h3 id="外围设施补齐，-流程集成"><a href="#外围设施补齐，-流程集成" class="headerlink" title="外围设施补齐， 流程集成"></a>外围设施补齐， 流程集成</h3><p>通过性能测试之后，就可以补充对整个功能影响不大的周边服务，例如监控系统，审计日志，接入服务等。并且可以在这种过程中逐步实现流程的自动化和规范化，例如统一镜像管理，CICD等。</p>
+<p>## </p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div class="post-share">分享到：</div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/测试/" rel="tag"># 测试</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2023/02/11/movie-review-until-0211/" rel="next" title="观后感">
+                <i class="fa fa-chevron-left"></i> 观后感
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+  <div class="comments" id="comments">
+      <div id="gitalk-container"></div>
+    </div>
+	
+  
+
+
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+        <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+		<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    
+		<script type="text/javascript">
+		const gitalk = new Gitalk({
+		clientID: '8c4098d1aa1409852b19',
+		clientSecret: 'cdc136702eaaa9600bc46ab7da3c95a8537116ef',
+		repo: 'Blog_message_repo',
+		owner: 'BladeDragon',
+		admin: ['BladeDragon'],
+		id: window.location.pathname,      // Ensure uniqueness and length less than 50
+		});
+		
+		gitalk.render('gitalk-container');
+		</script>
+
+    
+
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://cdn.zblade.top/qiniu_img/zcard2.png" alt="陌花采撷">
+            
+              <p class="site-author-name" itemprop="name"><span style="opacity:.2;"></span>陌花采撷</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/bladedragon" target="_blank" title="GitHub" data-balloon="GitHub" data-balloon-pos="up">
+                    
+                       <i class="fa fa-fw fa-github"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://telegram.com" target="_blank" title="telegram" data-balloon="telegram" data-balloon-pos="up">
+                    
+                       <i class="fa fa-fw fa-telegram"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:zaft1156673039@gmail.com" target="_blank" title="E-Mail" data-balloon="E-Mail" data-balloon-pos="up">
+                    
+                       <i class="fa fa-fw fa-envelope"></i></a>
+                </span>
+              
+            
+          </div>
+
+         
+
+          
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-name">日志</span>
+				  <span class="site-state-item-count">56</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-name">分类</span>
+				   <span class="site-state-item-count">4</span>
+                </a>
+              </div>
+            
+            
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+				 <span class="site-state-item-name">标签</span>
+				  <span class="site-state-item-count">29</span>
+                </a>
+              </div>
+            
+            
+
+          </nav>
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              
+            </div>
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是生产系统"><span class="nav-text">什么是生产系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#搭建前的准备"><span class="nav-text">搭建前的准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#搭建生产环境"><span class="nav-text">搭建生产环境</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#系统内循环打通"><span class="nav-text">系统内循环打通</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#系统外循环打通"><span class="nav-text">系统外循环打通</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#底层弹性伸缩自动化"><span class="nav-text">底层弹性伸缩自动化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#性能基准测试"><span class="nav-text">性能基准测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#外围设施补齐，-流程集成"><span class="nav-text">外围设施补齐， 流程集成</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-image"></div>
+      <div class="footer-inner">
+        <p>本博客已出生<span id="since"></span><span class="my-face">(●'◡'●)ﾉ♥</span></p>
+<p></p>
+
+Theme By <a href="https://github.com/DIYgod/hexo-theme-sagiri" target="_blank" class="external" rel="nofollow">Sagiri</a>
+
+<p>Made with <i class="fa fa-heart throb" style="color: #d43f57;"></i> by <span class="author" itemprop="copyrightHolder">陌花采撷</span>. </p>
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    <canvas id="evanyou"></canvas>
+    <div id="aplayer-fixed"></div>
+
+    
+	
+  </div>
+
+	
+  <script type="text/javascript" src="/js/sagiri.min.js?v=0.0.50"></script>
+	
+  
+
+
+
+
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+  <!--<script>
+    // remove service worker cache
+    // from https://stackoverflow.com/questions/33704791/how-do-i-uninstall-a-service-worker
+    "use strict";
+    if(navigator.serviceWorker)
+    {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            for(let registration of registrations) {
+                registration.unregister()
+            }
+        })
+    }
+  </script>-->
+
+  <!--<script>
+    var serviceWorkerUri = '/sw.js';
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register(serviceWorkerUri).then(function() {
+          if (navigator.serviceWorker.controller) {
+            console.log('Assets cached by the controlling service worker.');
+          } else {
+            console.log('Please reload this page to allow the service worker to handle network operations.');
+          }
+        }).catch(function(error) {
+          console.log('ERROR: ' + error);
+        });
+    } else {
+        console.log('Service workers are not supported in the current browser.');
+    }
+  </script>-->
+  
+  
+
+	
+</body>
+</html>
