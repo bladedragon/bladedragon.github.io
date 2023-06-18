@@ -418,6 +418,824 @@
   
   
   <div class="post-date">
+			<div class="post-month">06月</div>
+			<div class="post-day">18</div>
+	</div>
+  
+
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://site.zblade.top/2023/06/18/spark-wen-jian-du-qu-fen-qu-can-shu-she-zhi-fang-fa/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="陌花采撷">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="http://cdn.zblade.top/qiniu_img/zavatar2.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Feel The Wind">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2023/06/18/spark-wen-jian-du-qu-fen-qu-can-shu-she-zhi-fang-fa/" itemprop="url">spark文件读取分区参数设置方法</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-06-18T12:33:02+08:00">2023-06-18</time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>简单记录一个spark的分区参数如何配置的问题。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2023/06/18/spark-wen-jian-du-qu-fen-qu-can-shu-she-zhi-fang-fa/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-date">
+			<div class="post-month">06月</div>
+			<div class="post-day">02</div>
+	</div>
+  
+
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://site.zblade.top/2023/06/02/CUDA-ji-cudnn-chu-tan-ji-an-zhuang-fang-fa/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="陌花采撷">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="http://cdn.zblade.top/qiniu_img/zavatar2.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Feel The Wind">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2023/06/02/CUDA-ji-cudnn-chu-tan-ji-an-zhuang-fang-fa/" itemprop="url">CUDA及cudnn初探及安装方法</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-06-02T12:33:02+08:00">2023-06-02</time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>刚开始玩stable diffusion, 但用的整合包，很多训练知识都只是一知半解，现学现用，倒也是能炼出一些自己想要的作品。但是最近了解到升级pyTorch 和xformer之后可以极大提高训练lora的速度，这不由得让我产生了想升级的念头（<del>刚到手的4070怎能没有榨干它的冲动</del>），于是，开始了踩坑之路——其实也就是标题。</p>
+<p>&lt; !–more–&gt;</p>
+<p><img src="https://cdn.zblade.top/20230618170121.png" alt></p>
+<p>升级Pytorch之前，首先需要检查你的<strong>CUDA</strong>和<strong>cuDNN</strong>版本，大部分显卡支持的cuda都是11，目前绝大多数SD-webui默认安装的pytorch也都是支持cuda11的版本，所以不需要改动。但是如果你的显卡是40系，那大概率支持CUDA12，虽说正常使用CUDA11也没有关系，但<strong>CUDA12能大幅提高显卡的计算效率</strong>，因此，我是推荐能升12就升12。那怎么判断自己电脑内装的是CUDA11还是CUDA12呢？cuDNN又是什么东西？<br>我一开始就有这样的问题，甚至一度认为自己装的就是CUDA12，后来查了一遍资料才发现事实并非如此。</p>
+<h2 id="简单概念"><a href="#简单概念" class="headerlink" title="简单概念"></a>简单概念</h2><p>首先你要知道CUDA和cuDNN是什么。具体的细节其实我也是一知半解，但是我们还是要有一个大致的概念，起码要知道是什么，干什么，怎么用。根据官方文档解释：</p>
+<blockquote>
+<p>The NVIDIA® CUDA® Toolkit provides a comprehensive development environment for C and C++ developers building GPU-accelerated applications. With the CUDA Toolkit, you can develop, optimize, and deploy your applications on GPU-accelerated embedded systems, desktop workstations, enterprise data centers, cloud-based platforms and HPC supercomputers. The toolkit includes GPU-accelerated libraries, debugging and optimization tools, a C/C++ compiler, and a runtime library to deploy your application.<br>Using built-in capabilities for distributing computations across multi-GPU configurations, scientists and researchers can develop applications that scale from single GPU workstations to cloud installations with thousands of GPUs.</p>
+</blockquote>
+<p>翻译过来简单解释就是一套开发框架，帮助我们更好调用GPU的计算能力进行顶层开发<br>而cuDNN的官方解释是：</p>
+<blockquote>
+<p>The NVIDIA® CUDA Deep Neural Network (cuDNN) library is a GPU-accelerated library of primitives for deep neural networks. cuDNN provides highly tuned implementations for standard routines such as forward and backward convolution, pooling, normalization, and activation layers. Deep learning researchers and framework developers worldwide rely on cuDNN for high-performance GPU acceleration.<br>Deep learning researchers and framework developers worldwide rely on cuDNN for high-performance GPU acceleration. It allows them to focus on training neural networks and developing software applications rather than spending time on low-level GPU performance tuning. cuDNN accelerates widely used deep learning frameworks, including Chainer, Keras, MATLAB, MxNet, PaddlePaddle, PyTorch, and TensorFlow.</p>
+</blockquote>
+<p>翻译过来简单解释就是深度学习框架的依赖库，用于加速神经网络训练</p>
+<p>而pyTorch则是基于python的深度学习框架，可见使用了cuDNN之后可以加速训练速度。而特别要留意pyTorch 和CUDA的版本一定要一致，不然兼容问题可能导致程序运行出错，这个下面会提到</p>
+<h2 id="前置准备"><a href="#前置准备" class="headerlink" title="前置准备"></a>前置准备</h2><p>首先，你要先确定本机支持的CUDA版本，可以通过cmd输入如下命令查看（这是nvidia的命令行，所以linux系统只要装了显卡对应的驱动理论上都可以使用）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvidia-smi</span><br></pre></td></tr></table></figure>
+
+<p>可以得到电脑内的具体显卡型号：</p>
+<p><img src="https://cdn.zblade.top/20230618170136.png" alt><br>上面其实就是你的硬件和软件信息，包括显卡的名称，规格，驱动版本，使用进程，已经左上角显示的支持的CUDA 版本（<strong>注意，这里显示的是你的显卡支持的CUDA版本，不是电脑的安装的CUDA版本！</strong>)</p>
+<p>如果你之前从未主动装过CUDA甚至从未听说过CUDA，那你的环境99%没有装它（看似是个废话，但我当时就是没有想到TT）<br>如果你还想进一步检查是否安装，可以通过cmd输入这个命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvcc -V</span><br></pre></td></tr></table></figure>
+
+<p>如果显示下面这样说明已经安装了<br><img src="https://cdn.zblade.top/20230618170220.png" alt></p>
+<p><strong><mark>那么问题来了，已知pytorch运行必须要CUDA，但我从未安装过CUDA，那我之前的整合包是如何运行的？<br>答：pytorch内置了CUDA的一些基本运行时依赖库，当你的环境中不存在CUDA时，就会调用它们</mark></strong></p>
+<p>另外还请确认你环境中的pytorch版本以及想要升级的版本，这对后面安装对应版本的CUDA非常重要<br>可以进入你的Python环境，执行下面命令查看pytorch的对应版本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="comment"># 输出pytorch的版本</span></span><br><span class="line">print(torch.__version__)</span><br><span class="line"><span class="comment"># 输出torch引用的cuda的版本，注意如果你的环境没有安装cuda，这里也会输出，不过指的是torch内置的cuda运行时的版本</span></span><br><span class="line">print(torch.version.cuda)</span><br><span class="line"><span class="comment"># 输出torch 引用的cudnn版本，具体规则和上述cuda一致</span></span><br><span class="line">print(torch.backends.cudnn.version())</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>首先你需要知道pyTorch的版本和对应需要的CUDA,这个网上也有很多资料，其中一种方式是可以直接看安装包的命名方式，通过一<br>下<a href="https://download.pytorch.org/whl/torch_stable.html" target="_blank" rel="noopener">链接</a></p>
+<p><strong>但是，有一个非常重要的一点</strong><br><mark>CUDA12 并未出现在版本适配上，但在一些非官方的渠道上，开发人员表示最新的pyTorch是支持CUDA12的，只需要替换一些运行时文件即可，具体方法在下面适配pyTorch环节</mark></p>
+<p>更新torch的方式就不多说了，通过pip升级，非常方便</p>
+<h3 id="CUDA安装"><a href="#CUDA安装" class="headerlink" title="CUDA安装"></a>CUDA安装</h3><p>接下来介绍CUDA的安装</p>
+<p>首先到<a href="https://developer.nvidia.com/cuda-downloads?target_os=Windows&target_arch=x86_64&target_version=10&target_type=exe_local" target="_blank" rel="noopener">官网</a>下载软件包，这里以win10系统为例</p>
+<p>下完后就直接开始安装：</p>
+<p>以下是安装时缓存文件的位置，随便放在一个空间足够的位置就行，但是注意这个目录会随着安装结束而删除<br><img src="https://cdn.zblade.top/20230618170243.png" alt></p>
+<p><img src="https://cdn.zblade.top/20230618170255.png" alt></p>
+<p><img src="https://cdn.zblade.top/20230618170305.png" alt></p>
+<p>这里注意，由于CUDA的安装体积比较大，而且安装时我们往往已经具备一定的GPU 环境，所以建议还是自定义安装，按需安装即可<br><img src="https://cdn.zblade.top/20230618170315.png" alt></p>
+<p>这里注意图中的Driver Component一般不要勾选，因为这涉及到显卡驱动，而显卡驱动我们一般都是独立升级（我是通过nvidia experience升级的）如果安装的CUDA版本不是最新的，大概率会出现旧驱动覆盖新驱动的情况，所以不建议勾选<br><img src="https://cdn.zblade.top/20230618170325.png" alt></p>
+<p>可以打开CUDA下看具体的一些组件，像visual studio的组件，如果平时开发没用到，不需要勾选<br><img src="https://cdn.zblade.top/20230618170336.png" alt></p>
+<p>安装中…<br><img src="https://cdn.zblade.top/20230618170347.png" alt></p>
+<p>由于我的电脑没有安装VS，所以安装时有些依赖不会安装成功，但只要不影响使用就好<br><img src="https://cdn.zblade.top/20230618170356.png" alt></p>
+<p><img src="https://cdn.zblade.top/20230618170408.png" alt></p>
+<p><strong>验证</strong><br>可以cmd到以下目录，查看这些测试程序是否能跑通，以及查看CUDA版本是否正常</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd DIR\NVIDIA GPU Computing Toolkit\CUDA\v12.1\extras\demo_suite</span><br><span class="line">bandwidthTest.exe</span><br><span class="line">deviceQuery.exe</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装cuDNN"><a href="#安装cuDNN" class="headerlink" title="安装cuDNN"></a>安装cuDNN</h3><p>由于cuDNN只是一些依赖库文件，所以我们只需要下载指定版本的文件，然后覆盖CUDA路径下的指定目录即可<br>注意这里需要注册nvidia 账号，好在只需要邮箱就可以创建成功…<br>这是<a href="https://developer.nvidia.com/rdp/cudnn-download" target="_blank" rel="noopener">下载地址</a></p>
+<p>下载后会有如下文件夹，覆盖到CUDA的目录即可</p>
+<p><img src="https://cdn.zblade.top/20230618170420.png" alt></p>
+<h3 id="适配pyTorch"><a href="#适配pyTorch" class="headerlink" title="适配pyTorch"></a>适配pyTorch</h3><p>这里主要是给CUDA12的适配，pyTorch想用CUDA12，需要在pyTorch的依赖库目录中用CUDA中的文件进行替换</p>
+<p>torch的库目录一般在对应的python lib目录下（或者virtualenv 的lib目录下）<br>类似</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$&#123;venv&#125;</span>\Lib\site-packages\torch\lib</span><br></pre></td></tr></table></figure>
+
+<p>需要替换的文件如下图所示<br><img src="https://cdn.zblade.top/20230618170431.png" alt><br>前三个是CUDA的文件，后7个是cuDNN的文件，应该很容易就能在CUDA的目录下找到</p>
+<p><strong>安装成功后就可以享受CUDA12 带来的高速体验了！！！</strong></p>
+<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><p><a href="https://docs.nvidia.com/cuda/doc/index.html" target="_blank" rel="noopener">CUDA 官方文档</a><br><a href="https://docs.nvidia.com/cudnn/index.html" target="_blank" rel="noopener">cuDNN 官方文档</a></p>
+
+            <div class="post-button text-center">
+              <a class="btn" href="/2023/06/02/CUDA-ji-cudnn-chu-tan-ji-an-zhuang-fang-fa/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-date">
+			<div class="post-month">05月</div>
+			<div class="post-day">13</div>
+	</div>
+  
+
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://site.zblade.top/2023/05/13/guan-yu-S3A-de-yi-xie-cai-keng-he-si-kao/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="陌花采撷">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="http://cdn.zblade.top/qiniu_img/zavatar2.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Feel The Wind">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2023/05/13/guan-yu-S3A-de-yi-xie-cai-keng-he-si-kao/" itemprop="url">关于S3A的一些踩坑和思考</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-05-13T12:33:02+08:00">2023-05-13</time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>最近工作中架构升级，将原来的EMR集群迁移到基于开源的自建集群上，原来使用的一些组件自然也需要改造，其中就包括s3。在我们的自建集群中，选用的开源hadoop中s3a client（或者s3a connector，下面简写成s3a,  意义基本相同）来连接原有的s3存储。接下来我就会分享我在用s3a client时总结的一些经验<br><img src="https://cdn.zblade.top/20230618170619.png" alt></p>
+<h2 id="s3协议的类型"><a href="#s3协议的类型" class="headerlink" title="s3协议的类型"></a>s3协议的类型</h2><p>首先介绍一下s3，s3全称应该叫<code>AWS S3</code>，又称<code>AWS Amazon Simple Storage Service</code>，是亚马逊公司开发的对象存储服务，广义上讲是一款包含了Web服务在内的完整存储产品，狭义上也能特指AWS的对象存储。它通过自定的s3协议访问存储上的文件，其路径类似：<code>s3://xxx/yyy/zzz</code></p>
+<p>鉴于AWS在云市场的占有地位，s3存储在各个行业也有广泛的应用。然而s3协议是AWS的私有协议，只有AWS产品可用，为了能巩固和扩大s3在市场的地位，让用户能任何地方连上s3存储，放心地把数据存储到s3上，AWS向Hadoop提供了开源版本的s3 client来连接s3，也即是<a href="https://hadoop.apache.org/docs/stable/hadoop-aws/tools/hadoop-aws/s3n.html" target="_blank" rel="noopener">s3n client</a>, 在s3n协议上的文件路径类似：<code>s3n://xxx/yyy/zzz</code></p>
+<p>后来Hadoop在升级中淘汰了s3n client, 采用了全新的<a href="https://hadoop.apache.org/docs/stable/hadoop-aws/tools/hadoop-aws/index.html#Retry_and_Recovery" target="_blank" rel="noopener">s3a client</a>，在s3a协议下的文件路径类似：<code>s3a://xxx/yyy/zzz</code></p>
+<p>(Hadoop最初推出的s3 client，也采用s3协议，即文件路径类似：<code>s3://</code>，但是年代久远，早已废弃，这里就不提了)</p>
+<p>总结一下三种文件协议的区别</p>
+<ul>
+<li>s3协议是AWS最初也是私有的协议，广泛用在AWS的产品中，例如EMR，EC2等等。如果你们公司使用的是AWS全家桶，基本都是通过s3协议访问s3</li>
+<li>s3n 和s3a 是hadoop上基于AWS s3 SDK开发的开源s3 client，能够摆脱AWS产品的限制，在自建的服务中自由访问s3存储，适用于仅使用了AWS的s3存储服务，需要和多方产品交互的场景</li>
+<li>在性能上，三者差别不大，考虑到s3由AWS自己维护，在版本迭代的速度上可能要快于开源的s3n和s3a</li>
+<li>在兼容性上，作为s3协议的派生，原则上s3n和s3a都是兼容s3协议的；而s3n和s3a之间一般情况也是兼容（即原来采用的s3n协议，后来升级到了s3a），但是s3n和s3a之间在目录创建上存在一些区别（下一part会提及），在一些场景中需要注意</li>
+</ul>
+<h2 id="s3a-在目录处理上的不同"><a href="#s3a-在目录处理上的不同" class="headerlink" title="s3a 在目录处理上的不同"></a>s3a 在目录处理上的不同</h2><p>实际上很多人并不认同s3为文件系统，因此s3是对象存储，和传统的文件系统有较大的区别。在官方的文档也说：</p>
+<blockquote>
+<p><em>Amazon S3 is not a filesystem, it is an object store.</em></p>
+</blockquote>
+<p>两者的一个重要区别就是对<strong>目录</strong>概念的解释。</p>
+<ul>
+<li>传统的Unix风格的文件系统，例如HDFS，其文件系统的组成是目录文件树，即生成的目录都是“一直存在”的，无论目录内是否存在文件。</li>
+<li>s3“文件系统”，由于其底层是通过对象存储（或者称之为块存储），其目录是“虚拟”的，举个例子：如果两个对象有相同的路径前缀：<code>a/b/file1</code> 和 <code>a/b/file2</code>，那么s3会认为这里存在目录  <code>a/b/</code></li>
+</ul>
+<p>两者在这方面的差异就会导致在实际使用中可能出现各种坑</p>
+<h3 id="在具体场景的区别"><a href="#在具体场景的区别" class="headerlink" title="在具体场景的区别"></a>在具体场景的区别</h3><p>让我们再细分一下场景：<br><strong>创建目录</strong></p>
+<ul>
+<li>HDFS等目录文件树会创建一个空目录，可以往里面添加文件和目录，也可以在任意时候（无论目录中有没有文件或其他目录）通过ls 来发现这个目录</li>
+<li>实际上，要是s3也能做到这一点，那它也可以被视为实现了目录文件树，<del>可惜它做不到</del>。由于目录是s3是通过前缀来识别目录，因此当目录中没有任何文件时，需要通过目录标记（Directory Marker，后面简称DM）来标记目录。当目录中创建了文件后，就会删除这个DM；反之，当目录删除成为空目录时，又会添加这个DM<ul>
+<li>在s3a中，会在空目录的场景中生成以 <code>path_name+/</code> 为名称的文件来作为DM，例如执行<code>mkdir(s3a://bucket/a/b)</code> 会创建一个标记对象 <code>a/b/</code></li>
+<li>在更老的s3n中，则是以<code>path_name_$folder$</code>方式作为DM</li>
+</ul>
+</li>
+</ul>
+<p>相信从这里就能看出一丝不妙了吧，当新老版本的产品在某些约定上存在分歧时，往往会出问题。简单举个例子，当你用<code>aws s3</code>命令创建了目录，但是却用s3a 去连接时，往往会找不到该目录，因为在<code>aws s3</code>工具中创建的目录没有创建s3a的DM，因此在s3a协议中找不到目录。同理，当一个集群从低版本的hadoop升级到高版本时，也需要格外留意空目录的存在问题，因为有可能升级的同时将s3n 升级到了s3a, 识别的DM发生变化，就检查不到原来的空目录。</p>
+<p><strong>创建文件</strong></p>
+<ul>
+<li>在一般目录文件树的文件系统中，只需要按照目录所在路径，创建单一文件即可</li>
+<li>在s3中，<mark>创建文件的操作可能会伴随着一系列DM的删除操作</mark>, s3a 需要在一个请求中包含删除所有父级DM的请求</li>
+</ul>
+<p><strong>删除目录和文件</strong></p>
+<ul>
+<li>HDFS目录文件树的删除目录操作和删除文件操作基本相同，其删除的语义也更符合一般逻辑</li>
+<li>在s3中，由于DM的存在，当删除文件/目录的时候如果父级目录变成了空目录，则需要将DM补充添加</li>
+</ul>
+<h3 id="存在的问题"><a href="#存在的问题" class="headerlink" title="存在的问题"></a>存在的问题</h3><p>s3 对目录的处理虽是无奈之举，但也确实成为了许多问题的源头</p>
+<ol>
+<li>s3n 和s3a 上采用的DM不同，意味着s3a 所在的hadoop版本无法<mark>向下兼容</mark></li>
+<li>用s3a 创建或删除文件的时候一般会需要删除或创建一批DM，这会导致实际的请求量较大。而且，s3中每个对象的读写视为一次操作，因此可能会带来较大的开销（结合s3的读写限制，这是s3 性能不佳的主要原因，具体内容下节讨论）</li>
+<li>在使用list操作的时候，由于每个请求中列出的对象的数量是父目录的数量，因此目录层级越深，请求越长。</li>
+<li>在正式版本的s3桶中，即使没有对象没删除，逻辑删除的标记也会写进索引里，这对使大型目录的查询变慢</li>
+</ol>
+<h2 id="s3a-的性能问题"><a href="#s3a-的性能问题" class="headerlink" title="s3a 的性能问题"></a>s3a 的性能问题</h2><p>在s3a的<a href="https://hadoop.apache.org/docs/stable/hadoop-aws/tools/hadoop-aws/performance.html" target="_blank" rel="noopener">官方文档</a>上，展示了s3a 和HDFS的一些不同，我将它贴了过来：<br><img src="https://cdn.zblade.top/20230618170702.png" alt></p>
+<p>总的来说，以下几点原因导致了s3a的性能问题</p>
+<ul>
+<li>由于桶分片导致IOPS被限制。</li>
+<li>不同类型的AWS EC2虚拟机可能进行网络IO进行不同的限制。</li>
+<li>对象和数据越多，目录重命名和复制操作花费的时间就越长。rename()的性能更加缓慢。</li>
+<li>在读取s3时使用seek()操作会强制新的HTTP请求。这可能会增大使读取Parquet/ORC文件的开销。</li>
+</ul>
+<p><strong>另外，还需要注意的是，由于AWS s3在读写上做出了频率限制，按照一般约定，当对s3的一个分区每秒超过读5500次或写3500次时，s3就会拒绝请求，显示错误503</strong><br>可见，若是使用s3进行大量读写还是存在着不小的挑战，在大数据领域中使用s3还是更多看重的是它的计费成本和性价比。如果你的场景追求性能，那我的建议是：<del>快跑</del>！</p>
+<p><img src="https://cdn.zblade.top/20230618170715.png" alt></p>
+<p><strong>解决方法</strong><br>当然，实际场景下很多选择往往不是我们能左右的，假如我们必须要在一些OLAP或者其他大规模数据处理场景中使用s3，这里依然会有一些优化建议。</p>
+<ol>
+<li>使用 s3a committer。hadoop 内置了多种s3a commiter来优化s3 文件的提交，其核心思路就是利用s3 的multipart Upload机制来加速文件上传，同时不同的committer也有不同的优化思路，具体可以参考这篇<a href="https://hadoop.apache.org/docs/stable/hadoop-aws/tools/hadoop-aws/committers.html" target="_blank" rel="noopener">文档</a></li>
+<li>一些参数的调优, 例如合理配置线程数和连接数，加大块读取的大小等等<br>更多优化的场景和细节，可以查看<a href="https://hadoop.apache.org/docs/stable/hadoop-aws/tools/hadoop-aws/performance.html" target="_blank" rel="noopener">官方文档</a></li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>总的来说，s3本身在某些场景还是很有优势的，作为AWS 生态的重要一环，人们更看重它的安全可靠，物美价廉，以及与AWS 其他云产品之间联动带来的叠加优势。但我们也要承认在不适当的场景中使用s3依然会不小的副作用。在实际生产中，也可能存在各种妥协因素，无法做不到釜底抽薪, 但我们至少可以了解产品特性，尽最大可能优化性能。<br>因此我就简单写了一些s3a 常见的可能会踩坑的点以及如何采取措施，其实大多来自于官方文档的整理，希望对你有所帮助~</p>
+<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><ol>
+<li><a href="https://hadoop.apache.org/docs/stable/hadoop-aws/tools/hadoop-aws/index.html#Retry_and_Recovery" target="_blank" rel="noopener">Hadoop-AWS module: Integration with Amazon Web Services</a></li>
+<li><a href="https://hadoop.apache.org/docs/stable/hadoop-aws/tools/hadoop-aws/directory_markers.html" target="_blank" rel="noopener">Experimental: Controlling the S3A Directory Marker Behavior</a></li>
+<li><a href="https://hadoop.apache.org/docs/stable/hadoop-aws/tools/hadoop-aws/performance.html#Thread_and_connection_pool_sizes." target="_blank" rel="noopener">Maximizing Performance when working with the S3A Connector</a></li>
+<li><a href="https://hadoop.apache.org/docs/stable/hadoop-aws/tools/hadoop-aws/committers.html" target="_blank" rel="noopener">Committing work to S3 with the “S3A Committers”</a></li>
+</ol>
+
+            <div class="post-button text-center">
+              <a class="btn" href="/2023/05/13/guan-yu-S3A-de-yi-xie-cai-keng-he-si-kao/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-date">
+			<div class="post-month">04月</div>
+			<div class="post-day">15</div>
+	</div>
+  
+
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://site.zblade.top/2023/04/15/Spark-Job-chang-wei-wen-ti-pai-cha-ji-xiao-wen-jian-you-hua-de-si-kao/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="陌花采撷">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="http://cdn.zblade.top/qiniu_img/zavatar2.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Feel The Wind">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2023/04/15/Spark-Job-chang-wei-wen-ti-pai-cha-ji-xiao-wen-jian-you-hua-de-si-kao/" itemprop="url">Spark Job长尾问题排查及小文件优化的思考</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-04-15T21:33:02+08:00">2023-04-15</time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>但是最近在测试spark on k8s的时候，遇到了一些性能问题，于是记录一下排查过程，做一下案例的复盘。</p>
+<p><img src="https://cdn.zblade.top/20230618170858.png" alt></p>
+<h2 id="案例再现"><a href="#案例再现" class="headerlink" title="案例再现"></a>案例再现</h2><p>我们使用的底层集群是AWS的eks集群，在此之上搭建了一套传统的hadoop yarn+ spark环境。通俗来说就是将yarn的resourceManager,nodeManager等具体的组件转化成k8s的pod，但是上层调度逻辑不变，做了一套两层调度的系统。该系统的具体实现方案和调度逻辑这里按下不表，因为这和今天讲述的性能优化案例关系不大，我们只要了解到这是传统的yarnspark，但是底层是k8s就好。<br>我采用的任务是来自我们生产环境的一个小任务，期望运行时间5min，数据量中等，输出表数据大约在2kw行。原先生产环境采用的是AWS的EMR on EC2集群,可以理解是传统的容器主机集群。现在将该任务迁移到eks集群后，时长达到了43min，于是观察其history ui:</p>
+<p><img src="https://cdn.zblade.top/20230618170907.png" alt></p>
+<p><img src="https://cdn.zblade.top/20230618170916.png" alt></p>
+<p>发现其sql执行的阶段耗时与生产环境的耗时基本类似，阶段执行时长只有几分钟，但是整个spark job完成耗时却用了43min，明显在job执行尾部存在耗时问题，导致长尾现象发生。</p>
+<h2 id="初步分析"><a href="#初步分析" class="headerlink" title="初步分析"></a>初步分析</h2><p>由于采用生产任务一样的sql，读写数据量也完全一致，排除业务逻辑导致的影响；<br>排查driver日志，发现阶段结束后几乎没有有效日志，此时所有task已经执行完成，观察集群，executor的利用率也非常低。<br>既然存在耗时，后台一定有耗时的线程在运行，于是查看spark driver的thread dump</p>
+<p>找到的真正的原因发现卡在s3的rename操作上</p>
+<h2 id="s3上rename操作带来的性能问题"><a href="#s3上rename操作带来的性能问题" class="headerlink" title="s3上rename操作带来的性能问题"></a>s3上rename操作带来的性能问题</h2><p><strong>首先谈一下rename。</strong> spark的rename是指在spark提交作业过程中，为了保持数据的一致性，会生成临时文件来读写数据，当task执行完毕，会将临时文件rename为正式文件；当job执行完毕，会把该job的临时目录下的所有文件rename为正式文件<br>其目录格式大概如图所示</p>
+<p><img src="https://cdn.zblade.top/20230618171101.png" alt></p>
+<p>driver会通过FileFormatWriter选择合适的output committer并启动writer job，committer会决定如何提交job和task,提交流程如下图</p>
+<p><img src="https://cdn.zblade.top/20230618170958.png" alt></p>
+<p>rename就发生在其中提交job和提交task的环节，具体的rename策略根据committer的策略而定。关于committer的细节等会再提。</p>
+<p><strong>为什么s3上rename会有性能问题</strong><br>AWS 的s3 包括大多数对象存储，目录本身就是一个对象，因此，其目录rename需要经历list-copy-delete 的操作，相对与文件系统例如HDFS简单的rename，其开销自然非常大。在spark运行中，可能会生成非常多的小文件，即使是HDFS，要进行数万计小文件的rename，其性能尚且需要优化，更不要说s3了。</p>
+<h2 id="spark的文件提交协议"><a href="#spark的文件提交协议" class="headerlink" title="spark的文件提交协议"></a>spark的文件提交协议</h2><p>在谈及如何优化之前，我们先回顾一下与之相关的Spark文件提交过程。从上一张图可以看到，Spark在job 提交过程中，实际上依然是调用的Hadoop的committer来采取具体的commit的策略。而committer要解决的问题，主要有以下几点：</p>
+<ol>
+<li>处理文件失败重读导致的数据一致性问题</li>
+<li>保证task推测执行下相同文件多写时的数据正确性</li>
+<li>提高海量文件读写，合并的效率</li>
+</ol>
+<p>目前Hadoo提供的两种文件提交方式，通过<code>mapreduce.fileoutputcommitter.algorithm.version</code>进行切换</p>
+<h3 id="FileOutputCommitter-V1"><a href="#FileOutputCommitter-V1" class="headerlink" title="FileOutputCommitter V1"></a>FileOutputCommitter V1</h3><p><strong>commit过程</strong></p>
+<ol>
+<li>首先TaskAttempt会将TaskAttempt Data写入一个临时目录： <code>${target_dir}/_temporary/${appAttempt}/_temporary/${taskAttempt}</code></li>
+<li>当task data写完，可以提交task后，执行commitTask，将上述目录转移到正式目录：<code>${target_dir}/_temporary/${appAttempt}/${taskAttempt}</code></li>
+<li>当所有task 完成，执行commitJob, 将<code>${target_dir}/_temporary</code>下所有文件及目录转移到<code>${target_dir}</code>正式目录，并在提交完成后当前目录添加标识符 <code>_SUCCESS</code>来表示标识提交成功</li>
+</ol>
+<p><strong>数据一致性问题</strong></p>
+<ol>
+<li>在TaskAttempt写入的阶段，如果发生task写失败需要重试，只需要重写<code>${taskAttempt}</code>目录下<code>/_temporary/</code>下的所有文件就行，可以保留原先正式的Attempt目录</li>
+<li>如果发生application重试，也可以通过recoverTask直接恢复原先<code>${appAttempt}</code>目录下的正式目录文件，直接重命名到当前<code>${appAttempt}</code>目录下</li>
+<li>由于存在两次rename，V1实际上是两阶段提交，rename前后数据的一致性都能得到保证，数据不一致的情况只有可能发生在rename的过程中</li>
+</ol>
+<p><strong>性能问题</strong><br>V1的强一致性带来的负面作用就是两次rename的操作在海量文件生成的情景中可能导致耗时问题，尤其是commitJob阶段，由于是Driver单线程串行执行commit，此时如果需要rename大量文件， 其耗时可能会非常长</p>
+<h3 id="FileOutputCommitter-V2"><a href="#FileOutputCommitter-V2" class="headerlink" title="FileOutputCommitter V2"></a>FileOutputCommitter V2</h3><ol>
+<li>首先TaskAttempt会将TaskAttempt Data写入一个临时目录： <code>${target_dir}/_temporary/${appAttempt}/_temporary/${taskAttempt}</code></li>
+<li>当task data写完，可以提交task后，执行commitTask，将上述目录转移到 <code>${target_dir}</code>. 注意这里是直接移动到正式目录</li>
+<li>当所有task 完成，由于所有data已经保存在正式目录下，所以commitJob就是单纯添加标识符 <code>_SUCCESS</code>来表示标识提交成功</li>
+</ol>
+<p><strong>数据一致性问题</strong><br>1.在taskAttempt写入的阶段，如果发生task写失败重试，由于此时可能task data已经被移动到正式目录，因此此时会出现脏数据<br>2.如果发生application重试，由于之前application已提交的数据已经存在在正式目录，因此无需额外的重命名操作，直接继续进行其他数据的重试即可，当然，此时已提交的数据不一定完全正确，其中可能存在脏数据。<br>3.可见V2过程牺牲一定的数据一致性，选择了最终一致性的方案，由于缺乏中间过程对数据正确性的保证，所以只能通过最后的_SUCCESS标识符来决定数据是否正确。同时，这还会带来另一个问题，由于存在脏数据，在任务长期运行中，这些脏数据可能无法被正确清理，从而占据存储空间，带来额外的开销</p>
+<p><strong>性能问题</strong><br>V2之所以采取最终一致性的方案，目录就是减少V1 rename操作过多带来的耗时开销。相比V1，V2只需要在task完成后rename到正式目录，而且可以通过task线程的并行操作，其执行的时长会被大大降低</p>
+<h2 id="小文件优化"><a href="#小文件优化" class="headerlink" title="小文件优化"></a>小文件优化</h2><p>虽然上述的Committer的不同算法在一致性和性能上给了大家选择，但毕竟各有利弊。但在实际场景下，大家的选择总是希望“我全都要”</p>
+<p><img src="https://cdn.zblade.top/20230618171120.png" alt></p>
+<p>除了在rename阶段进行优化外，性能杀手的源头：对海量小文件的优化也成为了一个行之有效的方法。</p>
+<h3 id="Spark现有的优化："><a href="#Spark现有的优化：" class="headerlink" title="Spark现有的优化："></a>Spark现有的优化：</h3><p>在spark中内置有对小文件的优化,从文件生成角度:</p>
+<ul>
+<li><code>spark.files.openCostInBytes</code> 利用这个参数设置预估打开文件的大小，设置高一点可以提高小文件分区的速度</li>
+<li></li>
+</ul>
+<p>从业务侧考虑，大致思路是减少分区数来将小文件合并成大文件</p>
+<ul>
+<li>使用coalesce或repartition操作合并分区。</li>
+<li>减少使用动态分区或者使用 <code>distribute by</code>来控制reducer个数</li>
+<li>多使用分区表来降低查询时产生的分区数量</li>
+<li>或者使用更先进的文件压缩格式来提高小文件处理性能</li>
+</ul>
+<h3 id="AWS的特殊优化："><a href="#AWS的特殊优化：" class="headerlink" title="AWS的特殊优化："></a>AWS的特殊优化：</h3><p>由于我们在生产环境中使用了AWS 的EMR，也稍微了解了一下AWS团队在s3上小文件优化上的措施</p>
+<ol>
+<li>multi upload：其原理就是利用并发读写文件片段来提高处理s3读写的性能，基于此，衍生出EMRFS S3-optimized Committer和s3a Committer（开源），注意，该committer默认采用FileOutputCommitter V2方式提交，因此V2存在的问题在这些committer上也都会存在。</li>
+<li>利用hdfs加速，在EMR中，考虑到文件系统对于rename等操作具有更好的性能，那我们不是可以在文件系统上先rename，再提交到s3上？在EMR中，就是在文件提交到s3前，先上传到类hdfs的文件系统上进行rename或者文件合并操作后再上传到s3上，这样比起纯s3读写，在性能上会有明显收益。当然坏处就是单独维护一个文件系统具有较高成本。</li>
+</ol>
+<h3 id="其他优化思路："><a href="#其他优化思路：" class="headerlink" title="其他优化思路："></a>其他优化思路：</h3><p>我们团队也在小文件合并上进行了优化，其优化思路就是在Job执行的最后，新建一个job用于合并小文件，通过继承Spark的<code>SqlHadoopMapReduceCommitProtocol</code>来实现插件式的扩展<br>合并的思路是在commitTask之后，获取数据的分区信息，然后进行分组合并，最后在commitJob的时候直接将合并完的文件转移到正式目录中。其基本思路如下图</p>
+<p><img src="https://cdn.zblade.top/20230618171131.png" alt></p>
+<p>这样合并小文件的优点</p>
+<ul>
+<li><p>该功能是插拔式的，对原生代码的侵入性较低</p>
+</li>
+<li><p>在海量小文件场景下优势明显</p>
+<p>缺点</p>
+<ul>
+<li>新起一个job进行优化，在任务最后会新增两个阶段用于小文件合并，会引入更多的task，带来一定的耗时</li>
+</ul>
+</li>
+</ul>
+<h2 id="尾声"><a href="#尾声" class="headerlink" title="尾声"></a>尾声</h2><p>通过启动该功能，我重新跑一遍任务，最终耗时下降明显降低：</p>
+<p><img src="https://cdn.zblade.top/20230618171140.png" alt></p>
+<p>当然优化并未完全结束，在eks上的任务耗时总体还是要比原EMR任务高，但这块问题的深入排查，等待下次有时间再分享吧</p>
+
+            <div class="post-button text-center">
+              <a class="btn" href="/2023/04/15/Spark-Job-chang-wei-wen-ti-pai-cha-ji-xiao-wen-jian-you-hua-de-si-kao/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-date">
+			<div class="post-month">03月</div>
+			<div class="post-day">26</div>
+	</div>
+  
+
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://site.zblade.top/2023/03/26/rust-01/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="陌花采撷">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="http://cdn.zblade.top/qiniu_img/zavatar2.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Feel The Wind">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2023/03/26/rust-01/" itemprop="url">rust学习笔记01</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-03-26T21:33:02+08:00">2023-03-26</time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>学习rust的第一天</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2023/03/26/rust-01/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-date">
 			<div class="post-month">02月</div>
 			<div class="post-day">26</div>
 	</div>
@@ -1041,640 +1859,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-date">
-			<div class="post-month">11月</div>
-			<div class="post-day">20</div>
-	</div>
-  
-
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://site.zblade.top/2022/11/20/next-blog/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="陌花采撷">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="http://cdn.zblade.top/qiniu_img/zavatar2.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Feel The Wind">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/11/20/next-blog/" itemprop="url">新的博客</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-11-20T10:34:10+08:00">2022-11-20</time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>尝试一些很新的东西…</p>
-<p><a href="https://bladedragon.xlog.app/" target="_blank" rel="noopener">https://bladedragon.xlog.app/</a></p>
-
-            <div class="post-button text-center">
-              <a class="btn" href="/2022/11/20/next-blog/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-date">
-			<div class="post-month">08月</div>
-			<div class="post-day">20</div>
-	</div>
-  
-
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://site.zblade.top/2022/08/20/trans-p3c/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="陌花采撷">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="http://cdn.zblade.top/qiniu_img/zavatar2.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Feel The Wind">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/08/20/trans-p3c/" itemprop="url">编码规范翻译</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-08-20T18:08:20+08:00">2022-08-20</time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>翻译了阿里巴巴Java编码指南中涉及的54条规则</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2022/08/20/trans-p3c/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-date">
-			<div class="post-month">08月</div>
-			<div class="post-day">14</div>
-	</div>
-  
-
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://site.zblade.top/2022/08/14/spark-ui-param/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="陌花采撷">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="http://cdn.zblade.top/qiniu_img/zavatar2.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Feel The Wind">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/08/14/spark-ui-param/" itemprop="url">spark源码笔记-UI参数原理</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-08-14T10:45:13+08:00">2022-08-14</time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <!more>
-
-<p>记录一下spark UI上一些参数的记录原理</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2022/08/14/spark-ui-param/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-date">
-			<div class="post-month">04月</div>
-			<div class="post-day">20</div>
-	</div>
-  
-
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://site.zblade.top/2022/04/20/sports-meeting/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="陌花采撷">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="http://cdn.zblade.top/qiniu_img/zavatar2.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Feel The Wind">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/04/20/sports-meeting/" itemprop="url">那些永不磨灭的青春</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-04-20T21:35:36+08:00">2022-04-20</time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>十年饮冰，难凉热血  </p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2022/04/20/sports-meeting/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-date">
-			<div class="post-month">04月</div>
-			<div class="post-day">08</div>
-	</div>
-  
-  <div class="post-badge">
-    
-      <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-        <a href="/categories/一如既往，只是日常/" itemprop="url" rel="index">
-          <span itemprop="name">一如既往，只是日常</span>
-        </a>
-      </span>
-    
-  </div>
-  
-
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://site.zblade.top/2022/04/08/boy-and-girl-and-earth/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="陌花采撷">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="http://cdn.zblade.top/qiniu_img/zavatar2.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Feel The Wind">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/04/08/boy-and-girl-and-earth/" itemprop="url">我们依然需要仰望天空</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-04-08T23:45:11+08:00">2022-04-08</time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>在《地球外少年少女》的正片中，如果单纯论观感，最后结局的演出和设计确实会让人觉得平庸甚至粗糙，有时我也会觉得有些桥段既视感过于强烈。但是不可否认的是，在其中确实能发掘一些值得思考的闪光点，加之这部作品对世界的架构和科学幻想部分深得我心，以及前半段的“太空求生”相对出色，因此我依然认为这部番看了不亏。遗憾的是久仰矶光雄大名，又因为其处女作《电脑线圈》拥有较高口碑，这样的作品确实有些不符合预期，最后还是需要感慨一下逝去的日本科幻动画黄金时代，不知何时，我们还能再次仰望星空呢。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2022/04/08/boy-and-girl-and-earth/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1792,7 +1981,7 @@
                 <a href="/archives">
               
                   <span class="site-state-item-name">日志</span>
-				  <span class="site-state-item-count">56</span>
+				  <span class="site-state-item-count">61</span>
                 </a>
               </div>
             
@@ -1814,7 +2003,7 @@
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
 				 <span class="site-state-item-name">标签</span>
-				  <span class="site-state-item-count">29</span>
+				  <span class="site-state-item-count">31</span>
                 </a>
               </div>
             

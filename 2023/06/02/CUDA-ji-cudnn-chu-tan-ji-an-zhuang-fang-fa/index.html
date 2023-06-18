@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+
+
+
+
+<html class="theme-next pisces" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#da532c">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="google-site-verification" content="fRFpn2MbE7qpAtGAMkPwOq1xWyHF0BtvPVdE_P3qZFY">
+
+
+
+
+
+
+
+
+  <meta name="baidu-site-verification" content="t4cHu1Oo6Q">
+
+
+
+
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.loli.net/css?family=Sigmar One:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+
+  
+
+<link href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=0.0.50" rel="stylesheet" type="text/css">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=0.0.50">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/布丁.png?v=0.0.50">
+
+
+  <link rel="mask-icon" href="/safari-pinned-tab.svg?v=0.0.50" color="#da532c">
+
+
+
+
+
+
+  <meta name="keywords" content="AI,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="刚开始玩stable diffusion, 但用的整合包，很多训练知识都只是一知半解，现学现用，倒也是能炼出一些自己想要的作品。但是最近了解到升级pyTorch 和xformer之后可以极大提高训练lora的速度，这不由得让我产生了想升级的念头（刚到手的4070怎能没有榨干它的冲动），于是，开始了踩坑之路——其实也就是标题。 &amp;lt; !–more–&amp;gt;  升级Pytorch之前，首先需要检查">
+<meta name="keywords" content="AI">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CUDA及cudnn初探及安装方法">
+<meta property="og:url" content="http://site.zblade.top/2023/06/02/CUDA-ji-cudnn-chu-tan-ji-an-zhuang-fang-fa/index.html">
+<meta property="og:site_name" content="Feel The Wind">
+<meta property="og:description" content="刚开始玩stable diffusion, 但用的整合包，很多训练知识都只是一知半解，现学现用，倒也是能炼出一些自己想要的作品。但是最近了解到升级pyTorch 和xformer之后可以极大提高训练lora的速度，这不由得让我产生了想升级的念头（刚到手的4070怎能没有榨干它的冲动），于是，开始了踩坑之路——其实也就是标题。 &amp;lt; !–more–&amp;gt;  升级Pytorch之前，首先需要检查">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://cdn.zblade.top/20230618170121.png">
+<meta property="og:image" content="https://cdn.zblade.top/20230618170136.png">
+<meta property="og:image" content="https://cdn.zblade.top/20230618170220.png">
+<meta property="og:image" content="https://cdn.zblade.top/20230618170243.png">
+<meta property="og:image" content="https://cdn.zblade.top/20230618170255.png">
+<meta property="og:image" content="https://cdn.zblade.top/20230618170305.png">
+<meta property="og:image" content="https://cdn.zblade.top/20230618170315.png">
+<meta property="og:image" content="https://cdn.zblade.top/20230618170325.png">
+<meta property="og:image" content="https://cdn.zblade.top/20230618170336.png">
+<meta property="og:image" content="https://cdn.zblade.top/20230618170347.png">
+<meta property="og:image" content="https://cdn.zblade.top/20230618170356.png">
+<meta property="og:image" content="https://cdn.zblade.top/20230618170408.png">
+<meta property="og:image" content="https://cdn.zblade.top/20230618170420.png">
+<meta property="og:image" content="https://cdn.zblade.top/20230618170431.png">
+<meta property="og:updated_time" content="2023-06-18T09:04:45.886Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CUDA及cudnn初探及安装方法">
+<meta name="twitter:description" content="刚开始玩stable diffusion, 但用的整合包，很多训练知识都只是一知半解，现学现用，倒也是能炼出一些自己想要的作品。但是最近了解到升级pyTorch 和xformer之后可以极大提高训练lora的速度，这不由得让我产生了想升级的念头（刚到手的4070怎能没有榨干它的冲动），于是，开始了踩坑之路——其实也就是标题。 &amp;lt; !–more–&amp;gt;  升级Pytorch之前，首先需要检查">
+<meta name="twitter:image" content="https://cdn.zblade.top/20230618170121.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '0.0.50',
+    sidebar: {"position":"right","display":"always","offset":52,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    since: '9/22/2019 11:30:00',
+    onlineAPI: '',
+    site: {
+      title: 'Feel The Wind',
+      subtitle: '',
+      author: '陌花采撷'
+    },
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    leancloud: {
+      enable: false,
+      appID: 'dTfoweWyLJr7wTEW4CUhKHJQ-gzGzoHsz',
+      appKey: 'xh7FpohCp7PmwlHYAyqSaXov'
+    },
+    favicon: {
+      visibilitychange: true,
+      narmal: '/images/布丁.png',
+      hidden: '/images/failure.ico',
+      show_text: '(/≧▽≦/)咦！又好了！',
+      hide_text: 'Warning! 404-NoFound'
+    }
+  };
+</script>
+
+
+
+
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+
+  <script type="text/javascript" src="null"></script>
+
+
+
+
+
+
+
+
+  <title>CUDA及cudnn初探及安装方法 | Feel The Wind</title>
+  
+
+
+
+
+
+
+
+
+ 
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans" class="theme-darling">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-首页">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-小项目">
+          <a href="javascript:;" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-flask"></i> <br>
+            
+            小项目
+          </a>
+          
+            <ul class="submenu submenu-小项目">
+              
+                
+                <li class="submenu-item submenu-item-old_blog">
+                  <a href="http://zblade.top:85/wordpress/" rel="section" target="_blank">
+                    Old_Blog
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-短网址生成">
+                  <a href="http://zblade.top:8081/" rel="section" target="_blank">
+                    短网址生成
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-资源站">
+                  <a href="http://inner.cquptict.com:90/" rel="section" target="_blank">
+                    资源站
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-ict-pan">
+                  <a href="http://www.cquptict.com:8000/" rel="section" target="_blank">
+                    ICT-Pan
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-招新系统">
+                  <a href="http://zblade.top:83/#/" rel="section" target="_blank">
+                    招新系统
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-领奖系统">
+                  <a href="https://github.com/bladedragon/PrizeTool" rel="section" target="_blank">
+                    领奖系统
+                  </a>
+                </li>
+              
+            </ul>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-归档">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-分类">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-server"></i> <br>
+            
+            分类
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-标签">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tag"></i> <br>
+            
+            标签
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-留言板">
+          <a href="/message/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-pencil"></i> <br>
+            
+            留言板
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-关于">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rocket"></i> <br>
+            
+            关于
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-coding_set">
+          <a href="https://bladedragon.github.io/coding_docs/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sign-language"></i> <br>
+            
+            Coding_Set
+          </a>
+          
+        </li>
+      
+
+      
+      <li class="menu-item search">
+          <form class="search-form">
+            <input name="keyword" type="text" class="search-input" placeholder="站内搜索">
+            <button type="submit" class="search-submit"><i class="fa fa-search"></i></button>
+          </form>
+      </li>
+      <!--<li class="menu-item online"><span id="online-count">?</span>人在线</li>-->
+    </ul>
+  
+
+  
+</nav>
+
+<div class="site-brand-wrapper" style="background-image: url(http://cdn.zblade.top/qiniu_img/wallhaven-6k1j7l.jpg)">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <div class="brand">
+        <span class="logo-line-before"><i></i></span>
+        <div class="site-title">
+          <div id="animate" class="animate">
+            <span>F</span><span>e</span><span>e</span><span>l</span><span> </span><span>T</span><span>h</span><span>e</span><span> </span><span>W</span><span>i</span><span>n</span><span>d</span>
+          </div>
+          <div id="guide" class="guide">
+            <span>F</span><span>e</span><span>e</span><span>l</span><span> </span><span>T</span><span>h</span><span>e</span><span> </span><span>W</span><span>i</span><span>n</span><span>d</span>
+          </div>
+        </div>
+        <span class="logo-line-after"><i></i></span>
+      </div>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<div class="site-master" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-master-avatar" itemprop="image" src="http://cdn.zblade.top/qiniu_img/zavatar2.jpg" alt="陌花采撷">
+    <h2 class="site-master-description" itemprop="description">
+        <span>即使天无雨，</span><span>吾亦留此地</span>
+    </h2>
+</div>
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-date">
+			<div class="post-month">06月</div>
+			<div class="post-day">02</div>
+	</div>
+  
+
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://site.zblade.top/2023/06/02/CUDA-ji-cudnn-chu-tan-ji-an-zhuang-fang-fa/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="陌花采撷">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="http://cdn.zblade.top/qiniu_img/zavatar2.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Feel The Wind">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">CUDA及cudnn初探及安装方法</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-06-02T12:33:02+08:00">2023-06-02</time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>刚开始玩stable diffusion, 但用的整合包，很多训练知识都只是一知半解，现学现用，倒也是能炼出一些自己想要的作品。但是最近了解到升级pyTorch 和xformer之后可以极大提高训练lora的速度，这不由得让我产生了想升级的念头（<del>刚到手的4070怎能没有榨干它的冲动</del>），于是，开始了踩坑之路——其实也就是标题。</p>
+<p>&lt; !–more–&gt;</p>
+<p><img src="https://cdn.zblade.top/20230618170121.png" alt></p>
+<p>升级Pytorch之前，首先需要检查你的<strong>CUDA</strong>和<strong>cuDNN</strong>版本，大部分显卡支持的cuda都是11，目前绝大多数SD-webui默认安装的pytorch也都是支持cuda11的版本，所以不需要改动。但是如果你的显卡是40系，那大概率支持CUDA12，虽说正常使用CUDA11也没有关系，但<strong>CUDA12能大幅提高显卡的计算效率</strong>，因此，我是推荐能升12就升12。那怎么判断自己电脑内装的是CUDA11还是CUDA12呢？cuDNN又是什么东西？<br>我一开始就有这样的问题，甚至一度认为自己装的就是CUDA12，后来查了一遍资料才发现事实并非如此。</p>
+<h2 id="简单概念"><a href="#简单概念" class="headerlink" title="简单概念"></a>简单概念</h2><p>首先你要知道CUDA和cuDNN是什么。具体的细节其实我也是一知半解，但是我们还是要有一个大致的概念，起码要知道是什么，干什么，怎么用。根据官方文档解释：</p>
+<blockquote>
+<p>The NVIDIA® CUDA® Toolkit provides a comprehensive development environment for C and C++ developers building GPU-accelerated applications. With the CUDA Toolkit, you can develop, optimize, and deploy your applications on GPU-accelerated embedded systems, desktop workstations, enterprise data centers, cloud-based platforms and HPC supercomputers. The toolkit includes GPU-accelerated libraries, debugging and optimization tools, a C/C++ compiler, and a runtime library to deploy your application.<br>Using built-in capabilities for distributing computations across multi-GPU configurations, scientists and researchers can develop applications that scale from single GPU workstations to cloud installations with thousands of GPUs.</p>
+</blockquote>
+<p>翻译过来简单解释就是一套开发框架，帮助我们更好调用GPU的计算能力进行顶层开发<br>而cuDNN的官方解释是：</p>
+<blockquote>
+<p>The NVIDIA® CUDA Deep Neural Network (cuDNN) library is a GPU-accelerated library of primitives for deep neural networks. cuDNN provides highly tuned implementations for standard routines such as forward and backward convolution, pooling, normalization, and activation layers. Deep learning researchers and framework developers worldwide rely on cuDNN for high-performance GPU acceleration.<br>Deep learning researchers and framework developers worldwide rely on cuDNN for high-performance GPU acceleration. It allows them to focus on training neural networks and developing software applications rather than spending time on low-level GPU performance tuning. cuDNN accelerates widely used deep learning frameworks, including Chainer, Keras, MATLAB, MxNet, PaddlePaddle, PyTorch, and TensorFlow.</p>
+</blockquote>
+<p>翻译过来简单解释就是深度学习框架的依赖库，用于加速神经网络训练</p>
+<p>而pyTorch则是基于python的深度学习框架，可见使用了cuDNN之后可以加速训练速度。而特别要留意pyTorch 和CUDA的版本一定要一致，不然兼容问题可能导致程序运行出错，这个下面会提到</p>
+<h2 id="前置准备"><a href="#前置准备" class="headerlink" title="前置准备"></a>前置准备</h2><p>首先，你要先确定本机支持的CUDA版本，可以通过cmd输入如下命令查看（这是nvidia的命令行，所以linux系统只要装了显卡对应的驱动理论上都可以使用）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvidia-smi</span><br></pre></td></tr></table></figure>
+
+<p>可以得到电脑内的具体显卡型号：</p>
+<p><img src="https://cdn.zblade.top/20230618170136.png" alt><br>上面其实就是你的硬件和软件信息，包括显卡的名称，规格，驱动版本，使用进程，已经左上角显示的支持的CUDA 版本（<strong>注意，这里显示的是你的显卡支持的CUDA版本，不是电脑的安装的CUDA版本！</strong>)</p>
+<p>如果你之前从未主动装过CUDA甚至从未听说过CUDA，那你的环境99%没有装它（看似是个废话，但我当时就是没有想到TT）<br>如果你还想进一步检查是否安装，可以通过cmd输入这个命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvcc -V</span><br></pre></td></tr></table></figure>
+
+<p>如果显示下面这样说明已经安装了<br><img src="https://cdn.zblade.top/20230618170220.png" alt></p>
+<p><strong><mark>那么问题来了，已知pytorch运行必须要CUDA，但我从未安装过CUDA，那我之前的整合包是如何运行的？<br>答：pytorch内置了CUDA的一些基本运行时依赖库，当你的环境中不存在CUDA时，就会调用它们</mark></strong></p>
+<p>另外还请确认你环境中的pytorch版本以及想要升级的版本，这对后面安装对应版本的CUDA非常重要<br>可以进入你的Python环境，执行下面命令查看pytorch的对应版本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="comment"># 输出pytorch的版本</span></span><br><span class="line">print(torch.__version__)</span><br><span class="line"><span class="comment"># 输出torch引用的cuda的版本，注意如果你的环境没有安装cuda，这里也会输出，不过指的是torch内置的cuda运行时的版本</span></span><br><span class="line">print(torch.version.cuda)</span><br><span class="line"><span class="comment"># 输出torch 引用的cudnn版本，具体规则和上述cuda一致</span></span><br><span class="line">print(torch.backends.cudnn.version())</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>首先你需要知道pyTorch的版本和对应需要的CUDA,这个网上也有很多资料，其中一种方式是可以直接看安装包的命名方式，通过一<br>下<a href="https://download.pytorch.org/whl/torch_stable.html" target="_blank" rel="noopener">链接</a></p>
+<p><strong>但是，有一个非常重要的一点</strong><br><mark>CUDA12 并未出现在版本适配上，但在一些非官方的渠道上，开发人员表示最新的pyTorch是支持CUDA12的，只需要替换一些运行时文件即可，具体方法在下面适配pyTorch环节</mark></p>
+<p>更新torch的方式就不多说了，通过pip升级，非常方便</p>
+<h3 id="CUDA安装"><a href="#CUDA安装" class="headerlink" title="CUDA安装"></a>CUDA安装</h3><p>接下来介绍CUDA的安装</p>
+<p>首先到<a href="https://developer.nvidia.com/cuda-downloads?target_os=Windows&target_arch=x86_64&target_version=10&target_type=exe_local" target="_blank" rel="noopener">官网</a>下载软件包，这里以win10系统为例</p>
+<p>下完后就直接开始安装：</p>
+<p>以下是安装时缓存文件的位置，随便放在一个空间足够的位置就行，但是注意这个目录会随着安装结束而删除<br><img src="https://cdn.zblade.top/20230618170243.png" alt></p>
+<p><img src="https://cdn.zblade.top/20230618170255.png" alt></p>
+<p><img src="https://cdn.zblade.top/20230618170305.png" alt></p>
+<p>这里注意，由于CUDA的安装体积比较大，而且安装时我们往往已经具备一定的GPU 环境，所以建议还是自定义安装，按需安装即可<br><img src="https://cdn.zblade.top/20230618170315.png" alt></p>
+<p>这里注意图中的Driver Component一般不要勾选，因为这涉及到显卡驱动，而显卡驱动我们一般都是独立升级（我是通过nvidia experience升级的）如果安装的CUDA版本不是最新的，大概率会出现旧驱动覆盖新驱动的情况，所以不建议勾选<br><img src="https://cdn.zblade.top/20230618170325.png" alt></p>
+<p>可以打开CUDA下看具体的一些组件，像visual studio的组件，如果平时开发没用到，不需要勾选<br><img src="https://cdn.zblade.top/20230618170336.png" alt></p>
+<p>安装中…<br><img src="https://cdn.zblade.top/20230618170347.png" alt></p>
+<p>由于我的电脑没有安装VS，所以安装时有些依赖不会安装成功，但只要不影响使用就好<br><img src="https://cdn.zblade.top/20230618170356.png" alt></p>
+<p><img src="https://cdn.zblade.top/20230618170408.png" alt></p>
+<p><strong>验证</strong><br>可以cmd到以下目录，查看这些测试程序是否能跑通，以及查看CUDA版本是否正常</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd DIR\NVIDIA GPU Computing Toolkit\CUDA\v12.1\extras\demo_suite</span><br><span class="line">bandwidthTest.exe</span><br><span class="line">deviceQuery.exe</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装cuDNN"><a href="#安装cuDNN" class="headerlink" title="安装cuDNN"></a>安装cuDNN</h3><p>由于cuDNN只是一些依赖库文件，所以我们只需要下载指定版本的文件，然后覆盖CUDA路径下的指定目录即可<br>注意这里需要注册nvidia 账号，好在只需要邮箱就可以创建成功…<br>这是<a href="https://developer.nvidia.com/rdp/cudnn-download" target="_blank" rel="noopener">下载地址</a></p>
+<p>下载后会有如下文件夹，覆盖到CUDA的目录即可</p>
+<p><img src="https://cdn.zblade.top/20230618170420.png" alt></p>
+<h3 id="适配pyTorch"><a href="#适配pyTorch" class="headerlink" title="适配pyTorch"></a>适配pyTorch</h3><p>这里主要是给CUDA12的适配，pyTorch想用CUDA12，需要在pyTorch的依赖库目录中用CUDA中的文件进行替换</p>
+<p>torch的库目录一般在对应的python lib目录下（或者virtualenv 的lib目录下）<br>类似</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$&#123;venv&#125;</span>\Lib\site-packages\torch\lib</span><br></pre></td></tr></table></figure>
+
+<p>需要替换的文件如下图所示<br><img src="https://cdn.zblade.top/20230618170431.png" alt><br>前三个是CUDA的文件，后7个是cuDNN的文件，应该很容易就能在CUDA的目录下找到</p>
+<p><strong>安装成功后就可以享受CUDA12 带来的高速体验了！！！</strong></p>
+<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><p><a href="https://docs.nvidia.com/cuda/doc/index.html" target="_blank" rel="noopener">CUDA 官方文档</a><br><a href="https://docs.nvidia.com/cudnn/index.html" target="_blank" rel="noopener">cuDNN 官方文档</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div class="post-share">分享到：</div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/AI/" rel="tag"># AI</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2023/05/13/guan-yu-S3A-de-yi-xie-cai-keng-he-si-kao/" rel="next" title="关于S3A的一些踩坑和思考">
+                <i class="fa fa-chevron-left"></i> 关于S3A的一些踩坑和思考
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2023/06/18/spark-wen-jian-du-qu-fen-qu-can-shu-she-zhi-fang-fa/" rel="prev" title="spark文件读取分区参数设置方法">
+                spark文件读取分区参数设置方法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+  <div class="comments" id="comments">
+      <div id="gitalk-container"></div>
+    </div>
+	
+  
+
+
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+        <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+		<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    
+		<script type="text/javascript">
+		const gitalk = new Gitalk({
+		clientID: '8c4098d1aa1409852b19',
+		clientSecret: 'cdc136702eaaa9600bc46ab7da3c95a8537116ef',
+		repo: 'Blog_message_repo',
+		owner: 'BladeDragon',
+		admin: ['BladeDragon'],
+		id: window.location.pathname,      // Ensure uniqueness and length less than 50
+		});
+		
+		gitalk.render('gitalk-container');
+		</script>
+
+    
+
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://cdn.zblade.top/qiniu_img/zcard2.png" alt="陌花采撷">
+            
+              <p class="site-author-name" itemprop="name"><span style="opacity:.2;"></span>陌花采撷</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/bladedragon" target="_blank" title="GitHub" data-balloon="GitHub" data-balloon-pos="up">
+                    
+                       <i class="fa fa-fw fa-github"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://telegram.com" target="_blank" title="telegram" data-balloon="telegram" data-balloon-pos="up">
+                    
+                       <i class="fa fa-fw fa-telegram"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:zaft1156673039@gmail.com" target="_blank" title="E-Mail" data-balloon="E-Mail" data-balloon-pos="up">
+                    
+                       <i class="fa fa-fw fa-envelope"></i></a>
+                </span>
+              
+            
+          </div>
+
+         
+
+          
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-name">日志</span>
+				  <span class="site-state-item-count">61</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-name">分类</span>
+				   <span class="site-state-item-count">4</span>
+                </a>
+              </div>
+            
+            
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+				 <span class="site-state-item-name">标签</span>
+				  <span class="site-state-item-count">31</span>
+                </a>
+              </div>
+            
+            
+
+          </nav>
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              
+            </div>
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#简单概念"><span class="nav-text">简单概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#前置准备"><span class="nav-text">前置准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装"><span class="nav-text">安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CUDA安装"><span class="nav-text">CUDA安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装cuDNN"><span class="nav-text">安装cuDNN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#适配pyTorch"><span class="nav-text">适配pyTorch</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引用"><span class="nav-text">引用</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-image"></div>
+      <div class="footer-inner">
+        <p>本博客已出生<span id="since"></span><span class="my-face">(●'◡'●)ﾉ♥</span></p>
+<p></p>
+
+Theme By <a href="https://github.com/DIYgod/hexo-theme-sagiri" target="_blank" class="external" rel="nofollow">Sagiri</a>
+
+<p>Made with <i class="fa fa-heart throb" style="color: #d43f57;"></i> by <span class="author" itemprop="copyrightHolder">陌花采撷</span>. </p>
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    <canvas id="evanyou"></canvas>
+    <div id="aplayer-fixed"></div>
+
+    
+	
+  </div>
+
+	
+  <script type="text/javascript" src="/js/sagiri.min.js?v=0.0.50"></script>
+	
+  
+
+
+
+
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+  <!--<script>
+    // remove service worker cache
+    // from https://stackoverflow.com/questions/33704791/how-do-i-uninstall-a-service-worker
+    "use strict";
+    if(navigator.serviceWorker)
+    {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            for(let registration of registrations) {
+                registration.unregister()
+            }
+        })
+    }
+  </script>-->
+
+  <!--<script>
+    var serviceWorkerUri = '/sw.js';
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register(serviceWorkerUri).then(function() {
+          if (navigator.serviceWorker.controller) {
+            console.log('Assets cached by the controlling service worker.');
+          } else {
+            console.log('Please reload this page to allow the service worker to handle network operations.');
+          }
+        }).catch(function(error) {
+          console.log('ERROR: ' + error);
+        });
+    } else {
+        console.log('Service workers are not supported in the current browser.');
+    }
+  </script>-->
+  
+  
+
+	
+</body>
+</html>
