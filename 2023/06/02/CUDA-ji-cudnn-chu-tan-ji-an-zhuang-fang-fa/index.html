@@ -111,13 +111,13 @@
 
 
 
-<meta name="description" content="刚开始玩stable diffusion, 但用的整合包，很多训练知识都只是一知半解，现学现用，倒也是能炼出一些自己想要的作品。但是最近了解到升级pyTorch 和xformer之后可以极大提高训练lora的速度，这不由得让我产生了想升级的念头（刚到手的4070怎能没有榨干它的冲动），于是，开始了踩坑之路——其实也就是标题。 &amp;lt; !–more–&amp;gt;  升级Pytorch之前，首先需要检查">
+<meta name="description" content="刚开始玩stable diffusion, 但用的整合包，很多训练知识都只是一知半解，现学现用，倒也是能炼出一些自己想要的作品。但是最近了解到升级pyTorch 和xformer之后可以极大提高训练lora的速度，这不由得让我产生了想升级的念头（刚到手的4070怎能没有榨干它的冲动），于是，开始了踩坑之路——其实也就是标题。">
 <meta name="keywords" content="AI">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CUDA及cudnn初探及安装方法">
 <meta property="og:url" content="http://site.zblade.top/2023/06/02/CUDA-ji-cudnn-chu-tan-ji-an-zhuang-fang-fa/index.html">
 <meta property="og:site_name" content="Feel The Wind">
-<meta property="og:description" content="刚开始玩stable diffusion, 但用的整合包，很多训练知识都只是一知半解，现学现用，倒也是能炼出一些自己想要的作品。但是最近了解到升级pyTorch 和xformer之后可以极大提高训练lora的速度，这不由得让我产生了想升级的念头（刚到手的4070怎能没有榨干它的冲动），于是，开始了踩坑之路——其实也就是标题。 &amp;lt; !–more–&amp;gt;  升级Pytorch之前，首先需要检查">
+<meta property="og:description" content="刚开始玩stable diffusion, 但用的整合包，很多训练知识都只是一知半解，现学现用，倒也是能炼出一些自己想要的作品。但是最近了解到升级pyTorch 和xformer之后可以极大提高训练lora的速度，这不由得让我产生了想升级的念头（刚到手的4070怎能没有榨干它的冲动），于是，开始了踩坑之路——其实也就是标题。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://cdn.zblade.top/20230618170121.png">
 <meta property="og:image" content="https://cdn.zblade.top/20230618170136.png">
@@ -133,10 +133,10 @@
 <meta property="og:image" content="https://cdn.zblade.top/20230618170408.png">
 <meta property="og:image" content="https://cdn.zblade.top/20230618170420.png">
 <meta property="og:image" content="https://cdn.zblade.top/20230618170431.png">
-<meta property="og:updated_time" content="2023-06-18T09:04:45.886Z">
+<meta property="og:updated_time" content="2024-02-25T07:31:55.716Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CUDA及cudnn初探及安装方法">
-<meta name="twitter:description" content="刚开始玩stable diffusion, 但用的整合包，很多训练知识都只是一知半解，现学现用，倒也是能炼出一些自己想要的作品。但是最近了解到升级pyTorch 和xformer之后可以极大提高训练lora的速度，这不由得让我产生了想升级的念头（刚到手的4070怎能没有榨干它的冲动），于是，开始了踩坑之路——其实也就是标题。 &amp;lt; !–more–&amp;gt;  升级Pytorch之前，首先需要检查">
+<meta name="twitter:description" content="刚开始玩stable diffusion, 但用的整合包，很多训练知识都只是一知半解，现学现用，倒也是能炼出一些自己想要的作品。但是最近了解到升级pyTorch 和xformer之后可以极大提高训练lora的速度，这不由得让我产生了想升级的念头（刚到手的4070怎能没有榨干它的冲动），于是，开始了踩坑之路——其实也就是标题。">
 <meta name="twitter:image" content="https://cdn.zblade.top/20230618170121.png">
 
 
@@ -507,7 +507,9 @@
 
       
         <p>刚开始玩stable diffusion, 但用的整合包，很多训练知识都只是一知半解，现学现用，倒也是能炼出一些自己想要的作品。但是最近了解到升级pyTorch 和xformer之后可以极大提高训练lora的速度，这不由得让我产生了想升级的念头（<del>刚到手的4070怎能没有榨干它的冲动</del>），于是，开始了踩坑之路——其实也就是标题。</p>
-<p>&lt; !–more–&gt;</p>
+<a id="more"></a>
+
+
 <p><img src="https://cdn.zblade.top/20230618170121.png" alt></p>
 <p>升级Pytorch之前，首先需要检查你的<strong>CUDA</strong>和<strong>cuDNN</strong>版本，大部分显卡支持的cuda都是11，目前绝大多数SD-webui默认安装的pytorch也都是支持cuda11的版本，所以不需要改动。但是如果你的显卡是40系，那大概率支持CUDA12，虽说正常使用CUDA11也没有关系，但<strong>CUDA12能大幅提高显卡的计算效率</strong>，因此，我是推荐能升12就升12。那怎么判断自己电脑内装的是CUDA11还是CUDA12呢？cuDNN又是什么东西？<br>我一开始就有这样的问题，甚至一度认为自己装的就是CUDA12，后来查了一遍资料才发现事实并非如此。</p>
 <h2 id="简单概念"><a href="#简单概念" class="headerlink" title="简单概念"></a>简单概念</h2><p>首先你要知道CUDA和cuDNN是什么。具体的细节其实我也是一知半解，但是我们还是要有一个大致的概念，起码要知道是什么，干什么，怎么用。根据官方文档解释：</p>
@@ -772,7 +774,7 @@
                 <a href="/archives">
               
                   <span class="site-state-item-name">日志</span>
-				  <span class="site-state-item-count">61</span>
+				  <span class="site-state-item-count">63</span>
                 </a>
               </div>
             

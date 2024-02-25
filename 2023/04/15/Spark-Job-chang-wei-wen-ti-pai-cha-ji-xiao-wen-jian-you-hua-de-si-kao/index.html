@@ -111,13 +111,13 @@
 
 
 
-<meta name="description" content="但是最近在测试spark on k8s的时候，遇到了一些性能问题，于是记录一下排查过程，做一下案例的复盘。  案例再现我们使用的底层集群是AWS的eks集群，在此之上搭建了一套传统的hadoop yarn+ spark环境。通俗来说就是将yarn的resourceManager,nodeManager等具体的组件转化成k8s的pod，但是上层调度逻辑不变，做了一套两层调度的系统。该系统的具体实现方">
+<meta name="description" content="但是最近在测试spark on k8s的时候，遇到了一些性能问题，于是记录一下排查过程，做一下案例的复盘。">
 <meta name="keywords" content="spark">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Spark Job长尾问题排查及小文件优化的思考">
 <meta property="og:url" content="http://site.zblade.top/2023/04/15/Spark-Job-chang-wei-wen-ti-pai-cha-ji-xiao-wen-jian-you-hua-de-si-kao/index.html">
 <meta property="og:site_name" content="Feel The Wind">
-<meta property="og:description" content="但是最近在测试spark on k8s的时候，遇到了一些性能问题，于是记录一下排查过程，做一下案例的复盘。  案例再现我们使用的底层集群是AWS的eks集群，在此之上搭建了一套传统的hadoop yarn+ spark环境。通俗来说就是将yarn的resourceManager,nodeManager等具体的组件转化成k8s的pod，但是上层调度逻辑不变，做了一套两层调度的系统。该系统的具体实现方">
+<meta property="og:description" content="但是最近在测试spark on k8s的时候，遇到了一些性能问题，于是记录一下排查过程，做一下案例的复盘。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://cdn.zblade.top/20230618170858.png">
 <meta property="og:image" content="https://cdn.zblade.top/20230618170907.png">
@@ -127,10 +127,10 @@
 <meta property="og:image" content="https://cdn.zblade.top/20230618171120.png">
 <meta property="og:image" content="https://cdn.zblade.top/20230618171131.png">
 <meta property="og:image" content="https://cdn.zblade.top/20230618171140.png">
-<meta property="og:updated_time" content="2023-06-18T09:11:48.460Z">
+<meta property="og:updated_time" content="2024-02-25T07:32:27.071Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spark Job长尾问题排查及小文件优化的思考">
-<meta name="twitter:description" content="但是最近在测试spark on k8s的时候，遇到了一些性能问题，于是记录一下排查过程，做一下案例的复盘。  案例再现我们使用的底层集群是AWS的eks集群，在此之上搭建了一套传统的hadoop yarn+ spark环境。通俗来说就是将yarn的resourceManager,nodeManager等具体的组件转化成k8s的pod，但是上层调度逻辑不变，做了一套两层调度的系统。该系统的具体实现方">
+<meta name="twitter:description" content="但是最近在测试spark on k8s的时候，遇到了一些性能问题，于是记录一下排查过程，做一下案例的复盘。">
 <meta name="twitter:image" content="https://cdn.zblade.top/20230618170858.png">
 
 
@@ -502,6 +502,8 @@
       
         <p>但是最近在测试spark on k8s的时候，遇到了一些性能问题，于是记录一下排查过程，做一下案例的复盘。</p>
 <p><img src="https://cdn.zblade.top/20230618170858.png" alt></p>
+<a id="more"></a>
+
 <h2 id="案例再现"><a href="#案例再现" class="headerlink" title="案例再现"></a>案例再现</h2><p>我们使用的底层集群是AWS的eks集群，在此之上搭建了一套传统的hadoop yarn+ spark环境。通俗来说就是将yarn的resourceManager,nodeManager等具体的组件转化成k8s的pod，但是上层调度逻辑不变，做了一套两层调度的系统。该系统的具体实现方案和调度逻辑这里按下不表，因为这和今天讲述的性能优化案例关系不大，我们只要了解到这是传统的yarnspark，但是底层是k8s就好。<br>我采用的任务是来自我们生产环境的一个小任务，期望运行时间5min，数据量中等，输出表数据大约在2kw行。原先生产环境采用的是AWS的EMR on EC2集群,可以理解是传统的容器主机集群。现在将该任务迁移到eks集群后，时长达到了43min，于是观察其history ui:</p>
 <p><img src="https://cdn.zblade.top/20230618170907.png" alt></p>
 <p><img src="https://cdn.zblade.top/20230618170916.png" alt></p>
@@ -788,7 +790,7 @@
                 <a href="/archives">
               
                   <span class="site-state-item-name">日志</span>
-				  <span class="site-state-item-count">61</span>
+				  <span class="site-state-item-count">63</span>
                 </a>
               </div>
             
