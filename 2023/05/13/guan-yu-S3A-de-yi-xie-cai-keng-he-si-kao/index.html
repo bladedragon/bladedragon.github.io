@@ -111,21 +111,21 @@
 
 
 
-<meta name="description" content="最近工作中架构升级，将原来的EMR集群迁移到基于开源的自建集群上，原来使用的一些组件自然也需要改造，其中就包括s3。在我们的自建集群中，选用的开源hadoop中s3a client（或者s3a connector，下面简写成s3a,  意义基本相同）来连接原有的s3存储。接下来我就会分享我在用s3a client时总结的一些经验 s3协议的类型首先介绍一下s3，s3全称应该叫AWS S3，又称AW">
+<meta name="description" content="最近工作中架构升级，将原来的EMR集群迁移到基于开源的自建集群上，原来使用的一些组件自然也需要改造，其中就包括s3。在我们的自建集群中，选用的开源hadoop中s3a client（或者s3a connector，下面简写成s3a,  意义基本相同）来连接原有的s3存储。接下来我就会分享我在用s3a client时总结的一些经验">
 <meta name="keywords" content="大数据">
 <meta property="og:type" content="article">
 <meta property="og:title" content="关于S3A的一些踩坑和思考">
 <meta property="og:url" content="http://site.zblade.top/2023/05/13/guan-yu-S3A-de-yi-xie-cai-keng-he-si-kao/index.html">
 <meta property="og:site_name" content="Feel The Wind">
-<meta property="og:description" content="最近工作中架构升级，将原来的EMR集群迁移到基于开源的自建集群上，原来使用的一些组件自然也需要改造，其中就包括s3。在我们的自建集群中，选用的开源hadoop中s3a client（或者s3a connector，下面简写成s3a,  意义基本相同）来连接原有的s3存储。接下来我就会分享我在用s3a client时总结的一些经验 s3协议的类型首先介绍一下s3，s3全称应该叫AWS S3，又称AW">
+<meta property="og:description" content="最近工作中架构升级，将原来的EMR集群迁移到基于开源的自建集群上，原来使用的一些组件自然也需要改造，其中就包括s3。在我们的自建集群中，选用的开源hadoop中s3a client（或者s3a connector，下面简写成s3a,  意义基本相同）来连接原有的s3存储。接下来我就会分享我在用s3a client时总结的一些经验">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://cdn.zblade.top/20230618170619.png">
 <meta property="og:image" content="https://cdn.zblade.top/20230618170702.png">
 <meta property="og:image" content="https://cdn.zblade.top/20230618170715.png">
-<meta property="og:updated_time" content="2023-06-18T09:07:37.650Z">
+<meta property="og:updated_time" content="2024-03-03T13:10:09.764Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="关于S3A的一些踩坑和思考">
-<meta name="twitter:description" content="最近工作中架构升级，将原来的EMR集群迁移到基于开源的自建集群上，原来使用的一些组件自然也需要改造，其中就包括s3。在我们的自建集群中，选用的开源hadoop中s3a client（或者s3a connector，下面简写成s3a,  意义基本相同）来连接原有的s3存储。接下来我就会分享我在用s3a client时总结的一些经验 s3协议的类型首先介绍一下s3，s3全称应该叫AWS S3，又称AW">
+<meta name="twitter:description" content="最近工作中架构升级，将原来的EMR集群迁移到基于开源的自建集群上，原来使用的一些组件自然也需要改造，其中就包括s3。在我们的自建集群中，选用的开源hadoop中s3a client（或者s3a connector，下面简写成s3a,  意义基本相同）来连接原有的s3存储。接下来我就会分享我在用s3a client时总结的一些经验">
 <meta name="twitter:image" content="https://cdn.zblade.top/20230618170619.png">
 
 
@@ -496,6 +496,8 @@
 
       
         <p>最近工作中架构升级，将原来的EMR集群迁移到基于开源的自建集群上，原来使用的一些组件自然也需要改造，其中就包括s3。在我们的自建集群中，选用的开源hadoop中s3a client（或者s3a connector，下面简写成s3a,  意义基本相同）来连接原有的s3存储。接下来我就会分享我在用s3a client时总结的一些经验<br><img src="https://cdn.zblade.top/20230618170619.png" alt></p>
+<a id="more"></a>
+
 <h2 id="s3协议的类型"><a href="#s3协议的类型" class="headerlink" title="s3协议的类型"></a>s3协议的类型</h2><p>首先介绍一下s3，s3全称应该叫<code>AWS S3</code>，又称<code>AWS Amazon Simple Storage Service</code>，是亚马逊公司开发的对象存储服务，广义上讲是一款包含了Web服务在内的完整存储产品，狭义上也能特指AWS的对象存储。它通过自定的s3协议访问存储上的文件，其路径类似：<code>s3://xxx/yyy/zzz</code></p>
 <p>鉴于AWS在云市场的占有地位，s3存储在各个行业也有广泛的应用。然而s3协议是AWS的私有协议，只有AWS产品可用，为了能巩固和扩大s3在市场的地位，让用户能任何地方连上s3存储，放心地把数据存储到s3上，AWS向Hadoop提供了开源版本的s3 client来连接s3，也即是<a href="https://hadoop.apache.org/docs/stable/hadoop-aws/tools/hadoop-aws/s3n.html" target="_blank" rel="noopener">s3n client</a>, 在s3n协议上的文件路径类似：<code>s3n://xxx/yyy/zzz</code></p>
 <p>后来Hadoop在升级中淘汰了s3n client, 采用了全新的<a href="https://hadoop.apache.org/docs/stable/hadoop-aws/tools/hadoop-aws/index.html#Retry_and_Recovery" target="_blank" rel="noopener">s3a client</a>，在s3a协议下的文件路径类似：<code>s3a://xxx/yyy/zzz</code></p>
