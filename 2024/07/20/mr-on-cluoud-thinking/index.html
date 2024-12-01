@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+
+
+
+
+<html class="theme-next pisces" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#da532c">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="google-site-verification" content="fRFpn2MbE7qpAtGAMkPwOq1xWyHF0BtvPVdE_P3qZFY">
+
+
+
+
+
+
+
+
+  <meta name="baidu-site-verification" content="t4cHu1Oo6Q">
+
+
+
+
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.loli.net/css?family=Sigmar One:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+
+  
+
+<link href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=0.0.50" rel="stylesheet" type="text/css">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=0.0.50">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/布丁.png?v=0.0.50">
+
+
+  <link rel="mask-icon" href="/safari-pinned-tab.svg?v=0.0.50" color="#da532c">
+
+
+
+
+
+
+  <meta name="keywords" content="大数据,MapReduce,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="MapReduce作为至今仍为流行的大数据计算框架，虽然早已在各个场景下均有竞品，但是凭借大保有量和集群较高的升级成本，现在依然在行业上占有较大规模。然而，随着技术不断迭代，以及用户对数据降本越来越高的需求，即使上层计算不变，下层配套设施比如存储，比如容器都可能会往更弹性，更经济的方向演进，从而会让计算在异构环境下运行的情形越来越多。">
+<meta name="keywords" content="大数据,MapReduce">
+<meta property="og:type" content="article">
+<meta property="og:title" content="云上MR任务优化思路">
+<meta property="og:url" content="http://site.zblade.top/2024/07/20/mr-on-cluoud-thinking/index.html">
+<meta property="og:site_name" content="Feel The Wind">
+<meta property="og:description" content="MapReduce作为至今仍为流行的大数据计算框架，虽然早已在各个场景下均有竞品，但是凭借大保有量和集群较高的升级成本，现在依然在行业上占有较大规模。然而，随着技术不断迭代，以及用户对数据降本越来越高的需求，即使上层计算不变，下层配套设施比如存储，比如容器都可能会往更弹性，更经济的方向演进，从而会让计算在异构环境下运行的情形越来越多。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2024-07-20T14:32:43.648Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="云上MR任务优化思路">
+<meta name="twitter:description" content="MapReduce作为至今仍为流行的大数据计算框架，虽然早已在各个场景下均有竞品，但是凭借大保有量和集群较高的升级成本，现在依然在行业上占有较大规模。然而，随着技术不断迭代，以及用户对数据降本越来越高的需求，即使上层计算不变，下层配套设施比如存储，比如容器都可能会往更弹性，更经济的方向演进，从而会让计算在异构环境下运行的情形越来越多。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '0.0.50',
+    sidebar: {"position":"right","display":"always","offset":52,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    since: '9/22/2019 11:30:00',
+    onlineAPI: '',
+    site: {
+      title: 'Feel The Wind',
+      subtitle: '',
+      author: '陌花采撷'
+    },
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    leancloud: {
+      enable: false,
+      appID: 'dTfoweWyLJr7wTEW4CUhKHJQ-gzGzoHsz',
+      appKey: 'xh7FpohCp7PmwlHYAyqSaXov'
+    },
+    favicon: {
+      visibilitychange: true,
+      narmal: '/images/布丁.png',
+      hidden: '/images/failure.ico',
+      show_text: '(/≧▽≦/)咦！又好了！',
+      hide_text: 'Warning! 404-NoFound'
+    }
+  };
+</script>
+
+
+
+
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+
+  <script type="text/javascript" src="null"></script>
+
+
+
+
+
+
+
+
+  <title>云上MR任务优化思路 | Feel The Wind</title>
+  
+
+
+
+
+
+
+
+
+ 
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans" class="theme-darling">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-首页">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-小项目">
+          <a href="javascript:;" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-flask"></i> <br>
+            
+            小项目
+          </a>
+          
+            <ul class="submenu submenu-小项目">
+              
+                
+                <li class="submenu-item submenu-item-old_blog">
+                  <a href="http://zblade.top:85/wordpress/" rel="section" target="_blank">
+                    Old_Blog
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-短网址生成">
+                  <a href="http://zblade.top:8081/" rel="section" target="_blank">
+                    短网址生成
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-资源站">
+                  <a href="http://inner.cquptict.com:90/" rel="section" target="_blank">
+                    资源站
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-ict-pan">
+                  <a href="http://www.cquptict.com:8000/" rel="section" target="_blank">
+                    ICT-Pan
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-招新系统">
+                  <a href="http://zblade.top:83/#/" rel="section" target="_blank">
+                    招新系统
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-领奖系统">
+                  <a href="https://github.com/bladedragon/PrizeTool" rel="section" target="_blank">
+                    领奖系统
+                  </a>
+                </li>
+              
+            </ul>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-归档">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-分类">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-server"></i> <br>
+            
+            分类
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-标签">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tag"></i> <br>
+            
+            标签
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-留言板">
+          <a href="/message/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-pencil"></i> <br>
+            
+            留言板
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-关于">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rocket"></i> <br>
+            
+            关于
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-coding_set">
+          <a href="https://bladedragon.github.io/coding_docs/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sign-language"></i> <br>
+            
+            Coding_Set
+          </a>
+          
+        </li>
+      
+
+      
+      <li class="menu-item search">
+          <form class="search-form">
+            <input name="keyword" type="text" class="search-input" placeholder="站内搜索">
+            <button type="submit" class="search-submit"><i class="fa fa-search"></i></button>
+          </form>
+      </li>
+      <!--<li class="menu-item online"><span id="online-count">?</span>人在线</li>-->
+    </ul>
+  
+
+  
+</nav>
+
+<div class="site-brand-wrapper" style="background-image: url(http://cdn.zblade.top/qiniu_img/wallhaven-6k1j7l.jpg)">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <div class="brand">
+        <span class="logo-line-before"><i></i></span>
+        <div class="site-title">
+          <div id="animate" class="animate">
+            <span>F</span><span>e</span><span>e</span><span>l</span><span> </span><span>T</span><span>h</span><span>e</span><span> </span><span>W</span><span>i</span><span>n</span><span>d</span>
+          </div>
+          <div id="guide" class="guide">
+            <span>F</span><span>e</span><span>e</span><span>l</span><span> </span><span>T</span><span>h</span><span>e</span><span> </span><span>W</span><span>i</span><span>n</span><span>d</span>
+          </div>
+        </div>
+        <span class="logo-line-after"><i></i></span>
+      </div>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<div class="site-master" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-master-avatar" itemprop="image" src="http://cdn.zblade.top/qiniu_img/zavatar2.jpg" alt="陌花采撷">
+    <h2 class="site-master-description" itemprop="description">
+        <span>即使天无雨，</span><span>吾亦留此地</span>
+    </h2>
+</div>
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-date">
+			<div class="post-month">07月</div>
+			<div class="post-day">20</div>
+	</div>
+  
+
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://site.zblade.top/2024/07/20/mr-on-cluoud-thinking/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="陌花采撷">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="http://cdn.zblade.top/qiniu_img/zavatar2.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Feel The Wind">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">云上MR任务优化思路</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-07-20T22:25:48+08:00">2024-07-20</time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>MapReduce作为至今仍为流行的大数据计算框架，虽然早已在各个场景下均有竞品，但是凭借大保有量和集群较高的升级成本，现在依然在行业上占有较大规模。然而，随着技术不断迭代，以及用户对数据降本越来越高的需求，即使上层计算不变，下层配套设施比如存储，比如容器都可能会往更弹性，更经济的方向演进，从而会让计算在异构环境下运行的情形越来越多。</p>
+<a id="more"></a>
+
+<p>对于大公司，一般自建iDC机房，构建自己的私有云；对于中等体量的公司，可以自建私有云，但考虑到自建机房维护成本，也可能会选择部分业务上公有云，搭建混合云环境部署大数据生态；对于小公司，如果cover不住运维成本，直接上公有云或许更合适。上公有云，又要考虑是否自建计算集群还是用各家的EMR产品，归根到底，都是由业务降本的驱动力决定的。无论是在云上自建MapReduce集群，还是使用全套EMR产品，依然需要对MR任务进行优化，以提升计算效率，或是节省资源开销，最终都能反映到成本上来。考虑到云上环境的不同，优化思路相比较传统也有所不同，接下来就会阐述。</p>
+<h2 id="云上环境分析"><a href="#云上环境分析" class="headerlink" title="云上环境分析"></a>云上环境分析</h2><blockquote>
+<p>Users commonly get into trouble when their jobs input large numbers of small files, output large numbers of small files, or require random access to files. Another problem is a need for rapid access to data or for rapid turnover of jobs</p>
+<p>这类问题在云上会展现的更加明显。</p>
+</blockquote>
+<h3 id="对象存储"><a href="#对象存储" class="headerlink" title="对象存储"></a>对象存储</h3><p>对Mapreduce框架来说，其天生就和HDFS存在紧密联系，其运作的理念也高度利用了HDFS的特性，毫无疑问,HDFS是最适合Mapreduce的存储产品。然而，在云上环境，最常见的存储产品是对象存储，当然在云上使用HDFS自然也是可以，但是对象存储的优势就是便宜， 既然上云是为了降本，那便宜就是最大的优势。</p>
+<p>但遗憾的是，对象存储并不太契合大数据场景，尤其是存在大量文件时，Mapreduce框架中大量文件操作在对象存储中就成了劣势。我们无法保证使用对象存储的性能保持能和HDFS保持完全一致，但是依然可以通过手段尽力去优化。</p>
+<h3 id="弹性容器"><a href="#弹性容器" class="headerlink" title="弹性容器"></a>弹性容器</h3><p>弹性容器的解释可以有两方面，一方面，使用云厂商按需使用的云服务器，这些云服务器的价格是浮动，而且随时会有被销毁的风险，但与之换来的是低廉的售价。因此比较适合离线业务这种存在明显波峰波谷的场景；另一方面，使用k8s做弹性调度，mapreduce的节点随时可能会回收，但是资源即用即销毁，资源的利用率得到了很大的提高。在弹性容器的场景，比较明显的特征是无法保证作业运行环境随时可用，也就是说提高mapreducce的容错能力。同时，选择合适的机型也能提高竞价实例的拉起效率和作业性能。</p>
+<h2 id="具体措施"><a href="#具体措施" class="headerlink" title="具体措施"></a>具体措施</h2><h3 id="配置优化"><a href="#配置优化" class="headerlink" title="配置优化"></a>配置优化</h3><p>考虑到云上环境的区别，我们对MR任务的配置也需要格外注意。</p>
+<ol>
+<li>推荐配置合适输出压缩算法。因为云上存储收费成本较高，配置合适的压缩算法所以尽可能提高压缩率是比较有效的措施。</li>
+</ol>
+<p>Lz4是目前常用的，也是效果还不错的压缩算法(亲身经验比snappy效果好不少)</p>
+<table>
+<thead>
+<tr>
+<th>配置项</th>
+<th>注释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>mapreduce.map.output.compress</td>
+<td>是否使用输出压缩</td>
+</tr>
+<tr>
+<td>mapreduce.map.output.compress.codec</td>
+<td>指定特定的压缩算法</td>
+</tr>
+</tbody></table>
+<ol start="2">
+<li>设置资源要基于集群资源和机型配比进行调整，设置资源配置的参数如下</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>配置项</th>
+<th>注释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>mapreduce.input.fileinputformat.split.maxsize</td>
+<td>设置输入分片大小</td>
+</tr>
+<tr>
+<td>mapreduce.map.memory.mb/mapreduce.reduce.memory.mb</td>
+<td>设置map、 reduce任务的内存</td>
+</tr>
+<tr>
+<td>mapreduce.map.cpu.vcores/mapreduce.reduce.cpu.vcores</td>
+<td>设置map、reduce任务的vcore</td>
+</tr>
+</tbody></table>
+<ol start="3">
+<li>加大任务的重试次数，在云上容器销毁的概率相对较高，一旦因为容器重试次数达到上限导致任务失败，只会得不偿失</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>配置项</th>
+<th>注释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>mapreduce.map.maxattempts</td>
+<td>默认4 可适当调大</td>
+</tr>
+<tr>
+<td>mapreduce.reduce.maxattempts</td>
+<td>默认4 可适当调大</td>
+</tr>
+<tr>
+<td>apreduce.reduce.failures.maxpercent</td>
+<td>当失败的 Map Task 失败比例超过该值，整个作业则失败，默认0</td>
+</tr>
+</tbody></table>
+<ol start="4">
+<li>加速执行的配置</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>配置项</th>
+<th>注释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>mapreduce.map.speculative/mapreduce.reduce.speculative</td>
+<td>开启推测执行</td>
+</tr>
+<tr>
+<td>mapreduce.job.speculative.speculativecap</td>
+<td>推测执行功能的任务能够占总任务数量的比例</td>
+</tr>
+<tr>
+<td>mapreduce.job.speculative.slownodethreshold</td>
+<td>node级别是否适合启动某个task的speculative task的阈值</td>
+</tr>
+<tr>
+<td>mapreduce.job.speculative.slowtaskthreshold</td>
+<td>是否可以启动speculative task的阈值</td>
+</tr>
+<tr>
+<td>mapreduce.job.reduce.slowstart.completedmaps</td>
+<td>reduce task 慢启动，当task完成比例达到某个值时即启动reducetask</td>
+</tr>
+</tbody></table>
+<h3 id="节点选型"><a href="#节点选型" class="headerlink" title="节点选型"></a>节点选型</h3><p>在云上，一个相当有效但也容易导致反作用的优化措施就是更换运行节点的机型，借助k8s以及弹性伸缩器（例如autoscaler、aws karpenter等）我们可以方便基于当前资源需求快速供应所需机型（实际上并非所有机型都能自由供应，一般还有受到云厂商的供给限制），让资源使用尽可能贴合供应曲线。</p>
+<p>然而，关于如何进行机型选型就是纯粹的经验之谈了，针对不同的情形需要对症下药，不存在公式银弹。这里我也就根据我的实际情况，总结了一些非常主观的注意点，希望能带来启发。</p>
+<ul>
+<li><p>任务提交的vcore和内存配比要尽量和机器配比保持一致</p>
+</li>
+<li><p>在资源需求相对稳定时，可以尝试用更大规格机型来塞更多任务，虽然单价更贵，但台数下降，有时总成本也会更少</p>
+</li>
+<li><p>如果使用的按需服务器，一定要时刻关注价格变化，根据价格选择机型</p>
+</li>
+</ul>
+<h3 id="深入定制"><a href="#深入定制" class="headerlink" title="深入定制"></a>深入定制</h3><p>实际上由于MapReduce本身架构相对较旧，在云上尤其是非常弹性的环境下适应性确实不够好。此时如果开源的产品无法满足需求，各家云厂商也提供了他们对应的弹性大数据计算产品——当然是需要额外收费的，而且费用不低。如果不想要将自己的架构和云厂商提供的解决方案绑定，也可以基于开源去做一些定制优化，以下是我认为对性能提升帮助较大的几个切入点：</p>
+<ol>
+<li>资源超卖。通过超卖vcore和内存带来的收益是非常明显的，尤其是当资源需求曲线不贴合供应曲线时，通过一定的超卖来做补差。但是也需要注意不同云厂商提供的云服务器本身就是容器，可能底层也一定做了超卖，需要谨慎控制超卖比例防止资源不足</li>
+<li>committer。在对象存储上文件的元信息修改不是原子操作，性能比hdfs要差很多，然而大数据计算中存在大量staging操作，随着小文件数量的增加，其对作业的性能影响是非常严重的。建议使用hadoop 开源的S3A committer，或者基于其思想去重写commit逻辑来优化对象存储上的不足。</li>
+<li>shuffle。在很多场景，上云作业往往拥有多种存储介质，不同存储介质之间可能存在较大的特性差异，这对重磁盘spill的Mapreduce计算非常不友好。推荐参考现代计算引擎例如spark，实现remote shuffle service，将存储和计算解耦，这会大大提升作业的性能和稳定性</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div class="post-share">分享到：</div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/大数据/" rel="tag"># 大数据</a>
+          
+            <a href="/tags/MapReduce/" rel="tag"># MapReduce</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2024/05/25/public-cloud-experience/" rel="next" title="公有云上云经验">
+                <i class="fa fa-chevron-left"></i> 公有云上云经验
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2024/09/16/hive-acl/" rel="prev" title="hive 权限继承问题记录">
+                hive 权限继承问题记录 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+  <div class="comments" id="comments">
+      <div id="gitalk-container"></div>
+    </div>
+	
+  
+
+
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+        <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+		<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    
+		<script type="text/javascript">
+		const gitalk = new Gitalk({
+		clientID: '8c4098d1aa1409852b19',
+		clientSecret: 'cdc136702eaaa9600bc46ab7da3c95a8537116ef',
+		repo: 'Blog_message_repo',
+		owner: 'BladeDragon',
+		admin: ['BladeDragon'],
+		id: window.location.pathname,      // Ensure uniqueness and length less than 50
+		});
+		
+		gitalk.render('gitalk-container');
+		</script>
+
+    
+
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://cdn.zblade.top/qiniu_img/zcard2.png" alt="陌花采撷">
+            
+              <p class="site-author-name" itemprop="name"><span style="opacity:.2;"></span>陌花采撷</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/bladedragon" target="_blank" title="GitHub" data-balloon="GitHub" data-balloon-pos="up">
+                    
+                       <i class="fa fa-fw fa-github"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://telegram.com" target="_blank" title="telegram" data-balloon="telegram" data-balloon-pos="up">
+                    
+                       <i class="fa fa-fw fa-telegram"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:zaft1156673039@gmail.com" target="_blank" title="E-Mail" data-balloon="E-Mail" data-balloon-pos="up">
+                    
+                       <i class="fa fa-fw fa-envelope"></i></a>
+                </span>
+              
+            
+          </div>
+
+         
+
+          
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-name">日志</span>
+				  <span class="site-state-item-count">68</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-name">分类</span>
+				   <span class="site-state-item-count">4</span>
+                </a>
+              </div>
+            
+            
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+				 <span class="site-state-item-name">标签</span>
+				  <span class="site-state-item-count">34</span>
+                </a>
+              </div>
+            
+            
+
+          </nav>
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              
+            </div>
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#云上环境分析"><span class="nav-text">云上环境分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#对象存储"><span class="nav-text">对象存储</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#弹性容器"><span class="nav-text">弹性容器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#具体措施"><span class="nav-text">具体措施</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#配置优化"><span class="nav-text">配置优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#节点选型"><span class="nav-text">节点选型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#深入定制"><span class="nav-text">深入定制</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-image"></div>
+      <div class="footer-inner">
+        <p>本博客已出生<span id="since"></span><span class="my-face">(●'◡'●)ﾉ♥</span></p>
+<p></p>
+
+Theme By <a href="https://github.com/DIYgod/hexo-theme-sagiri" target="_blank" class="external" rel="nofollow">Sagiri</a>
+
+<p>Made with <i class="fa fa-heart throb" style="color: #d43f57;"></i> by <span class="author" itemprop="copyrightHolder">陌花采撷</span>. </p>
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    <canvas id="evanyou"></canvas>
+    <div id="aplayer-fixed"></div>
+
+    
+	
+  </div>
+
+	
+  <script type="text/javascript" src="/js/sagiri.min.js?v=0.0.50"></script>
+	
+  
+
+
+
+
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+  <!--<script>
+    // remove service worker cache
+    // from https://stackoverflow.com/questions/33704791/how-do-i-uninstall-a-service-worker
+    "use strict";
+    if(navigator.serviceWorker)
+    {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            for(let registration of registrations) {
+                registration.unregister()
+            }
+        })
+    }
+  </script>-->
+
+  <!--<script>
+    var serviceWorkerUri = '/sw.js';
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register(serviceWorkerUri).then(function() {
+          if (navigator.serviceWorker.controller) {
+            console.log('Assets cached by the controlling service worker.');
+          } else {
+            console.log('Please reload this page to allow the service worker to handle network operations.');
+          }
+        }).catch(function(error) {
+          console.log('ERROR: ' + error);
+        });
+    } else {
+        console.log('Service workers are not supported in the current browser.');
+    }
+  </script>-->
+  
+  
+
+	
+</body>
+</html>

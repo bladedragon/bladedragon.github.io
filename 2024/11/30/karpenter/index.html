@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+
+
+
+
+<html class="theme-next pisces" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#da532c">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="google-site-verification" content="fRFpn2MbE7qpAtGAMkPwOq1xWyHF0BtvPVdE_P3qZFY">
+
+
+
+
+
+
+
+
+  <meta name="baidu-site-verification" content="t4cHu1Oo6Q">
+
+
+
+
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.loli.net/css?family=Sigmar One:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+
+  
+
+<link href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=0.0.50" rel="stylesheet" type="text/css">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=0.0.50">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/布丁.png?v=0.0.50">
+
+
+  <link rel="mask-icon" href="/safari-pinned-tab.svg?v=0.0.50" color="#da532c">
+
+
+
+
+
+
+  <meta name="keywords" content="aws,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Karpenter是一个AWS提供的节点生命周期管理器，它会观察传入的pod并根据情况启动正确的节点。节点选择决策基于策略并由传入的pod的规范驱动，包括资源请求和调度约束。  它的主要作用：  为不可调度的Pod启动节点 替换现有的节点提高资源利用率 如果超时或者不需要，则终止节点 在抢占前优雅终止节点  优点Karpenter观察未调度的Pod的聚合资源请求，并做出启动和终止节点的决定，以最大">
+<meta name="keywords" content="aws">
+<meta property="og:type" content="article">
+<meta property="og:title" content="karpenter">
+<meta property="og:url" content="http://site.zblade.top/2024/11/30/karpenter/index.html">
+<meta property="og:site_name" content="Feel The Wind">
+<meta property="og:description" content="Karpenter是一个AWS提供的节点生命周期管理器，它会观察传入的pod并根据情况启动正确的节点。节点选择决策基于策略并由传入的pod的规范驱动，包括资源请求和调度约束。  它的主要作用：  为不可调度的Pod启动节点 替换现有的节点提高资源利用率 如果超时或者不需要，则终止节点 在抢占前优雅终止节点  优点Karpenter观察未调度的Pod的聚合资源请求，并做出启动和终止节点的决定，以最大">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://site.zblade.top/2024/11/30/karpenter/karpenter-new-generation-kubernetes-auto-scaling-t3.png">
+<meta property="og:updated_time" content="2024-12-01T03:40:11.242Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="karpenter">
+<meta name="twitter:description" content="Karpenter是一个AWS提供的节点生命周期管理器，它会观察传入的pod并根据情况启动正确的节点。节点选择决策基于策略并由传入的pod的规范驱动，包括资源请求和调度约束。  它的主要作用：  为不可调度的Pod启动节点 替换现有的节点提高资源利用率 如果超时或者不需要，则终止节点 在抢占前优雅终止节点  优点Karpenter观察未调度的Pod的聚合资源请求，并做出启动和终止节点的决定，以最大">
+<meta name="twitter:image" content="http://site.zblade.top/2024/11/30/karpenter/karpenter-new-generation-kubernetes-auto-scaling-t3.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '0.0.50',
+    sidebar: {"position":"right","display":"always","offset":52,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    since: '9/22/2019 11:30:00',
+    onlineAPI: '',
+    site: {
+      title: 'Feel The Wind',
+      subtitle: '',
+      author: '陌花采撷'
+    },
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    leancloud: {
+      enable: false,
+      appID: 'dTfoweWyLJr7wTEW4CUhKHJQ-gzGzoHsz',
+      appKey: 'xh7FpohCp7PmwlHYAyqSaXov'
+    },
+    favicon: {
+      visibilitychange: true,
+      narmal: '/images/布丁.png',
+      hidden: '/images/failure.ico',
+      show_text: '(/≧▽≦/)咦！又好了！',
+      hide_text: 'Warning! 404-NoFound'
+    }
+  };
+</script>
+
+
+
+
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+
+  <script type="text/javascript" src="null"></script>
+
+
+
+
+
+
+
+
+  <title>karpenter | Feel The Wind</title>
+  
+
+
+
+
+
+
+
+
+ 
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans" class="theme-darling">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-首页">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-小项目">
+          <a href="javascript:;" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-flask"></i> <br>
+            
+            小项目
+          </a>
+          
+            <ul class="submenu submenu-小项目">
+              
+                
+                <li class="submenu-item submenu-item-old_blog">
+                  <a href="http://zblade.top:85/wordpress/" rel="section" target="_blank">
+                    Old_Blog
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-短网址生成">
+                  <a href="http://zblade.top:8081/" rel="section" target="_blank">
+                    短网址生成
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-资源站">
+                  <a href="http://inner.cquptict.com:90/" rel="section" target="_blank">
+                    资源站
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-ict-pan">
+                  <a href="http://www.cquptict.com:8000/" rel="section" target="_blank">
+                    ICT-Pan
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-招新系统">
+                  <a href="http://zblade.top:83/#/" rel="section" target="_blank">
+                    招新系统
+                  </a>
+                </li>
+              
+                
+                <li class="submenu-item submenu-item-领奖系统">
+                  <a href="https://github.com/bladedragon/PrizeTool" rel="section" target="_blank">
+                    领奖系统
+                  </a>
+                </li>
+              
+            </ul>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-归档">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-分类">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-server"></i> <br>
+            
+            分类
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-标签">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tag"></i> <br>
+            
+            标签
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-留言板">
+          <a href="/message/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-pencil"></i> <br>
+            
+            留言板
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-关于">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-rocket"></i> <br>
+            
+            关于
+          </a>
+          
+        </li>
+      
+        
+        <li class="menu-item menu-item-coding_set">
+          <a href="https://bladedragon.github.io/coding_docs/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sign-language"></i> <br>
+            
+            Coding_Set
+          </a>
+          
+        </li>
+      
+
+      
+      <li class="menu-item search">
+          <form class="search-form">
+            <input name="keyword" type="text" class="search-input" placeholder="站内搜索">
+            <button type="submit" class="search-submit"><i class="fa fa-search"></i></button>
+          </form>
+      </li>
+      <!--<li class="menu-item online"><span id="online-count">?</span>人在线</li>-->
+    </ul>
+  
+
+  
+</nav>
+
+<div class="site-brand-wrapper" style="background-image: url(http://cdn.zblade.top/qiniu_img/wallhaven-6k1j7l.jpg)">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <div class="brand">
+        <span class="logo-line-before"><i></i></span>
+        <div class="site-title">
+          <div id="animate" class="animate">
+            <span>F</span><span>e</span><span>e</span><span>l</span><span> </span><span>T</span><span>h</span><span>e</span><span> </span><span>W</span><span>i</span><span>n</span><span>d</span>
+          </div>
+          <div id="guide" class="guide">
+            <span>F</span><span>e</span><span>e</span><span>l</span><span> </span><span>T</span><span>h</span><span>e</span><span> </span><span>W</span><span>i</span><span>n</span><span>d</span>
+          </div>
+        </div>
+        <span class="logo-line-after"><i></i></span>
+      </div>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+<div class="site-master" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-master-avatar" itemprop="image" src="http://cdn.zblade.top/qiniu_img/zavatar2.jpg" alt="陌花采撷">
+    <h2 class="site-master-description" itemprop="description">
+        <span>即使天无雨，</span><span>吾亦留此地</span>
+    </h2>
+</div>
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-date">
+			<div class="post-month">11月</div>
+			<div class="post-day">30</div>
+	</div>
+  
+
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://site.zblade.top/2024/11/30/karpenter/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="陌花采撷">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="http://cdn.zblade.top/qiniu_img/zavatar2.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Feel The Wind">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">karpenter</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-11-30T22:47:53+08:00">2024-11-30</time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Karpenter是一个AWS提供的节点生命周期管理器，它会观察传入的pod并根据情况启动正确的节点。节点选择决策基于策略并由传入的pod的规范驱动，包括资源请求和调度约束。</p>
+<p><img src="/2024/11/30/karpenter/karpenter-new-generation-kubernetes-auto-scaling-t3.png" alt="img"></p>
+<p>它的主要作用：</p>
+<ul>
+<li>为不可调度的Pod启动节点</li>
+<li>替换现有的节点提高资源利用率</li>
+<li>如果超时或者不需要，则终止节点</li>
+<li>在抢占前优雅终止节点</li>
+</ul>
+<h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><p>Karpenter观察未调度的Pod的聚合资源请求，并做出启动和终止节点的决定，以最大限度地减少调度延迟和基础设施成本。</p>
+<p>优势</p>
+<ol>
+<li>更快：Karpenter在AWS上直接与EC2队列API通信，可以根据pod的规格直接选择正确的实例类型，以实现快速自动扩展</li>
+<li>更省钱：Karpenter根据工作负载要求提供节点，可以将pod打包成最小数量的适当大小节点，并节省成本</li>
+<li>更灵活：使用karpenter无需创建数十个节点即可实现灵活性和多样性</li>
+<li>对比原生的Cluster-Autoscaler，规避其原生的一些缺陷：例如在集群中添加或删除的容量限制、不能在Auto Scaling组中使用混合大小的集群…</li>
+<li>Karpenter自动检测存储依赖，例如如果原来节点拉取在A区，Pod第一次拉起时有创建PV（Persistent Volume），后续节点启动决策时会自动创建在A区（因为EBS是单可用区的，如果手动创建跨AZ可能会导致访问不通）</li>
+</ol>
+<h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><h3 id="前置准备"><a href="#前置准备" class="headerlink" title="前置准备"></a>前置准备</h3><ol>
+<li>需要部署Metrics Server, 采集pod和node的指标用于资源约束</li>
+<li>安装Karpenter controller， 这是Karpenter的核心控制器</li>
+<li>安装Karpenter dashboard， 用于查看Karpenter管理的节点以及性能指标</li>
+</ol>
+<p><a href="https://karpenter.sh/docs/getting-started/" target="_blank" rel="noopener">Getting Started | Karpenter</a></p>
+<p>karpenter provisioner 的模板</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">karpenter.sh/v1alpha5</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Provisioner</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  providerRef:</span></span><br><span class="line"><span class="attr">    name:</span> <span class="string">default</span></span><br><span class="line"></span><br><span class="line"><span class="attr">  taints:</span></span><br><span class="line"><span class="attr">    - key:</span> <span class="string">example.com/special-taint</span></span><br><span class="line"><span class="attr">      effect:</span> <span class="string">NoSchedule</span></span><br><span class="line"></span><br><span class="line"><span class="attr">  startupTaints:</span></span><br><span class="line"><span class="attr">    - key:</span> <span class="string">example.com/another-taint</span></span><br><span class="line"><span class="attr">      effect:</span> <span class="string">NoSchedule</span></span><br><span class="line"></span><br><span class="line"><span class="attr">  labels:</span></span><br><span class="line"><span class="attr">    billing-team:</span> <span class="string">my-team</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># Requirements that constrain the parameters of provisioned nodes.</span></span><br><span class="line">  <span class="comment"># These requirements are combined with pod.spec.affinity.nodeAffinity rules.</span></span><br><span class="line">  <span class="comment"># Operators &#123; In, NotIn &#125; are supported to enable including or excluding values</span></span><br><span class="line"><span class="attr">  requirements:</span></span><br><span class="line"><span class="attr">    - key:</span> <span class="string">"karpenter.k8s.aws/instance-category"</span></span><br><span class="line"><span class="attr">      operator:</span> <span class="string">In</span></span><br><span class="line"><span class="attr">      values:</span> <span class="string">["c",</span> <span class="string">"m"</span><span class="string">,</span> <span class="string">"r"</span><span class="string">]</span></span><br><span class="line"><span class="attr">    - key:</span> <span class="string">"karpenter.k8s.aws/instance-cpu"</span></span><br><span class="line"><span class="attr">      operator:</span> <span class="string">In</span></span><br><span class="line"><span class="attr">      values:</span> <span class="string">["4",</span> <span class="string">"8"</span><span class="string">,</span> <span class="string">"16"</span><span class="string">,</span> <span class="string">"32"</span><span class="string">]</span></span><br><span class="line"><span class="attr">    - key:</span> <span class="string">"karpenter.k8s.aws/instance-hypervisor"</span></span><br><span class="line"><span class="attr">      operator:</span> <span class="string">In</span></span><br><span class="line"><span class="attr">      values:</span> <span class="string">["nitro"]</span></span><br><span class="line"><span class="attr">    - key:</span> <span class="string">"topology.kubernetes.io/zone"</span></span><br><span class="line"><span class="attr">      operator:</span> <span class="string">In</span></span><br><span class="line"><span class="attr">      values:</span> <span class="string">["us-west-2a",</span> <span class="string">"us-west-2b"</span><span class="string">]</span></span><br><span class="line"><span class="attr">    - key:</span> <span class="string">"kubernetes.io/arch"</span></span><br><span class="line"><span class="attr">      operator:</span> <span class="string">In</span></span><br><span class="line"><span class="attr">      values:</span> <span class="string">["arm64",</span> <span class="string">"amd64"</span><span class="string">]</span></span><br><span class="line"><span class="attr">    - key:</span> <span class="string">"karpenter.sh/capacity-type"</span> <span class="comment"># If not included, the webhook for the AWS cloud provider will default to on-demand</span></span><br><span class="line"><span class="attr">      operator:</span> <span class="string">In</span></span><br><span class="line"><span class="attr">      values:</span> <span class="string">["spot",</span> <span class="string">"on-demand"</span><span class="string">]</span></span><br><span class="line"></span><br><span class="line"><span class="attr">  kubeletConfiguration:</span></span><br><span class="line"><span class="attr">    clusterDNS:</span> <span class="string">["10.0.1.100"]</span></span><br><span class="line"><span class="attr">    containerRuntime:</span> <span class="string">containerd</span></span><br><span class="line"><span class="attr">    systemReserved:</span></span><br><span class="line"><span class="attr">      cpu:</span> <span class="number">100</span><span class="string">m</span></span><br><span class="line"><span class="attr">      memory:</span> <span class="number">100</span><span class="string">Mi</span></span><br><span class="line"><span class="attr">      ephemeral-storage:</span> <span class="number">1</span><span class="string">Gi</span></span><br><span class="line"><span class="attr">    kubeReserved:</span></span><br><span class="line"><span class="attr">      cpu:</span> <span class="number">200</span><span class="string">m</span></span><br><span class="line"><span class="attr">      memory:</span> <span class="number">100</span><span class="string">Mi</span></span><br><span class="line"><span class="attr">      ephemeral-storage:</span> <span class="number">3</span><span class="string">Gi</span></span><br><span class="line"><span class="attr">    evictionHard:</span></span><br><span class="line">      <span class="string">memory.available:</span> <span class="number">5</span><span class="string">%</span></span><br><span class="line">      <span class="string">nodefs.available:</span> <span class="number">10</span><span class="string">%</span></span><br><span class="line">      <span class="string">nodefs.inodesFree:</span> <span class="number">10</span><span class="string">%</span></span><br><span class="line"><span class="attr">    evictionSoft:</span></span><br><span class="line">      <span class="string">memory.available:</span> <span class="number">500</span><span class="string">Mi</span></span><br><span class="line">      <span class="string">nodefs.available:</span> <span class="number">15</span><span class="string">%</span></span><br><span class="line">      <span class="string">nodefs.inodesFree:</span> <span class="number">15</span><span class="string">%</span></span><br><span class="line"><span class="attr">    evictionSoftGracePeriod:</span></span><br><span class="line">      <span class="string">memory.available:</span> <span class="number">1</span><span class="string">m</span></span><br><span class="line">      <span class="string">nodefs.available:</span> <span class="number">1</span><span class="string">m30s</span></span><br><span class="line">      <span class="string">nodefs.inodesFree:</span> <span class="number">2</span><span class="string">m</span></span><br><span class="line"><span class="attr">    evictionMaxPodGracePeriod:</span> <span class="number">3</span><span class="string">m</span></span><br><span class="line"><span class="attr">    podsPerCore:</span> <span class="number">2</span></span><br><span class="line"><span class="attr">    maxPods:</span> <span class="number">20</span></span><br><span class="line"></span><br><span class="line"><span class="attr">  limits:</span></span><br><span class="line"><span class="attr">    resources:</span></span><br><span class="line"><span class="attr">      cpu:</span> <span class="string">"1000"</span></span><br><span class="line"><span class="attr">      memory:</span> <span class="number">1000</span><span class="string">Gi</span></span><br><span class="line"></span><br><span class="line"><span class="attr">  consolidation:</span></span><br><span class="line"><span class="attr">    enabled:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="attr">  ttlSecondsUntilExpired:</span> <span class="number">2592000</span> <span class="comment"># 30 Days = 60 * 60 * 24 * 30 Seconds;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">  ttlSecondsAfterEmpty:</span> <span class="number">30</span></span><br><span class="line"><span class="attr">  weight:</span> <span class="number">10</span></span><br></pre></td></tr></table></figure>
+
+<p>同时需要配置node template 模板</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">karpenter.sh/v1alpha5</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Provisioner</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  providerRef:</span></span><br><span class="line"><span class="attr">    name:</span> <span class="string">default</span></span><br><span class="line"></span><br><span class="line"><span class="attr">  taints:</span></span><br><span class="line"><span class="attr">    - key:</span> <span class="string">example.com/special-taint</span></span><br><span class="line"><span class="attr">      effect:</span> <span class="string">NoSchedule</span></span><br><span class="line"></span><br><span class="line"><span class="attr">  startupTaints:</span></span><br><span class="line"><span class="attr">    - key:</span> <span class="string">example.com/another-taint</span></span><br><span class="line"><span class="attr">      effect:</span> <span class="string">NoSchedule</span></span><br><span class="line"></span><br><span class="line"><span class="attr">  labels:</span></span><br><span class="line"><span class="attr">    billing-team:</span> <span class="string">my-team</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># Requirements that constrain the parameters of provisioned nodes.</span></span><br><span class="line">  <span class="comment"># These requirements are combined with pod.spec.affinity.nodeAffinity rules.</span></span><br><span class="line">  <span class="comment"># Operators &#123; In, NotIn &#125; are supported to enable including or excluding values</span></span><br><span class="line"><span class="attr">  requirements:</span></span><br><span class="line"><span class="attr">    - key:</span> <span class="string">"karpenter.k8s.aws/instance-category"</span></span><br><span class="line"><span class="attr">      operator:</span> <span class="string">In</span></span><br><span class="line"><span class="attr">      values:</span> <span class="string">["c",</span> <span class="string">"m"</span><span class="string">,</span> <span class="string">"r"</span><span class="string">]</span></span><br><span class="line"><span class="attr">    - key:</span> <span class="string">"karpenter.k8s.aws/instance-cpu"</span></span><br><span class="line"><span class="attr">      operator:</span> <span class="string">In</span></span><br><span class="line"><span class="attr">      values:</span> <span class="string">["4",</span> <span class="string">"8"</span><span class="string">,</span> <span class="string">"16"</span><span class="string">,</span> <span class="string">"32"</span><span class="string">]</span></span><br><span class="line"><span class="attr">    - key:</span> <span class="string">"karpenter.k8s.aws/instance-hypervisor"</span></span><br><span class="line"><span class="attr">      operator:</span> <span class="string">In</span></span><br><span class="line"><span class="attr">      values:</span> <span class="string">["nitro"]</span></span><br><span class="line"><span class="attr">    - key:</span> <span class="string">"topology.kubernetes.io/zone"</span></span><br><span class="line"><span class="attr">      operator:</span> <span class="string">In</span></span><br><span class="line"><span class="attr">      values:</span> <span class="string">["us-west-2a",</span> <span class="string">"us-west-2b"</span><span class="string">]</span></span><br><span class="line"><span class="attr">    - key:</span> <span class="string">"kubernetes.io/arch"</span></span><br><span class="line"><span class="attr">      operator:</span> <span class="string">In</span></span><br><span class="line"><span class="attr">      values:</span> <span class="string">["arm64",</span> <span class="string">"amd64"</span><span class="string">]</span></span><br><span class="line"><span class="attr">    - key:</span> <span class="string">"karpenter.sh/capacity-type"</span> <span class="comment"># If not included, the webhook for the AWS cloud provider will default to on-demand</span></span><br><span class="line"><span class="attr">      operator:</span> <span class="string">In</span></span><br><span class="line"><span class="attr">      values:</span> <span class="string">["spot",</span> <span class="string">"on-demand"</span><span class="string">]</span></span><br><span class="line"></span><br><span class="line"><span class="attr">  kubeletConfiguration:</span></span><br><span class="line"><span class="attr">    clusterDNS:</span> <span class="string">["10.0.1.100"]</span></span><br><span class="line"><span class="attr">    containerRuntime:</span> <span class="string">containerd</span></span><br><span class="line"><span class="attr">    systemReserved:</span></span><br><span class="line"><span class="attr">      cpu:</span> <span class="number">100</span><span class="string">m</span></span><br><span class="line"><span class="attr">      memory:</span> <span class="number">100</span><span class="string">Mi</span></span><br><span class="line"><span class="attr">      ephemeral-storage:</span> <span class="number">1</span><span class="string">Gi</span></span><br><span class="line"><span class="attr">    kubeReserved:</span></span><br><span class="line"><span class="attr">      cpu:</span> <span class="number">200</span><span class="string">m</span></span><br><span class="line"><span class="attr">      memory:</span> <span class="number">100</span><span class="string">Mi</span></span><br><span class="line"><span class="attr">      ephemeral-storage:</span> <span class="number">3</span><span class="string">Gi</span></span><br><span class="line"><span class="attr">    evictionHard:</span></span><br><span class="line">      <span class="string">memory.available:</span> <span class="number">5</span><span class="string">%</span></span><br><span class="line">      <span class="string">nodefs.available:</span> <span class="number">10</span><span class="string">%</span></span><br><span class="line">      <span class="string">nodefs.inodesFree:</span> <span class="number">10</span><span class="string">%</span></span><br><span class="line"><span class="attr">    evictionSoft:</span></span><br><span class="line">      <span class="string">memory.available:</span> <span class="number">500</span><span class="string">Mi</span></span><br><span class="line">      <span class="string">nodefs.available:</span> <span class="number">15</span><span class="string">%</span></span><br><span class="line">      <span class="string">nodefs.inodesFree:</span> <span class="number">15</span><span class="string">%</span></span><br><span class="line"><span class="attr">    evictionSoftGracePeriod:</span></span><br><span class="line">      <span class="string">memory.available:</span> <span class="number">1</span><span class="string">m</span></span><br><span class="line">      <span class="string">nodefs.available:</span> <span class="number">1</span><span class="string">m30s</span></span><br><span class="line">      <span class="string">nodefs.inodesFree:</span> <span class="number">2</span><span class="string">m</span></span><br><span class="line"><span class="attr">    evictionMaxPodGracePeriod:</span> <span class="number">3</span><span class="string">m</span></span><br><span class="line"><span class="attr">    podsPerCore:</span> <span class="number">2</span></span><br><span class="line"><span class="attr">    maxPods:</span> <span class="number">20</span></span><br><span class="line"></span><br><span class="line"><span class="attr">  limits:</span></span><br><span class="line"><span class="attr">    resources:</span></span><br><span class="line"><span class="attr">      cpu:</span> <span class="string">"1000"</span></span><br><span class="line"><span class="attr">      memory:</span> <span class="number">1000</span><span class="string">Gi</span></span><br><span class="line"></span><br><span class="line"><span class="attr">  consolidation:</span></span><br><span class="line"><span class="attr">    enabled:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="attr">  ttlSecondsUntilExpired:</span> <span class="number">2592000</span> <span class="comment"># 30 Days = 60 * 60 * 24 * 30 Seconds;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">  ttlSecondsAfterEmpty:</span> <span class="number">30</span></span><br><span class="line"><span class="attr">  weight:</span> <span class="number">10</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>利用Karpenter的分层约束模型，pod运行受到三层约束</p>
+<ul>
+<li>需要在依赖的应用程序或存储可用的区域中运行</li>
+<li>需要特定种类的处理器或者硬件（需要有对应的Node）</li>
+<li>希望使用拓扑扩展等技术来确保高可用性</li>
+</ul>
+<p>第一层由云服务器厂商对硬件的类型，区域进行限制；第三层由其他技术控制pod调度；Karpenter通过设置Provisioner对指定节点进行调度和决策，从而满足第二层的控制</p>
+<p>通过Provisioner 可以做到的限制包括</p>
+<ul>
+<li><strong>资源请求</strong>：请求一定数量的内存或CPU。</li>
+<li><strong>节点选择</strong>：选择在具有特定标签(nodeSelector)的节点上运行。</li>
+<li><strong>节点亲缘性</strong>： 绘制pod以在具有特定属性(亲缘性)的节点上运行。</li>
+<li><strong>拓扑扩展</strong>： 使用拓扑扩展来确保应用程序的可用性。<br>Pod亲和性/反亲和性： 根据其他Pod的调度将Pod引向或远离拓扑域。</li>
+</ul>
+<p>Karpenter 控制节点上下线的方式包括以下几种，</p>
+<ul>
+<li><strong>删除Provisioner</strong>：删除Provisioner就会优雅下线其所有的节点</li>
+<li><strong>Emptiness</strong>： 当节点上不存在非daemonset的工作负载，同时启动了ttlSecondsAfterEmpty时，会在时间结束后回收节点</li>
+<li><strong>Expiration</strong>： 当设置了ttlSecondsUntilExpired  后，节点到达过期时间就会自动下线</li>
+<li><strong>Consolidation</strong>： Karpenter基于积极的节约策略，主动删除或者将节点换成更便宜的节点<ul>
+<li>具体策略：</li>
+<li>如果一个节点的所有pod都可以在集群中其他节点的空闲容量上运行，则可以删除节点。</li>
+<li>如果一个节点的所有pod都可以在集群中其他节点的空闲容量和一个更便宜的替换节点的组合上运行，那么它就可以被替换。</li>
+</ul>
+</li>
+<li><strong>Interruption</strong>： 启动中断检测后karpenter会判断节点是否即将发生中断事件并主动下线节点<br>Drift：karpenter会下线出现漂移的节点，同时也会主动检测，把实例上使用的AMI与AWSNodeTemplate设置的AMI不匹配的节点打上标记</li>
+<li><strong>手动删除</strong>： 通过eksctl 主动删除节点，同样会被karpenter优雅下线处理</li>
+</ul>
+<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><p>在aws中可以代替固定节点组的创建，基于taint以及 亲和性反亲和性，指定更灵活的策略进行节点的调度与约束</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div class="post-share">分享到：</div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/aws/" rel="tag"># aws</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2024/09/16/hive-acl/" rel="next" title="hive 权限继承问题记录">
+                <i class="fa fa-chevron-left"></i> hive 权限继承问题记录
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+  <div class="comments" id="comments">
+      <div id="gitalk-container"></div>
+    </div>
+	
+  
+
+
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+        <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+		<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    
+		<script type="text/javascript">
+		const gitalk = new Gitalk({
+		clientID: '8c4098d1aa1409852b19',
+		clientSecret: 'cdc136702eaaa9600bc46ab7da3c95a8537116ef',
+		repo: 'Blog_message_repo',
+		owner: 'BladeDragon',
+		admin: ['BladeDragon'],
+		id: window.location.pathname,      // Ensure uniqueness and length less than 50
+		});
+		
+		gitalk.render('gitalk-container');
+		</script>
+
+    
+
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://cdn.zblade.top/qiniu_img/zcard2.png" alt="陌花采撷">
+            
+              <p class="site-author-name" itemprop="name"><span style="opacity:.2;"></span>陌花采撷</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/bladedragon" target="_blank" title="GitHub" data-balloon="GitHub" data-balloon-pos="up">
+                    
+                       <i class="fa fa-fw fa-github"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://telegram.com" target="_blank" title="telegram" data-balloon="telegram" data-balloon-pos="up">
+                    
+                       <i class="fa fa-fw fa-telegram"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:zaft1156673039@gmail.com" target="_blank" title="E-Mail" data-balloon="E-Mail" data-balloon-pos="up">
+                    
+                       <i class="fa fa-fw fa-envelope"></i></a>
+                </span>
+              
+            
+          </div>
+
+         
+
+          
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-name">日志</span>
+				  <span class="site-state-item-count">68</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-name">分类</span>
+				   <span class="site-state-item-count">4</span>
+                </a>
+              </div>
+            
+            
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+				 <span class="site-state-item-name">标签</span>
+				  <span class="site-state-item-count">34</span>
+                </a>
+              </div>
+            
+            
+
+          </nav>
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              
+            </div>
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#优点"><span class="nav-text">优点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用方法"><span class="nav-text">使用方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#前置准备"><span class="nav-text">前置准备</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原理"><span class="nav-text">原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用场景"><span class="nav-text">使用场景</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-image"></div>
+      <div class="footer-inner">
+        <p>本博客已出生<span id="since"></span><span class="my-face">(●'◡'●)ﾉ♥</span></p>
+<p></p>
+
+Theme By <a href="https://github.com/DIYgod/hexo-theme-sagiri" target="_blank" class="external" rel="nofollow">Sagiri</a>
+
+<p>Made with <i class="fa fa-heart throb" style="color: #d43f57;"></i> by <span class="author" itemprop="copyrightHolder">陌花采撷</span>. </p>
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    <canvas id="evanyou"></canvas>
+    <div id="aplayer-fixed"></div>
+
+    
+	
+  </div>
+
+	
+  <script type="text/javascript" src="/js/sagiri.min.js?v=0.0.50"></script>
+	
+  
+
+
+
+
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+  <!--<script>
+    // remove service worker cache
+    // from https://stackoverflow.com/questions/33704791/how-do-i-uninstall-a-service-worker
+    "use strict";
+    if(navigator.serviceWorker)
+    {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            for(let registration of registrations) {
+                registration.unregister()
+            }
+        })
+    }
+  </script>-->
+
+  <!--<script>
+    var serviceWorkerUri = '/sw.js';
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register(serviceWorkerUri).then(function() {
+          if (navigator.serviceWorker.controller) {
+            console.log('Assets cached by the controlling service worker.');
+          } else {
+            console.log('Please reload this page to allow the service worker to handle network operations.');
+          }
+        }).catch(function(error) {
+          console.log('ERROR: ' + error);
+        });
+    } else {
+        console.log('Service workers are not supported in the current browser.');
+    }
+  </script>-->
+  
+  
+
+	
+</body>
+</html>
